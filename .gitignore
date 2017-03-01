@@ -1,3 +1,5 @@
+*/storage/*
+*/storage/!index.html
 */config/development
 */logs/log-*.php
 !*/logs/index.html
