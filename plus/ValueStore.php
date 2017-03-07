@@ -1,14 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: lichao
- * Date: 2017/3/7
- * Time: 21:25
+ * 数据本地读写类
  */
-
 namespace CIPlus;
 
-
 class ValueStore {
+    public function __construct(array $config = array()) {
+        echo "success";
+    }
 
+    public function Write() {
+        echo "write";
+    }
 }
