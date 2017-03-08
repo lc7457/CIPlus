@@ -206,6 +206,7 @@ class Curl {
             }
         } else {
             $this->option(CURLOPT_SSL_VERIFYPEER, FALSE);
+            $this->option(CURLOPT_SSL_VERIFYHOST, $verify_host);
         }
         return $this;
     }
@@ -339,5 +340,3 @@ class Curl {
 
 }
 
-/* End of file Curl.php */
-/* Location: ./application/libraries/Curl.php */

@@ -1,9 +1,14 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * ===================================================================
+ * 微信公众平台配置文件（公众号）
+ * ===================================================================
+ */
 $config['appid'] = ''; // 公众号APP ID
 $config['secret'] = ''; // 公众号APP SECRET
 $config['token'] = ''; // 服务器通信认证 TOKEN
-$config['aeskey'] = ''; // 服务器通信认证 TOKEN
+$config['aeskey'] = ''; // 服务器通信认证密钥
 $config['mchid'] = ''; // 商户号
 $config['mchkey'] = ''; // 商户支付密钥
 $config['notify_url'] = base_url('wxpay/jsapi'); // 支付通知回调地址
@@ -33,3 +38,12 @@ $config['curl_proxy_port'] = 0;
  * @var int
  */
 $config['report_level'] = 1; // SDK 单词 LEVENL
+/**
+ * ===================================================================
+ * 微信第三方平台配置文件
+ * ===================================================================
+ */
+$config['tp_appid'] = '';
+$config['tp_secret'] = '';
+$config['tp_token'] = '';
+$config['tp_aeskey'] = '';

@@ -1,5 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
-
+<?php
 /**
  * Jsonf文件类
  * ===================================================================
@@ -10,6 +9,7 @@
  * Create by LeeNux @ 2016-3-2
  * Update by LeeNux @ 2016-3-2
  */
+defined('BASEPATH') OR exit('No direct script access allowed');
 Class Jsonf {
     private $save_path = '';
     private $save_extension = '';

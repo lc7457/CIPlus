@@ -1,10 +1,14 @@
 <?php
 
 /**
- * 微信通信类
+ * 微信公众平台接入类
+ * ===================================================================
+ * Version 0.8.0 BETA
+ * Create by LeeNux @ 2016-3-2
+ * Update by LeeNux @ 2016-3-2
  */
-Class Wechat
-{
+defined('BASEPATH') OR exit('No direct script access allowed');
+Class CI_Wechat {
     private $appid = "";
     private $secret = "";
     private $token = "";
@@ -24,8 +28,7 @@ Class Wechat
     public $FromUserName;
     public $ToUserName;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->CI = &get_instance();
         $this->CI->load->library(array('curl', 'jsonf'));
         $this->LoadConfig();
@@ -34,8 +37,7 @@ Class Wechat
     /**
      * 加载CI的配置文件
      */
-    private function LoadConfig()
-    {
+    private function LoadConfig() {
         try {
             $this->CI->config->load('wechat', true, true);
             $config = $this->CI->config->item('wechat');
@@ -48,6 +50,7 @@ Class Wechat
             }
         } catch (Exception $e) {
             // this not codeigniter
+            log_message('error', $e);
         }
     }
 
@@ -60,8 +63,7 @@ Class Wechat
     /**
      * 获取消息（微信 - > 服务器）
      */
-    public function getMsg()
-    {
+    public function GetMsg() {
         // get post data, May be due to the different environments
         @$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
         // extract post data
@@ -81,8 +83,7 @@ Class Wechat
      * 回复文字消息（服务器 - > 微信）
      * @param $text :消息
      */
-    public function reText($text)
-    {
+    public function ReText($text) {
         /* 文本信息回复模板 */
         $tpl = "<xml>
 					<ToUserName><![CDATA[%s]]></ToUserName>
@@ -98,8 +99,7 @@ Class Wechat
         exit;
     }
 
-    public function reTxPic($item = array())
-    {
+    public function ReTxPic($item = array()) {
         /* 图文消息模板 */
         $tpl = "<xml>
 					<ToUserName><![CDATA[%s]]></ToUserName>
@@ -139,8 +139,7 @@ Class Wechat
     /**
      * 获取微信Access Token
      */
-    public function GetAccessToken()
-    {
+    public function GetAccessToken() {
 
         $str = $this->CI->jsonf->load('wx_token', false);
         if (!empty($str)) {
@@ -160,8 +159,7 @@ Class Wechat
     /**
      * 从服务器端获取微信Access Token
      */
-    private function GetRemoteAccessToken()
-    {
+    private function GetRemoteAccessToken() {
         $url = sprintf(self::WX_GETTOKEN_URL, $this->appid, $this->secret);
         $json = $this->CI->curl->simple_get($url);
         $json = json_decode($json, true);
@@ -175,8 +173,7 @@ Class Wechat
     /**
      * 设置微信菜单
      */
-    public function SetCustomMenu()
-    {
+    public function SetCustomMenu() {
         $token = $this->GetAccessToken();
         $url = sprintf(self::WX_SETMENU_URL, $token);
         $menu = $this->CI->jsonf->read('wx_menu', false);
@@ -190,8 +187,7 @@ Class Wechat
      * 获取服务器端的菜单设置
      * @param $isSave :是否本地保存
      */
-    public function GetRemoteMenu($isSave = false)
-    {
+    public function GetRemoteMenu($isSave = false) {
         $token = $this->GetAccessToken();
         $url = sprintf(self::WX_GETMENU_URL, $token);
         $reJson = $this->CI->curl->simple_get($url);
@@ -218,8 +214,7 @@ Class Wechat
      *        2、snsapi_userinfo：弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息
      * @param $state : 自定义返回值
      */
-    public function AskAccessCode($redirectUrl, $type = "snsapi_base ", $state = "GetCode")
-    {
+    public function AskAccessCode($redirectUrl, $type = "snsapi_base ", $state = "GetCode") {
         $url = sprintf(self::WX_WEB_GETCODE_URL, $this->appid, urlencode($redirectUrl), $type, $state);
         redirect($url);
     }
@@ -229,8 +224,7 @@ Class Wechat
      * @param $code :请求的交互用code
      * @return mixed
      */
-    public function GetUserToken($code)
-    {
+    public function GetUserToken($code) {
         $url = sprintf(self::WX_WEB_GETTOKEN_URL, $this->appid, $this->secret, $code);
         $reInfo = $this->CI->curl->simple_get($url);
         if (!empty($reInfo)) {
@@ -250,8 +244,7 @@ Class Wechat
      * 获取用户的微信信息
      * @param $userToken
      */
-    public function GetUserWxInfo($userToken)
-    {
+    public function GetUserWxInfo($userToken) {
         $url = sprintf(self::WX_WEB_GETUSERINFO_URL, $userToken, $this->appid);
         $userInfo = $this->CI->curl->simple_get($url);
         return $userInfo;
@@ -264,8 +257,7 @@ Class Wechat
      */
 
     // 获取签名
-    public function GetSignPackage()
-    {
+    public function GetSignPackage() {
         $jsapiTicket = $this->GetJsApiTicket();
         // 注意 URL 一定要动态获取，不能 hardcode.
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
@@ -279,8 +271,7 @@ Class Wechat
         return $signPackage;
     }
 
-    public function CreateNonceStr($length = 16)
-    {
+    public function CreateNonceStr($length = 16) {
         $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         $str = "";
         for ($i = 0; $i < $length; $i++) {
@@ -289,8 +280,7 @@ Class Wechat
         return $str;
     }
 
-    private function GetJsApiTicket()
-    {
+    private function GetJsApiTicket() {
         $data = $this->CI->jsonf->load('wx_ticket');
         $data = (object)$data;
         if ($data->expire_time < time()) {
@@ -310,8 +300,7 @@ Class Wechat
         return $ticket;
     }
 
-    private function httpGet($url)
-    {
+    private function HttpGet($url) {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_TIMEOUT, 500);
@@ -334,8 +323,7 @@ Class Wechat
     /*
      * 验证微信API合法性
      */
-    public function IsValidAPI()
-    {
+    public function IsValidAPI() {
         $echoStr = $_GET["echostr"];
         //valid signature , option
         if ($this->CheckSignature()) {
@@ -347,8 +335,7 @@ Class Wechat
     /**
      * 构造证书
      */
-    private function CheckSignature()
-    {
+    private function CheckSignature() {
         $signature = $_GET["signature"];
         $timestamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];

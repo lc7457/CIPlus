@@ -14,17 +14,15 @@
  * @author LeeNux
  * @version 1.0
  */
-class MY_Model extends CI_Model
-{
+class MY_Model extends CI_Model {
     // 数据表名称
     protected $table;
 
     /**
      * 构造函数
-     * $table:数据表
+     * @param $table :数据表
      */
-    public function __construct($table = '', $database = 'default')
-    {
+    public function __construct($table = '', $database = 'default') {
         parent::__construct();
         $this->db = $this->load->database($database, TRUE);
         $this->table = $table;
@@ -32,23 +30,21 @@ class MY_Model extends CI_Model
 
     /**
      * 添加数据
-     * $dataArr:(array)插入的数据
+     * @param $dataArr :(array)插入的数据
      * return:当前插入的数据id
      */
-    public function insert($dataArr = array())
-    {
+    public function insert($dataArr = array()) {
         $this->db->insert($this->table, $dataArr);
         return $this->db->insert_id();
     }
 
     /**
      * 修改数据
-     * $dataArr:(array)更新的数据
-     * $whereArr:(array)更新的条件
+     * @param $dataArr :(array)更新的数据
+     * @param $whereArr :(array)更新的条件
      * return:更新的数据条数
      */
-    public function update($dataArr, $whereArr)
-    {
+    public function update($dataArr, $whereArr) {
         $this->db->where($whereArr);
         $this->db->update($this->table, $dataArr);
         return $this->db->affected_rows();
@@ -56,11 +52,10 @@ class MY_Model extends CI_Model
 
     /**
      * 删除数据
-     * $whereArr:(array)删除的条件
+     * @param $whereArr :(array)删除的条件
      * return:删除的数据条数
      */
-    public function delete($whereArr)
-    {
+    public function delete($whereArr) {
         $this->db->where($whereArr);
         $this->db->delete($this->table);
         return $this->db->affected_rows();
@@ -68,12 +63,10 @@ class MY_Model extends CI_Model
 
     /**
      * 查询并返回一条数据
-     * $whereArr:(array)查询的条件
-     * $type:返回结果类型，默认为obj格式，arr为数组格式
+     * @param $whereArr :(array)查询的条件
      * return:查询结果
      */
-    public function row($whereArr)
-    {
+    public function row($whereArr) {
         $this->db->where($whereArr);
         $query = $this->db->get($this->table);
         return $query->row_array();
@@ -81,14 +74,13 @@ class MY_Model extends CI_Model
 
     /**
      * 查询并返回多条数据
-     * $whereArr:(array)查询的条件
-     * $num:单页显示的条数
-     * $page:当前页数
-     * $orderby:排序条件
+     * @param $whereArr :(array)查询的条件
+     * @param $num :单页显示的条数
+     * @param $page :当前页数
+     * @param $orderby :排序条件
      * return:查询结果
      */
-    public function result($whereArr, $page = 1, $num = 10, $orderby = "")
-    {
+    public function result($whereArr, $page = 1, $num = 10, $orderby = "") {
         if ($page <= 0) $page = 1;
         $offset = ($page - 1) * $num;
         $this->db->where($whereArr);
@@ -102,11 +94,10 @@ class MY_Model extends CI_Model
 
     /**
      * 查询数据条数
-     * $whereArr:(array)查询的条件
-     * return:查询结果数据条数
+     * @param $whereArr
+     * @return mixed
      */
-    public function count($whereArr)
-    {
+    public function count($whereArr) {
         $this->db->where($whereArr);
         $query = $this->db->get($this->table);
         return $query->num_rows();
