@@ -1,9 +1,8 @@
 <?php
+namespace CIPlus;
 /**
  * 数据本地读写类
  */
-namespace CIPlus;
-
 class ValueStore {
     public function __construct(array $config = array()) {
         echo "success";
