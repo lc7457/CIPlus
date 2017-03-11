@@ -14,9 +14,13 @@ class MY_Controller extends REST_Controller {
 
     protected function SetCode($code, $inDict = true) {
         $this->code = $code;
+        if ($inDict) {
+            $re = $this->lang->load('api_message');
+            $this->message = $this->lang->line('m' . $code, FALSE);
+        }
     }
 
-    protected function SetMessage($message, $inDict = true) {
+    protected function SetMessage($message) {
         $this->message = $message;
     }
 
