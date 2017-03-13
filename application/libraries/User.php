@@ -7,6 +7,7 @@ class User {
     const PHONE_COLUMN = 'phone';
     const PASSWORD_COLUMN = 'password';
     const VERSION_COLUMN = 'version';
+    const UID_COLUMN = 'uid';
 
     const PREFIX_UID = 'CU_'; // Ceramic User
 
@@ -19,6 +20,8 @@ class User {
 
     private $valid;
     private $number;
+
+    public $uid = '';
 
     public function __construct(array $config = array()) {
         $this->CI =& get_instance();
@@ -109,7 +112,11 @@ class User {
             $whereArr[self::PHONE_COLUMN] = $this->phone;
         }
         $ub = $this->CI->user_base_model->row($whereArr);
-        return $this->DecryptPassword($ub[self::PASSWORD_COLUMN]) === $this->password;
+        if ($this->DecryptPassword($ub[self::PASSWORD_COLUMN]) === $this->password) {
+            $this->uid = $ub[self::UID_COLUMN];
+            return true;
+        }
+        return false;
     }
 
     /**

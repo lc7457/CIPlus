@@ -10,12 +10,23 @@ class MY_Controller extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->lang->load('api_message');
+        $this->ValidToken();
+    }
+
+    public function ValidToken() {
+        $this->load->library('oauth');
+        $accessToken = $this->input->post_get('access_token');
+        if (!$this->oauth->ValidToken($accessToken)) {
+            $this->SetCode(40098);
+            $this->DoResponse();
+            ob_end_clean();
+        }
     }
 
     protected function SetCode($code, $inDict = true) {
         $this->code = $code;
         if ($inDict) {
-            $re = $this->lang->load('api_message');
             $this->message = $this->lang->line('m' . $code, FALSE);
         }
     }
@@ -35,7 +46,8 @@ class MY_Controller extends REST_Controller {
             'data' => $this->data
         );
         $this->set_response($callback, $status);
+        $this->output->_display();
+        exit();
     }
-
 
 }

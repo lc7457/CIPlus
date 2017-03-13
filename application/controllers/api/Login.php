@@ -19,8 +19,10 @@ class Login extends MY_Controller {
         $email = $this->post('email');
         $phone = $this->post('phone');
         $password = $this->post('password');
-        $code = $this->user->ValidUser($email, $phone, $password);
+        $userInfo = array();
+        $code = $this->user->ValidUser($email, $phone, $password, $userInfo);
         $this->SetCode($code);
+        $this->SetData(array('uid' => $this->user->uid));
         $this->DoResponse();
     }
 }
