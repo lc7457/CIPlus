@@ -181,6 +181,11 @@ class User {
         return $this->CI->encrypt->encode($this->password, $this->encryptKey);
     }
 
+    /**
+     * 对用户密码二次解密
+     * @param $password
+     * @return string
+     */
     private function DecryptPassword($password) {
         $this->CI->load->library('encrypt');
         return $this->CI->encrypt->decode($password, $this->encryptKey);
