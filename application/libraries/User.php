@@ -163,8 +163,8 @@ class User {
      * @return bool
      */
     private function CheckUserExist() {
-        $hasEmail = $this->CI->user_base_model->count(array(self::EMAIL_COLUMN => $this->email));
-        $hasPhone = $this->CI->user_base_model->count(array(self::PHONE_COLUMN => $this->phone));
+        $hasEmail = empty($this->email) ? 0 : $this->CI->user_base_model->count(array(self::EMAIL_COLUMN => $this->email));
+        $hasPhone = empty($this->phone) ? 0 : $this->CI->user_base_model->count(array(self::PHONE_COLUMN => $this->phone));
         return $hasEmail > 0 || $hasPhone > 0;
     }
 
