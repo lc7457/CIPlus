@@ -19,8 +19,8 @@ RewriteRule ^(.*)$ $1 [R=200,L]
 
 RewriteEngine on
 RewriteRule ^favicon\.ico$ /assets/favicon\.ico [L]
-RewriteRule /app/(.*)\.(js|css|jpe?g|png) /apps/$1\.$2 [R=301,L,QSA]
-RewriteCond $1 !^(index\.php|apps|assets|classes|storage|favicon\.ico)
+RewriteRule /page/(.*)\.(js|css|jpe?g|png) /pages/$1\.$2 [R=301,L,QSA]
+RewriteCond $1 !^(index\.php|pages|assets|storage|favicon\.ico)
 RewriteRule ^(.*)$ /index.php/$1 [L]
 </ifmodule>
 
