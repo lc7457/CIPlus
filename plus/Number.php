@@ -1,12 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: 李超
- * Date: 2017/3/11
- * Time: 14:11
- */
-
 namespace CIPlus;
+
+/**
+ * 数字类
+ * ============================================================
+ * ============================================================
+ * Version 2.0.0
+ * Create by LeeNux @ 2017-3-1
+ */
 
 class Number {
     const DICT_36 = '0123456789abcdefghijklmnopqrstuvwxyz';
