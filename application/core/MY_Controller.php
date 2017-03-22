@@ -8,10 +8,12 @@ class MY_Controller extends REST_Controller {
     protected $message = 'success';
     protected $data = array();
 
-    public function __construct() {
+    public function __construct($validToken = true) {
         parent::__construct();
         $this->lang->load('api_message');
-        $this->ValidToken();
+        if ($validToken) {
+            $this->ValidToken();
+        }
     }
 
     public function ValidToken() {

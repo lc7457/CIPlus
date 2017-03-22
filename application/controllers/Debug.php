@@ -27,4 +27,8 @@ class Debug extends CI_Controller {
         echo 'token:' . $token;
         return $token;
     }
+
+    public function Upload() {
+        $this->load->view("debug/upload");
+    }
 }
