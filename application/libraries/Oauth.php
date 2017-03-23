@@ -22,7 +22,7 @@ class Oauth {
     public function __construct() {
         $this->CI =& get_instance();
         $this->CI->load->model('oauth_base_model');
-        $this->number = new CIPlus\Number();
+        $this->number = new CIPlus\Number();``
     }
 
     /**
