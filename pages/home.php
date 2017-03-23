@@ -12,16 +12,16 @@
 <body>
 <div id="home-page">
     <div class="section">
-        <h3>第一屏</h3>
+        <h3>用户</h3>
     </div>
     <div class="section">
-        <h3>第二屏</h3>
+        <h3>支付</h3>
     </div>
     <div class="section">
-        <h3>第三屏</h3>
+        <h3>认证</h3>
     </div>
     <div class="section">
-        <h3>第四屏</h3>
+        <h3>授权</h3>
     </div>
 </div>
 <script type="text/javascript">
