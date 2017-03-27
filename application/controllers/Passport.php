@@ -11,20 +11,13 @@ class Passport extends CI_Controller {
     }
 
     public function Server() {
-        if ($this->agent->is_browser())
-        {
-            $agent = $this->agent->browser().' '.$this->agent->version();
-        }
-        elseif ($this->agent->is_robot())
-        {
+        if ($this->agent->is_browser()) {
+            $agent = $this->agent->browser() . ' ' . $this->agent->version();
+        } elseif ($this->agent->is_robot()) {
             $agent = $this->agent->robot();
-        }
-        elseif ($this->agent->is_mobile())
-        {
+        } elseif ($this->agent->is_mobile()) {
             $agent = $this->agent->mobile();
-        }
-        else
-        {
+        } else {
             $agent = 'Unidentified User Agent';
         }
         echo $agent;
