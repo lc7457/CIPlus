@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
 require_once APPPATH . 'core/REST_Controller.php';
 
 class MY_Controller extends REST_Controller {
