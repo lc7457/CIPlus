@@ -4,13 +4,30 @@ class Debug extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        if ($this->input->get('token') !== 'private') {
-            show_404();
-        }
     }
 
     public function index() {
         phpinfo();
+    }
+
+    public function ua() {
+        $this->load->library('user_agent');
+        echo $this->agent->agent_string();
+        echo '<br>';
+        if ($this->agent->is_browser()) {
+            $agent = $this->agent->browser() . ' ' . $this->agent->version();
+        } elseif ($this->agent->is_robot()) {
+            $agent = $this->agent->robot();
+        } elseif ($this->agent->is_mobile()) {
+            $agent = $this->agent->mobile();
+        } else {
+            $agent = 'Unidentified User Agent';
+        }
+        echo 'agent: ' . $agent;
+        echo '<br>';
+        echo 'platform: ' . $this->agent->platform(); // Platform info (Windows, Linux, Mac, etc.)
+        echo '<br>';
+        echo 'referrer: ' . $this->agent->referrer();
     }
 
 
