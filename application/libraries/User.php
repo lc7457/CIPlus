@@ -26,7 +26,7 @@ class User {
     public function __construct(array $config = array()) {
         $this->CI =& get_instance();
         $this->CI->load->library('user_agent');
-        $this->CI->load->model('user_base_model');
+        $this->CI->load->model('user_model');
         $this->valid = new CIPlus\Validated();
         $this->number = new CIPlus\Number();
         $this->InitConfig($config);

@@ -11,26 +11,48 @@ class Passport extends CI_Controller {
     }
 
     public function Server() {
-        if ($this->agent->is_browser()) {
-            $agent = 'b:' . $this->agent->browser() . ' ' . $this->agent->version();
-        } elseif ($this->agent->is_robot()) {
-            $agent = 'r:' .$this->agent->robot();
-        } elseif ($this->agent->is_mobile()) {
-            $agent = 'm:' .$this->agent->mobile();
-        } else {
-            $agent = 'Unidentified User Agent';
-        }
-        echo $agent;
+
     }
 
-    public function User() {
+    public function Code() {
+        $this->load->library('oauth');
+        $appid = $this->input->get('appid');
+        echo $this->oauth->CreateCode($appid);
+    }
+
+    public function Token() {
+        $this->load->library('oauth');
+        $code = $this->input->get('code');
+        $secret = $this->input->get('secret');
+        echo $this->oauth->CreateToken($code, $secret);
+    }
+
+    public function User($type = 'login') {
+        if ($type === 'login') {
+            $this->UserLogin();
+        } else {
+            $this->UserReg();
+        }
+    }
+
+    private function UserLogin() {
         $this->load->library('user');
-        $email = $this->post('email');
-        $phone = $this->post('phone');
-        $password = $this->post('password');
+        $email = $this->input->post('email');
+        $phone = $this->input->post('phone');
+        $password = $this->input->post('password');
         $code = $this->user->ValidUser($email, $phone, $password);
         $this->SetCode($code);
         $this->SetData(array('uid' => $this->user->uid));
+        $this->DoResponse();
+    }
+
+    private function UserReg() {
+        $this->load->library('user');
+        $email = $this->input->post('email');
+        $phone = $this->input->post('phone');
+        $password = $this->input->post('password');
+        $code = $this->user->AddUser($email, $phone, $password);
+        $this->SetCode($code);
         $this->DoResponse();
     }
 
