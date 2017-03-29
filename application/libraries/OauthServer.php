@@ -4,9 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once FCPATH . 'plus/Number.php';
 
 /**
- * Class Oauth
+ * Oauth 验证服务端
  */
-class Oauth {
+class OauthServer {
     const CODE_EXPIRES_TIME = 300;
     const TOKEN_EXPIRES_TIME = 3600;
 
@@ -21,7 +21,7 @@ class Oauth {
 
     public function __construct() {
         $this->CI =& get_instance();
-        $this->CI->load->model('oauth_base_model');
+        $this->CI->load->model('oauth_model');
         $this->number = new CIPlus\Number();
     }
 
@@ -31,12 +31,12 @@ class Oauth {
      * @return bool
      */
     public function ValidToken($accessToken) {
-        $oauth = $this->CI->oauth_base_model->row(array('access_token' => $accessToken));
+        $oauth = $this->CI->oauth_model->row(array('access_token' => $accessToken));
         return $oauth['token_expires_in'] > time();
     }
 
     /**
-     * 生成 Oauth Code
+     * 生成 OauthServer Code
      * @param $appid
      * @return string
      */

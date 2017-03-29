@@ -13,6 +13,8 @@ class User extends API_Controller {
     public function index() {
 //        $p = $this->input->get_post('p') OR 1;
 //        $n = 20;
+        echo 1;
         $this->Respond();
+        echo 2;
     }
 }

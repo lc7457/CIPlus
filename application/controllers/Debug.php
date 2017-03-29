@@ -10,7 +10,7 @@ class Debug extends CI_Controller {
         phpinfo();
     }
 
-    public function ua() {
+    public function ua($type = 'client') {
         $this->load->library('user_agent');
         echo $this->agent->agent_string();
         echo '<br>';
@@ -31,6 +31,12 @@ class Debug extends CI_Controller {
         echo '<br>';
         $this->load->helper('ip');
         echo client_ip();
+        if ($type == "client") {
+            echo "<hr>";
+            $this->load->library('curl');
+            $this->curl->option(CURLOPT_USERAGENT, 'Server (linux) ciplus');
+            echo $this->curl->simple_get('/debug/ua/server');
+        }
     }
 
 
