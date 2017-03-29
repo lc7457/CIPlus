@@ -46,6 +46,6 @@ class Passport extends CI_Controller {
 
     public function Refresh() {
         $this->load->library('curl');
-        echo $this->curl->simple_get('/passport/server');
+        echo $this->curl->simple_get('');
     }
 }
