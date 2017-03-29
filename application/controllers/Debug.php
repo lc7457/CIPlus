@@ -1,12 +1,18 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: 李超
- * Date: 2017/3/10
- * Time: 9:38
- */
 class Debug extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        if ($this->input->get('token') !== 'private') {
+            show_404();
+        }
+    }
+
+    public function index() {
+        phpinfo();
+    }
+
 
     public function reg() {
         $this->load->view('debug/reg', array('token' => $this->access_token()));
