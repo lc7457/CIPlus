@@ -28,6 +28,9 @@ class Debug extends CI_Controller {
         echo 'platform: ' . $this->agent->platform(); // Platform info (Windows, Linux, Mac, etc.)
         echo '<br>';
         echo 'referrer: ' . $this->agent->referrer();
+        echo '<br>';
+        $this->load->helper('ip');
+        echo client_ip();
     }
 
 

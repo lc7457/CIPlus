@@ -46,6 +46,7 @@ class Passport extends CI_Controller {
 
     public function Refresh() {
         $this->load->library('curl');
-        echo $this->curl->simple_get('');
+        $this->curl->ssl(false);
+        echo $this->curl->simple_get('https://passport.jciuc.com/debug/ua');
     }
 }

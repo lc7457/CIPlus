@@ -9,7 +9,7 @@ class User {
     const VERSION_COLUMN = 'version';
     const UID_COLUMN = 'uid';
 
-    const PREFIX_UID = 'CU_'; // Ceramic User
+    const PREFIX_UID = 'CU'; // Ceramic User
 
     private $email;
     private $phone;
