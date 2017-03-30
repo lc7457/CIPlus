@@ -7,22 +7,37 @@ require_once FCPATH . 'plus/Number.php';
  * Oauth 验证服务端
  */
 class OauthServer {
-    const CODE_EXPIRES_TIME = 300;
+    const COLUMN_APPID = 'appid';
+    const COLUMN_SECRET = 'secret';
+    const COLUMN_TOKEN = 'access_token';
+    const COLUMN_TOKEN_EXPIRES = 'token_expires_in';
+
     const TOKEN_EXPIRES_TIME = 3600;
 
-    const APPID_COLUMN = 'appid';
-    const SECRET_COLUMN = 'secret';
-    const CODE_COLUMN = 'code';
-    const TOKEN_COLUMN = 'access_token';
-    const CODE_EXPIRES_COLUMN = 'code_expires_in';
-    const TOKEN_EXPIRES_COLUMN = 'token_expires_in';
-
     private $appid;
+    private $number;
 
     public function __construct() {
         $this->CI =& get_instance();
         $this->CI->load->model('oauth_model');
+        $this->LoadConf();
         $this->number = new CIPlus\Number();
+    }
+
+    /**
+     * 加载配置文件
+     */
+    private function LoadConf() {
+        $CI = &get_instance();
+        $CI->config->load('oauth', true, true);
+        $config = $CI->config->item('oauth');
+        if (is_array($config)) {
+            foreach ($config as $key => $val) {
+                if (isset($this->$key)) {
+                    $this->$key = $val;
+                }
+            }
+        }
     }
 
     /**
@@ -48,7 +63,7 @@ class OauthServer {
             $code = $this->number->Encode($n);
             $whereArr = array(self::APPID_COLUMN => $appid);
             $dataArr = array(self::CODE_COLUMN => $code, self::CODE_EXPIRES_COLUMN => time() + self::CODE_EXPIRES_TIME);
-            $this->CI->oauth_base_model->update($dataArr, $whereArr);
+            $this->CI->oauth_model->update($dataArr, $whereArr);
         }
         return $code;
     }
@@ -62,7 +77,7 @@ class OauthServer {
     public function CreateToken($code, $secret) {
         if ($this->ValidAccess($code, $secret)) {
             $token = md5($code . self::TOKEN_EXPIRES_TIME . $secret . time());
-            $this->CI->oauth_base_model->update(array(
+            $this->CI->oauth_model->update(array(
                 self::APPID_COLUMN => $this->appid,
                 self::TOKEN_COLUMN => $token,
                 self::CODE_COLUMN => '',
@@ -80,7 +95,7 @@ class OauthServer {
      */
     private function ValidApp($appid) {
         $whereArr = array(self::APPID_COLUMN => $appid);
-        return $this->CI->oauth_base_model->count($whereArr) > 0;
+        return $this->CI->oauth_model->count($whereArr) > 0;
     }
 
     /**
@@ -91,8 +106,8 @@ class OauthServer {
      */
     private function ValidAccess($code, $secret) {
         $whereArr = array(self::CODE_COLUMN => $code, self::SECRET_COLUMN => $secret);
-        if ($this->CI->oauth_base_model->count($whereArr) > 0) {
-            $oauth = $this->CI->oauth_base_model->row($whereArr);
+        if ($this->CI->oauth_model->count($whereArr) > 0) {
+            $oauth = $this->CI->oauth_model->row($whereArr);
             if ($oauth[self::CODE_EXPIRES_COLUMN] > time()) {
                 $this->appid = $oauth[self::APPID_COLUMN];
                 return true;

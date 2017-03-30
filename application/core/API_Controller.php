@@ -28,6 +28,7 @@ abstract class API_Controller extends CI_Controller {
         $this->AnalysisParameters();
         $this->load->library('format');
         if ($this->tokenVerifier) {
+            $this->load->library('OauthClient');
             $this->Verifier();
         }
         ob_start();
@@ -61,6 +62,11 @@ abstract class API_Controller extends CI_Controller {
         $this->_format();
     }
 
+    // 接口验证
+    private function Verifier() {
+        $this->oauthclient->Access();
+    }
+
     // _get('_format');
     private function _format() {
         $f = strtolower($this->_get(self::PARAMS_FORMAT));
@@ -90,7 +96,7 @@ abstract class API_Controller extends CI_Controller {
     // 响应事件，最后执行
     public function Respond() {
         if ($this->strict) {
-            ob_end_clean();
+           // ob_end_clean();
         }
         $arr = array(
             self::KEY_CODE => $this->code,
@@ -119,8 +125,4 @@ abstract class API_Controller extends CI_Controller {
         return $this->input->post_get($key);
     }
 
-    // 接口验证
-    protected function Verifier() {
-        $this->load->library('OauthServer');
-    }
 }

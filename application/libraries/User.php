@@ -63,7 +63,7 @@ class User {
                 self::PASSWORD_COLUMN => $this->EncryptPassword(),
                 self::VERSION_COLUMN => $this->encryptVersion
             );
-            $id = $this->CI->user_base_model->insert($value);
+            $id = $this->CI->user_model->insert($value);
             $this->InitUid($id);
             return 20000;
         }
@@ -96,7 +96,7 @@ class User {
      * @param $phone
      * @return bool
      */
-    public function ValidAccount($email, $phone) {
+    public function ValidAccount($email = "", $phone = "") {
         return $this->SetEmail($email) || $this->SetPhone($phone);
     }
 
@@ -111,7 +111,7 @@ class User {
         } elseif (!empty($this->phone)) {
             $whereArr[self::PHONE_COLUMN] = $this->phone;
         }
-        $ub = $this->CI->user_base_model->row($whereArr);
+        $ub = $this->CI->user_model->row($whereArr);
         if ($this->DecryptPassword($ub[self::PASSWORD_COLUMN]) === $this->password) {
             $this->uid = $ub[self::UID_COLUMN];
             return true;
@@ -163,8 +163,8 @@ class User {
      * @return bool
      */
     private function CheckUserExist() {
-        $hasEmail = empty($this->email) ? 0 : $this->CI->user_base_model->count(array(self::EMAIL_COLUMN => $this->email));
-        $hasPhone = empty($this->phone) ? 0 : $this->CI->user_base_model->count(array(self::PHONE_COLUMN => $this->phone));
+        $hasEmail = empty($this->email) ? 0 : $this->CI->user_model->count(array(self::EMAIL_COLUMN => $this->email));
+        $hasPhone = empty($this->phone) ? 0 : $this->CI->user_model->count(array(self::PHONE_COLUMN => $this->phone));
         return $hasEmail > 0 || $hasPhone > 0;
     }
 
@@ -175,7 +175,7 @@ class User {
      */
     private function InitUid($n) {
         $uid = self::PREFIX_UID . $this->number->Zerofill($n);
-        $this->CI->user_base_model->update(array('uid' => $uid), array('id' => $n));
+        $this->CI->user_model->update(array('uid' => $uid), array('id' => $n));
         return $uid;
     }
 

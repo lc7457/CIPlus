@@ -1,59 +1,63 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+require APPPATH . 'core/API_Controller.php';
 
 /**
  * 全站通行证
  */
-class Passport extends CI_Controller {
+class Passport extends API_Controller {
     public function __construct() {
-        parent::__construct();
+        parent::__construct(array(
+            'tokenVerifier' => false
+        ));
         $this->load->library('user_agent');
+        $this->load->library('OauthServer');
     }
 
     public function Server() {
-
+        //$this->OauthClient->Access();
     }
 
     public function Code() {
         $this->load->library('OauthServer');
-        $appid = $this->input->get('appid');
+        $appid = $this->_get('appid');
         echo $this->oauth->CreateCode($appid);
     }
 
     public function Token() {
         $this->load->library('OauthServer');
-        $code = $this->input->get('code');
-        $secret = $this->input->get('secret');
+        $code = $this->_get('code');
+        $secret = $this->_get('secret');
         echo $this->oauth->CreateToken($code, $secret);
     }
 
     public function User($type = 'login') {
         if ($type === 'login') {
             $this->UserLogin();
-        } else {
+        } else if ($type === 'reg') {
             $this->UserReg();
         }
     }
 
     private function UserLogin() {
         $this->load->library('user');
-        $email = $this->input->post('email');
-        $phone = $this->input->post('phone');
-        $password = $this->input->post('password');
+        $email = $this->_post('email');
+        $phone = $this->_post('phone');
+        $password = $this->_post('password');
         $code = $this->user->ValidUser($email, $phone, $password);
         $this->SetCode($code);
         $this->SetData(array('uid' => $this->user->uid));
-        $this->DoResponse();
+        $this->Respond();
     }
 
     private function UserReg() {
         $this->load->library('user');
-        $email = $this->input->post('email');
-        $phone = $this->input->post('phone');
-        $password = $this->input->post('password');
+        $email = $this->_post('email');
+        $phone = $this->_post('phone');
+        $password = $this->_post('password');
         $code = $this->user->AddUser($email, $phone, $password);
         $this->SetCode($code);
-        $this->DoResponse();
+        $this->Respond();
     }
 
     public function Admin() {
@@ -63,7 +67,7 @@ class Passport extends CI_Controller {
         $code = $this->user->ValidUser($admin, $password);
         $this->SetCode($code);
         $this->SetData(array('uid' => $this->user->uid));
-        $this->DoResponse();
+        $this->Respond();
     }
 
     public function Refresh() {

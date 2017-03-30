@@ -34,7 +34,7 @@ class Debug extends CI_Controller {
         if ($type == "client") {
             echo "<hr>";
             $this->load->library('curl');
-            $this->curl->option(CURLOPT_USERAGENT, 'Server (linux) ciplus');
+            $this->curl->option(CURLOPT_USERAGENT, 'Server/3 (linux) ciplus');
             echo $this->curl->simple_get('/debug/ua/server');
         }
     }
