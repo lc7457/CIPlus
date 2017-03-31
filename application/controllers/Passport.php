@@ -62,9 +62,9 @@ class Passport extends API_Controller {
 
     public function Admin() {
         $this->load->library('admin');
-        $admin = $this->post('admin');
-        $password = $this->post('password');
-        $code = $this->user->ValidUser($admin, $password);
+        $admin = $this->_post('admin');
+        $password = $this->_post('password');
+        $code = $this->admin->ValidUser($admin, $password);
         $this->SetCode($code);
         $this->SetData(array('uid' => $this->user->uid));
         $this->Respond();

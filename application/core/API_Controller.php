@@ -96,7 +96,7 @@ abstract class API_Controller extends CI_Controller {
     // 响应事件，最后执行
     public function Respond() {
         if ($this->strict) {
-           // ob_end_clean();
+            ob_end_clean();
         }
         $arr = array(
             self::KEY_CODE => $this->code,
@@ -111,17 +111,17 @@ abstract class API_Controller extends CI_Controller {
     }
 
     // get
-    protected function _get($key = '') {
+    protected function _get($key = null) {
         return $this->input->get($key);
     }
 
     // post
-    protected function _post($key = '') {
+    protected function _post($key = null) {
         return $this->input->post($key);
     }
 
     // post & get
-    protected function _request($key = '') {
+    protected function _request($key = null) {
         return $this->input->post_get($key);
     }
 

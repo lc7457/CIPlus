@@ -6,15 +6,13 @@ require APPPATH . 'core/API_Controller.php';
 class User extends API_Controller {
     public function __construct() {
         parent::__construct(array(
-            'tokenVerifier' => true
+            'tokenVerifier' => true,
+            'strict' => false
         ));
     }
 
     public function index() {
-//        $p = $this->input->get_post('p') OR 1;
-//        $n = 20;
-        echo 1;
-        $this->Respond();
-        echo 2;
+
+        //$this->Respond();
     }
 }

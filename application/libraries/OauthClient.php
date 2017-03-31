@@ -41,10 +41,38 @@ class OauthClient {
         $params = $this->AnalysisParameters();
         $this->CI->load->library('curl');
         $this->CI->curl->option(CURLOPT_USERAGENT, sprintf('%s (%s) %s', $this->identity, $this->platform, $this->agent));
-        $this->CI->curl->simple_post($url, $params);
+        $role = $this->CI->curl->simple_post($url, $params);
+        $this->AnalyseRole($role);
+    }
+
+    private function AnalyseRole($role) {
+        print_r($role);
     }
 
     private function AnalysisParameters() {
-        //$this->_format();
+        $this->CI->load->library('user_agent');
+        $params = array(
+            'token' => $this->CI->input->post_get('_token'),
+            'timestamp' => $this->CI->input->post_get('_timestamp'),
+            'user_agent' => $this->UserAgent(),
+            'ip' => $this->IP(),
+            'device' => $this->DeviceInfo()
+        );
+        return $params;
     }
+
+    private function UserAgent() {
+        $this->CI->load->library('user_agent');
+        return $this->CI->agent->agent_string();
+    }
+
+    private function IP() {
+        $this->CI->load->helper('IP');
+        return client_ip();
+    }
+
+    private function DeviceInfo() {
+        return $this->CI->input->post_get('_device');
+    }
+
 }
