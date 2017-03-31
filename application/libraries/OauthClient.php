@@ -5,14 +5,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Oauth 验证客户端
  */
 class OauthClient {
-    private $innerIp = '';
-    private $outerUrl = '';
+    private $inner_ip = '';
+    private $outer_url = '';
     private $entry = '';
     private $channel = '';
 
-    private $identity = '';
+    private $appid = '';
+    private $secret = '';
     private $platform = 'Linux';
     private $agent = '';
+
+    public $token = '';
+    public $timestamp = 0;
+    public $role = '';
+    public $key = '';
+    public $illegalLevel = 0;
+    public $handle = array();
 
     public function __construct() {
         $this->CI =& get_instance();
@@ -40,23 +48,46 @@ class OauthClient {
         $url = $this->$url . $this->entry;
         $params = $this->AnalysisParameters();
         $this->CI->load->library('curl');
-        $this->CI->curl->option(CURLOPT_USERAGENT, sprintf('%s (%s) %s', $this->identity, $this->platform, $this->agent));
-        $role = $this->CI->curl->simple_post($url, $params);
-        $this->AnalyseRole($role);
+        $this->CI->curl->option(CURLOPT_USERAGENT, sprintf('%s (%s) %s', $this->appid, $this->platform, $this->agent));
+        $access = $this->CI->curl->simple_post($url, $params);
+        $access = json_decode($access, true);
+        $this->role = $access['key'];
+        $this->key = $this->AnalyseKey($access['key']);
+        $this->illegalLevel = $access['illegalLevel'];
+        $this->handle = $access['handle'];
     }
 
-    private function AnalyseRole($role) {
-        print_r($role);
+    public function AnalyseToken() {
+        $this->CI->load->library('encryption');
+        $data = str_split($this->token, strlen($this->token) - 4);
+        $token = urldecode($data[0]);
+        echo $token;
+        $this->CI->encryption->initialize(
+            array('key' => $this->key)
+        );
+        $res = $this->CI->encryption->decrypt($token);
+        return $res;
+    }
+
+    private function AnalyseKey($key) {
+        if (!empty($key)) {
+            $this->CI->load->library('encrypt');
+            $key = urldecode($key);
+            $key = $this->CI->encrypt->decode($key, $this->secret);
+        }
+        return $key;
     }
 
     private function AnalysisParameters() {
+        $this->token = $this->CI->input->post_get('_token');
+        $this->timestamp = $this->CI->input->post_get('_timestamp');
         $this->CI->load->library('user_agent');
         $params = array(
-            'token' => $this->CI->input->post_get('_token'),
-            'timestamp' => $this->CI->input->post_get('_timestamp'),
+            'token' => $this->token,
+            'timestamp' => $this->timestamp,
             'user_agent' => $this->UserAgent(),
             'ip' => $this->IP(),
-            'device' => $this->DeviceInfo()
+            'device' => $this->DeviceInfo() OR ''
         );
         return $params;
     }

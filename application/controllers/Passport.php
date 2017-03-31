@@ -21,7 +21,7 @@ class Passport extends API_Controller {
     public function Code() {
         $this->load->library('OauthServer');
         $appid = $this->_get('appid');
-        echo $this->oauth->CreateCode($appid);
+        echo $this->oauthserver->CreateCode($appid);
     }
 
     public function Token() {
@@ -46,7 +46,9 @@ class Passport extends API_Controller {
         $password = $this->_post('password');
         $code = $this->user->ValidUser($email, $phone, $password);
         $this->SetCode($code);
-        $this->SetData(array('uid' => $this->user->uid));
+        $data = array('uid' => $this->user->uid);
+        $data = $this->oauthserver->Track($this->user->uid, 'user', $data);
+        $this->SetData($data);
         $this->Respond();
     }
 

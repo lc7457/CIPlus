@@ -62,17 +62,17 @@ abstract class API_Controller extends CI_Controller {
         $this->_format();
     }
 
-    // 接口验证
-    private function Verifier() {
-        $this->oauthclient->Access();
-    }
-
     // _get('_format');
     private function _format() {
         $f = strtolower($this->_get(self::PARAMS_FORMAT));
         if (!empty($f) && array_key_exists($f, $this->supportedFormats)) {
             $this->respondFormat = $f;
         }
+    }
+
+    // 接口验证
+    private function Verifier() {
+        $this->oauthclient->Access();
     }
 
     // API Code
@@ -124,5 +124,6 @@ abstract class API_Controller extends CI_Controller {
     protected function _request($key = null) {
         return $this->input->post_get($key);
     }
+
 
 }
