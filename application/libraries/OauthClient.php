@@ -52,7 +52,7 @@ class OauthClient {
         $this->CI->curl->option(CURLOPT_USERAGENT, sprintf('%s (%s) %s', $this->appid, $this->platform, $this->agent));
         $access = $this->CI->curl->simple_post($url, $params);
         $access = json_decode($access, true);
-        $this->role = $access['key'];
+        $this->role = $access['role'];
         $this->key = $this->AnalyseKey($access['key']);
         $this->illegalLevel = $access['illegalLevel'];
         $this->handle = $access['handle'];
@@ -61,7 +61,7 @@ class OauthClient {
     public function AnalyseToken() {
         $this->CI->load->library('encryption');
         $data = str_split($this->token, strlen($this->token) - 4);
-        $token = base64_decode(urldecode($data[0]));
+        $token = base64_decode($data[0]);
         $res = $this->CI->encryption->decrypt($token, array(
             'cipher' => 'aes-128',
             'mode' => 'cbc',

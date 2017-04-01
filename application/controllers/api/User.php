@@ -12,9 +12,16 @@ class User extends API_Controller {
     }
 
     public function index() {
+        echo 'token : '.$this->oauthclient->token . "<br>";
+        echo 'timestamp : '.$this->oauthclient->timestamp . "<br>";
+        echo 'role : '.$this->oauthclient->role . "<br>";
+        echo 'key : '.$this->oauthclient->key . "<br>";
+        echo 'illegalLevel : '.$this->oauthclient->illegalLevel . "<br>";
+        echo 'handle : '.json_encode($this->oauthclient->handle) . "<br>";
         $s = $this->oauthclient->AnalyseToken();
 
         var_dump($s);
+
 
     }
 }

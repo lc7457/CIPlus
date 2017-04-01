@@ -70,7 +70,7 @@ class OauthServer {
         $dataArr = array(
             'code' => $code,
             'cipher_text' => $data,
-            'key' => bin2hex($key),
+            'key' => $key,
             'expires_in' => $timestamp
         );
         if ($this->CI->oauth_track_model->count($whereArr) > 0) {
@@ -209,7 +209,17 @@ class OauthServer {
             'hmac' => false,
         ));
         $key = bin2hex($key);
-        return urlencode(base64_encode($cipher));
+//        $text = base64_decode(urldecode($cipher));
+//        // 解密测试
+//        $text = $this->CI->encryption->decrypt($text, array(
+//            'cipher' => 'aes-128',
+//            'mode' => 'cbc',
+//            'key' => hex2bin($key),
+//            'hmac' => false,
+//        ));
+//        log_message('error', $text);
+        $cipher = urlencode(base64_encode($cipher));
+        return $cipher;
     }
 
 }
