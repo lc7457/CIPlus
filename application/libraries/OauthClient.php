@@ -21,6 +21,7 @@ class OauthClient {
     public $key = '';
     public $illegalLevel = 0;
     public $handle = array();
+    public $securityData = '';
 
     public function __construct() {
         $this->CI =& get_instance();
@@ -60,13 +61,15 @@ class OauthClient {
     public function AnalyseToken() {
         $this->CI->load->library('encryption');
         $data = str_split($this->token, strlen($this->token) - 4);
-        $token = urldecode($data[0]);
-        echo $token;
-        $this->CI->encryption->initialize(
-            array('key' => $this->key)
-        );
-        $res = $this->CI->encryption->decrypt($token);
-        return $res;
+        $token = base64_decode(urldecode($data[0]));
+        $res = $this->CI->encryption->decrypt($token, array(
+            'cipher' => 'aes-128',
+            'mode' => 'cbc',
+            'key' => hex2bin($this->key),
+            'hmac' => false
+        ));
+        $this->securityData = json_decode($res, true);
+        return $this->securityData;
     }
 
     private function AnalyseKey($key) {

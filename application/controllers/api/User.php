@@ -12,12 +12,9 @@ class User extends API_Controller {
     }
 
     public function index() {
-        $this->load->model('oauth_track_model');
-        $r = $this->oauth_track_model->row(array(
-            'key' => $this->oauthclient->key
-        ));
-        echo urldecode($r['cipher_text']);
-        echo "<br>";
-        $this->oauthclient->AnalyseToken();
+        $s = $this->oauthclient->AnalyseToken();
+
+        var_dump($s);
+
     }
 }

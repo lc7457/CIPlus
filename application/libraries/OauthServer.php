@@ -58,7 +58,7 @@ class OauthServer {
         }
         $code = $this->Code();
         $key = '';
-        $data = $this->Cipher($data, $key);
+        $data = $this->Cipher(json_encode($data), $key);
         $timestamp = time() + $this->expire_time;
         $whereArr = array(
             'account' => $account,
@@ -202,11 +202,14 @@ class OauthServer {
     private function Cipher($data, &$key) {
         $this->CI->load->library('encryption');
         $key = $this->CI->encryption->create_key(16);
-        $this->CI->encryption->initialize(
-            array('key' => $key)
-        );
-        $cipher = $this->CI->encryption->encrypt($data);
-        return urlencode($cipher);
+        $cipher = $this->CI->encryption->encrypt($data, array(
+            'cipher' => 'aes-128',
+            'mode' => 'cbc',
+            'key' => $key,
+            'hmac' => false,
+        ));
+        $key = bin2hex($key);
+        return urlencode(base64_encode($cipher));
     }
 
 }
