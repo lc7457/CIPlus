@@ -1,9 +1,17 @@
 */storage/*
 */storage/!index.html
 */config/development
+*/config/development/!index.html
+*/config/testing
+*/config/testing/!index.html
+*/config/production
+*/config/production/!index.html
 */logs/log-*.php
 !*/logs/index.html
 */cache/*
 !*/cache/index.html
 !*/cache/.htaccess
+
+
+# IDE
 /.idea
