@@ -73,6 +73,9 @@ abstract class API_Controller extends CI_Controller {
     // 接口验证
     private function Verifier() {
         $this->oauthclient->Access();
+        if ($this->oauthclient->key) {
+            $this->oauthclient->AnalyseToken();
+        }
     }
 
     // API Code

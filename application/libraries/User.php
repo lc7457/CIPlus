@@ -163,10 +163,9 @@ class User {
      * @return bool
      */
     private function CheckUserExist() {
-        return $this->CI->user_model->CheckUserExist($this->email, $this->phone);
-//        $hasEmail = empty($this->email) ? 0 : $this->CI->user_model->count(array(self::EMAIL_COLUMN => $this->email));
-//        $hasPhone = empty($this->phone) ? 0 : $this->CI->user_model->count(array(self::PHONE_COLUMN => $this->phone));
-//        return $hasEmail > 0 || $hasPhone > 0;
+        $hasEmail = empty($this->email) ? 0 : $this->CI->user_model->count(array(self::EMAIL_COLUMN => $this->email));
+        $hasPhone = empty($this->phone) ? 0 : $this->CI->user_model->count(array(self::PHONE_COLUMN => $this->phone));
+        return $hasEmail > 0 || $hasPhone > 0;
     }
 
     /**

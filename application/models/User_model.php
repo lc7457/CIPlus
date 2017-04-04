@@ -6,10 +6,4 @@ class User_model extends MY_model {
         parent::__construct('user');
     }
 
-    public function CheckUserExist($email = '', $phone = '') {
-        $this->db->where('email', $email);
-        $this->db->or_where('phone', $phone);
-        $query = $this->db->get($this->table);
-        return $query->num_rows();
-    }
 }

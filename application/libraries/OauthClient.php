@@ -50,7 +50,9 @@ class OauthClient {
         $params = $this->AnalysisParameters();
         $this->CI->load->library('curl');
         $this->CI->curl->option(CURLOPT_USERAGENT, sprintf('%s (%s) %s', $this->appid, $this->platform, $this->agent));
+        $this->CI->curl->ssl(false);
         $access = $this->CI->curl->simple_post($url, $params);
+
         $access = json_decode($access, true);
         $this->role = $access['role'];
         $this->key = $this->AnalyseKey($access['key']);
