@@ -19,7 +19,8 @@ class OauthServer {
     private $role = '';
     private $key = '';
     private $illegalLevel = 0;
-    private $handle = array();
+    private $handle = '';
+    private $mismatch = array();
 
     public function __construct() {
         $this->CI =& get_instance();
@@ -114,7 +115,7 @@ class OauthServer {
 
     private function TrackBack($track, $params) {
         if ($track['expires_in'] < time()) {
-            array_push($this->handle, 'Time Out');
+            $this->handle = 'time out';
             //$this->handle = 'Time Out';
             return;
         } else {
@@ -122,17 +123,14 @@ class OauthServer {
             $this->key = $this->Signed($track['key']);
             if ($params['user_agent'] != $track['user_agent']) {
                 $this->illegalLevel++;
-                array_push($this->handle, 'Illegal Agent');
+                array_push($this->mismatch, 'agent');
                 //$this->handle = 'Illegal Agent';
             } elseif ($params['ip'] != $track['ip']) {
                 $this->illegalLevel++;
-                array_push($this->handle, 'Illegal IP');
+                array_push($this->mismatch, 'ip');
             } elseif ($params['device'] != $track['device']) {
                 $this->illegalLevel++;
-                array_push($this->handle, 'Illegal device');
-            }
-            if ($track['expires_in'] - 600 < time()) {
-                array_push($this->handle, 'refresh');
+                array_push($this->mismatch, 'device');
             }
         }
     }

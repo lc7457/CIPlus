@@ -7,6 +7,7 @@ $config['entry'] = '/oauth';
 $config['channel'] = 'outer_url';
 
 $config['appid'] = '';
+$config['secret'] = '';
 $config['platform'] = 'Linux';
 $config['agent'] = '';
 
