@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<form id="reg" action="/passport/user/login?access_token=<?= $token ?>" method="post" onsubmit="return pwmd5();">
+<form id="reg" action="https://passport.jciuc.com/passport/user/login?access_token=<?= $token ?>" method="post" onsubmit="return pwmd5();">
     email: <input type="text" name="email">
     phone <input type="text" name="phone">
     password <input type="text" name="password">
