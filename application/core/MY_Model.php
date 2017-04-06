@@ -14,7 +14,7 @@
  * @author LeeNux
  * @version 1.0
  */
-class MY_Model extends CI_Model {
+abstract class MY_Model extends CI_Model {
     // 数据表名称
     protected $table;
 
@@ -26,6 +26,16 @@ class MY_Model extends CI_Model {
         parent::__construct();
         $this->db = $this->load->database($database, TRUE);
         $this->table = $table;
+    }
+
+    /**
+     * 查询字段
+     * @param string $selected
+     * @return $this
+     */
+    public function select($selected = '*') {
+        $this->db->select($selected);
+        return $this;
     }
 
     /**

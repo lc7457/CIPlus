@@ -20,7 +20,8 @@ class OauthClient {
     public $role = '';
     public $key = '';
     public $illegalLevel = 0;
-    public $handle = array();
+    public $handle = '';
+    public $mismatch = array();
     public $securityData = '';
 
     public function __construct() {
@@ -58,6 +59,7 @@ class OauthClient {
         $this->key = $this->AnalyseKey($access['key']);
         $this->illegalLevel = $access['illegalLevel'];
         $this->handle = $access['handle'];
+        $this->mismatch = $access['mismatch'];
     }
 
     public function AnalyseToken() {
