@@ -38,6 +38,14 @@ abstract class MY_Model extends CI_Model {
         return $this;
     }
 
+    public function order($by = '') {
+        if (!empty($by)) {
+            $by = str_replace("@", " ", $by);
+            $this->db->order_by($by);
+        }
+        return $this;
+    }
+
     /**
      * 添加数据
      * @param $dataArr :(array)插入的数据
@@ -90,14 +98,10 @@ abstract class MY_Model extends CI_Model {
      * @param $orderby :排序条件
      * return:查询结果
      */
-    public function result($whereArr, $page = 1, $num = 10, $orderby = "") {
+    public function result($whereArr, $page = 1, $num = 10) {
         if ($page <= 0) $page = 1;
         $offset = ($page - 1) * $num;
         $this->db->where($whereArr);
-        if (!empty($orderby)) {
-            $orderby = str_replace("@", " ", $orderby);
-            $this->db->order_by($orderby);
-        }
         $query = $this->db->get($this->table, $num, $offset);
         return $query->result_array();
     }
