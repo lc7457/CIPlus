@@ -18,6 +18,7 @@ class User extends API_Controller {
         echo 'key : ' . $this->oauthclient->key . "<br>";
         echo 'illegalLevel : ' . $this->oauthclient->illegalLevel . "<br>";
         echo 'handle : ' . json_encode($this->oauthclient->handle) . "<br>";
-        echo 'security :' . json_encode($this->oauthclient->securityData);
+        echo 'security :' . json_encode($this->oauthclient->securityData) . "<br>";
+        echo 'mismatch :' . json_encode($this->oauthclient->mismatch);
     }
 }
