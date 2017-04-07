@@ -1,5 +1,4 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 // 上传文件路径
 $config['file_save_path'] = dirname(APPPATH) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR;
 // 临时文件路径
@@ -18,9 +17,11 @@ $config['fetch_hash'] = TRUE;
 $config['rename'] = array('type' => 'hash', 'keep_ext' => TRUE);
 // 上传文件的用途及其允许的扩展名
 $config['usages'] = array(
-    'image' => array('jpg', 'png', 'gif', 'bmp', 'jpeg'),
-    'uvw' => array('png'),
     'attach' => array(),
+    'image' => array('jpg', 'png', 'gif', 'bmp', 'jpeg'),
     'model' => array('obj'),
+    'uvw' => array('png'),
 );
+
+
 

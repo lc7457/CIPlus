@@ -1,4 +1,5 @@
 <?php
+
 namespace CIPlus;
 
 /**
@@ -45,7 +46,7 @@ class Upload {
     public function LoadUserConfig($params = array()) {
         if (count($params) > 0) {
             foreach ($params as $key => $val) {
-                if (isset($this->$key)) {
+                if (property_exists($this, $key)) {
                     $this->$key = $val;
                 }
             }

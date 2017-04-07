@@ -8,7 +8,7 @@ abstract class MY_Controller extends API_Controller {
     public $isLogin = false;
     public $isAdmin = false;
 
-    public function __construct($config) {
+    public function __construct(array $config = array()) {
         parent::__construct($config);
         $this->AnalysisData();
     }
