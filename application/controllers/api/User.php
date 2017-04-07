@@ -1,24 +1,42 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require APPPATH . 'core/API_Controller.php';
+class User extends MY_Controller {
+    private $power = array(
+        'open' => array(),
+        'user' => array(),
+        'admin' => array('more')
+    );
 
-class User extends API_Controller {
     public function __construct() {
         parent::__construct(array(
-            'tokenVerifier' => true,
-            'strict' => false
+            'tokenVerifier' => false,
+            'strict' => true
         ));
     }
 
-    public function index() {
-        echo 'token : ' . $this->oauthclient->token . "<br>";
-        echo 'timestamp : ' . $this->oauthclient->timestamp . "<br>";
-        echo 'role : ' . $this->oauthclient->role . "<br>";
-        echo 'key : ' . $this->oauthclient->key . "<br>";
-        echo 'illegalLevel : ' . $this->oauthclient->illegalLevel . "<br>";
-        echo 'handle : ' . json_encode($this->oauthclient->handle) . "<br>";
-        echo 'security :' . json_encode($this->oauthclient->securityData) . "<br>";
-        echo 'mismatch :' . json_encode($this->oauthclient->mismatch);
+    public function __call($method = 'Index', $params) {
+        $this->$method($params);
     }
+
+    public function Index() {
+
+    }
+
+    public function More() {
+
+    }
+
+    public function Add() {
+
+    }
+
+    public function Edit() {
+
+    }
+
+    public function Delete() {
+
+    }
+
 }

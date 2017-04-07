@@ -1,10 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require APPPATH . 'core/API_Controller.php';
 
 /**
  * 全站通行证
  */
+require_once APPPATH . 'core/API_Controller.php';
+
 class Passport extends API_Controller {
     public function __construct() {
         parent::__construct(array(

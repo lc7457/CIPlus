@@ -27,8 +27,8 @@ abstract class API_Controller extends CI_Controller {
         $this->SetConf($config);
         $this->AnalysisParameters();
         $this->load->library('format');
+        $this->load->library('OauthClient');
         if ($this->tokenVerifier) {
-            $this->load->library('OauthClient');
             $this->Verifier();
         }
         ob_start();
@@ -71,7 +71,7 @@ abstract class API_Controller extends CI_Controller {
     }
 
     // 接口验证
-    private function Verifier() {
+    protected function Verifier() {
         $this->oauthclient->Access();
         if ($this->oauthclient->key) {
             $this->oauthclient->AnalyseToken();

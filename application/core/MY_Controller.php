@@ -3,36 +3,83 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 require_once APPPATH . 'core/API_Controller.php';
 
 abstract class MY_Controller extends API_Controller {
+    protected $uid = '';
+    protected $data = array();
+    public $isLogin = false;
+    public $isAdmin = false;
+
     public function __construct($config) {
         parent::__construct($config);
+        $this->AnalysisData();
     }
 
-    public function Uid() {
-        $data = is_array($this->oauthclient->securityData) ? $this->oauthclient->securityData : json_decode($this->oauthclient->securityData, true);
-        if (is_array($data) && array_key_exists('uid', $data)) {
-            return $data['uid'];
+    /**
+     * 接收数据
+     */
+    protected function Request() {
+        $post = $this->_request();
+        foreach ($post as $key => $val) {
+            if (property_exists($this, $key)) { // php5.3+
+                $this->$key = $val;
+            }
         }
-        return false;
     }
 
-    public function CheckUser($respond = true) {
-        $uid = $this->Uid();
-        $bool = !empty($uid);
-        if ($respond && !$bool) {
+    /**
+     * 解析关键数据
+     */
+    private function AnalysisData() {
+        $this->data = is_array($this->oauthclient->securityData) ? $this->oauthclient->securityData : json_decode($this->oauthclient->securityData, true);
+        $this->UserType();
+        $this->Uid();
+    }
+
+    /**
+     * 检测用户类型
+     * @return string
+     */
+    private function UserType() {
+        if ($this->oauthclient->role === 'admin') {
+            $this->isAdmin = true;
+        } elseif ($this->oauthclient->role === 'user') {
+            $this->isAdmin = false;
+        } else {
+            $isLogin = false;
+        }
+        return $this->oauthclient->role;
+    }
+
+    /**
+     * 解析UID
+     */
+    private function Uid() {
+        if (is_array($this->data) && array_key_exists('uid', $this->data)) {
+            $this->uid = $this->data['uid'];
+            $this->isLogin = true;
+        }
+    }
+
+    /**
+     * 检测是否已经登录
+     * @param bool $respond
+     * @return bool
+     */
+    public function CheckLogin($respond = true) {
+        if ($respond && !$this->isLogin) {
             $this->SetCode('40098');
             $this->Respond();
         }
-        return $bool;
+        return $this->isLogin;
     }
 
     public function Debug() {
-        echo 'token : ' . $this->oauthclient->token . "\n" . "<br>";
-        echo 'timestamp : ' . $this->oauthclient->timestamp . "\n" . "<br>";
+        echo 'token : ' . $this->oauthclient->token . "\n";
+        echo 'timestamp : ' . $this->oauthclient->timestamp . "\n";
         echo 'role : ' . $this->oauthclient->role . "\n" . "<br>";
         echo 'key : ' . $this->oauthclient->key . "\n" . "<br>";
-        echo 'illegalLevel : ' . $this->oauthclient->illegalLevel . "\n" . "<br>";
-        echo 'handle : ' . json_encode($this->oauthclient->handle) . "\n" . "<br>";
-        echo 'security :' . json_encode($this->oauthclient->securityData) . "\n" . "<br>";
-        echo 'mismatch:' . json_encode($this->oauthclient->mismatch) . "\n" . "<br>";
+        echo 'illegalLevel : ' . $this->oauthclient->illegalLevel . "\n";
+        echo 'handle : ' . json_encode($this->oauthclient->handle) . "\n";
+        echo 'security :' . json_encode($this->oauthclient->securityData) . "\n";
+        echo 'mismatch:' . json_encode($this->oauthclient->mismatch) . "\n";
     }
 }
