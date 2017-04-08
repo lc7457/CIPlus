@@ -18,6 +18,7 @@ class Upload extends MY_Controller {
         ));
         $this->LoadConf();
         $this->CheckLogin();
+        $this->load->model('storage_model');
     }
 
     /**

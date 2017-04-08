@@ -72,7 +72,7 @@ DEMO2:
     ZJSDTY.Upload = function () {
         var _this = this;
 
-        this.acceptUrl = "/upload/image/stream";
+        this.acceptUrl = "/api/upload/image/stream";
         this.filePath = "/storage/image/";
 
         this.onCompleted = function () {
