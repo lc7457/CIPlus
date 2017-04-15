@@ -7,10 +7,21 @@ abstract class MY_Controller extends API_Controller {
     protected $data = array();
     public $isLogin = false;
     public $isAdmin = false;
+    private $powerKey = 'none';
 
-    public function __construct(array $config = array()) {
+    protected $checkLogin = false;
+    protected $checkPower = false;
+
+    public function __construct($config) {
         parent::__construct($config);
+        $this->SetConf($config);
         $this->AnalysisData();
+        if ($this->checkLogin) {
+            $this->CheckLogin();
+        }
+        if ($this->checkPower) {
+            $this->CheckPower();
+        }
     }
 
     /**
@@ -41,8 +52,10 @@ abstract class MY_Controller extends API_Controller {
     private function UserType() {
         if ($this->oauthclient->role === 'admin') {
             $this->isAdmin = true;
+            $this->powerKey = 'admin';
         } elseif ($this->oauthclient->role === 'user') {
             $this->isAdmin = false;
+            $this->powerKey = 'user';
         } else {
             $isLogin = false;
         }
@@ -61,15 +74,24 @@ abstract class MY_Controller extends API_Controller {
 
     /**
      * 检测是否已经登录
-     * @param bool $respond
-     * @return bool
      */
-    public function CheckLogin($respond = true) {
-        if ($respond && !$this->isLogin) {
-            $this->SetCode('40098');
+    public function CheckLogin() {
+        if (!$this->isLogin) {
+            $this->SetCode(40098);
             $this->Respond();
         }
-        return $this->isLogin;
+    }
+
+    /**
+     * 检测是否具有权限
+     */
+    public function CheckPower() {
+        $power = constant($this->router->class . "::POWER_" . strtoupper($this->powerKey));
+        $key = strtolower($this->router->method);
+        if (!in_array($key, $power)) {
+            $this->SetCode(40097);
+            $this->Respond();
+        }
     }
 
     public function Debug() {

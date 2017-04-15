@@ -3,11 +3,11 @@ require_once FCPATH . 'plus/Validated.php';
 require_once FCPATH . 'plus/Number.php';
 
 class User {
-    const EMAIL_COLUMN = 'email';
-    const PHONE_COLUMN = 'phone';
-    const PASSWORD_COLUMN = 'password';
-    const VERSION_COLUMN = 'version';
-    const UID_COLUMN = 'uid';
+    const COLUMN_EMAIL = 'email';
+    const COLUMN_PHONE = 'phone';
+    const COLUMN_PASSWORD = 'password';
+    const COLUMN_VERSION = 'version';
+    const COLUMN_UID = 'uid';
 
     const PREFIX_UID = 'CU'; // Ceramic User
 
@@ -38,7 +38,7 @@ class User {
      */
     public function InitConfig($config) {
         foreach ($config as $key => $val) {
-            if (isset($this->$key)) {
+            if (property_exists($this, $key)) {
                 $this->$key = $val;
             }
         }
@@ -58,10 +58,10 @@ class User {
             return 40101;
         } else {
             $value = array(
-                self::EMAIL_COLUMN => $this->email,
-                self::PHONE_COLUMN => $this->phone,
-                self::PASSWORD_COLUMN => $this->EncryptPassword(),
-                self::VERSION_COLUMN => $this->encryptVersion
+                self::COLUMN_EMAIL => $this->email,
+                self::COLUMN_PHONE => $this->phone,
+                self::COLUMN_PASSWORD => $this->EncryptPassword(),
+                self::COLUMN_VERSION => $this->encryptVersion
             );
             $id = $this->CI->user_model->insert($value);
             $this->InitUid($id);
@@ -107,13 +107,13 @@ class User {
     private function ValidPassword() {
         $whereArr = array();
         if (!empty($this->email)) {
-            $whereArr[self::EMAIL_COLUMN] = $this->email;
+            $whereArr[self::COLUMN_EMAIL] = $this->email;
         } elseif (!empty($this->phone)) {
-            $whereArr[self::PHONE_COLUMN] = $this->phone;
+            $whereArr[self::COLUMN_PHONE] = $this->phone;
         }
         $ub = $this->CI->user_model->row($whereArr);
-        if ($this->DecryptPassword($ub[self::PASSWORD_COLUMN]) === $this->password) {
-            $this->uid = $ub[self::UID_COLUMN];
+        if ($this->DecryptPassword($ub[self::COLUMN_PASSWORD]) === $this->password) {
+            $this->uid = $ub[self::COLUMN_UID];
             return true;
         }
         return false;
@@ -163,8 +163,8 @@ class User {
      * @return bool
      */
     private function CheckUserExist() {
-        $hasEmail = empty($this->email) ? 0 : $this->CI->user_model->count(array(self::EMAIL_COLUMN => $this->email));
-        $hasPhone = empty($this->phone) ? 0 : $this->CI->user_model->count(array(self::PHONE_COLUMN => $this->phone));
+        $hasEmail = empty($this->email) ? 0 : $this->CI->user_model->count(array(self::COLUMN_EMAIL => $this->email));
+        $hasPhone = empty($this->phone) ? 0 : $this->CI->user_model->count(array(self::COLUMN_PHONE => $this->phone));
         return $hasEmail > 0 || $hasPhone > 0;
     }
 
@@ -176,6 +176,7 @@ class User {
     private function InitUid($n) {
         $uid = self::PREFIX_UID . $this->number->Zerofill($n);
         $this->CI->user_model->update(array('uid' => $uid), array('id' => $n));
+        $this->InitUserInfo($uid);
         return $uid;
     }
 
@@ -196,5 +197,22 @@ class User {
     private function DecryptPassword($password) {
         $this->CI->load->library('encrypt');
         return $this->CI->encrypt->decode($password, $this->encryptKey);
+    }
+
+    /**
+     * 初始化用户数据
+     * @param $uid
+     * @return array
+     */
+    private function InitUserInfo($uid) {
+        $this->CI->load->model('user_info_model');
+        $whereArr = array(
+            'uid' => $uid,
+            'nickname' => $uid,
+            'createtime' => time()
+        );
+
+        $this->CI->user_info_model->insert($whereArr);
+        return $whereArr;
     }
 }

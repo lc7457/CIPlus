@@ -1,4 +1,5 @@
-<?php defined('BASEPATH') or exit ('No direct script access allowed');
+<?php
+defined('BASEPATH') or exit ('No direct script access allowed');
 
 /**
  * 收件人信息接口
@@ -22,11 +23,11 @@ class Addressee extends MY_Controller {
     public function __construct() {
         parent::__construct(array(
             'tokenVerifier' => true, // 是否验证token
-            'strict' => true //是否开启严格模式，严格模式只能输出API信息
+            'strict' => true,//是否开启严格模式，严格模式只能输出API信息
+            'checkLogin' => true
         ));
         $this->load->model('user_addressee_model');
         $this->Request();
-        $this->CheckLogin();
     }
 
 
@@ -143,7 +144,7 @@ class Addressee extends MY_Controller {
     }
 
     /**
-     * 编辑收件人信息
+     * 编辑收件人信息+
      */
     public function Edit() {
         $this->Validate();

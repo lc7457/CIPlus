@@ -49,9 +49,9 @@ abstract class API_Controller extends CI_Controller {
     }
 
     // 初始化自定义配置,实例化时传入配置数组，可以覆盖CI config
-    private function SetConf(array $config = array()) {
+    protected function SetConf(array $config = array()) {
         foreach ($config as $key => $val) {
-            if (isset($this->$key)) {
+            if (property_exists($this, $key)) {
                 $this->$key = $val;
             }
         }
