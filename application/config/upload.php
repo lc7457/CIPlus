@@ -8,7 +8,7 @@ $config['create_usage_folder'] = TRUE;
 // 按用户标识创建文件夹
 $config['create_user_folder'] = FALSE;
 // 允许上传的文件夹大小
-$config['max_file_size'] = 1024 * 1024 * 10;
+$config['max_file_size'] = 4096 * 4096 * 10;
 // 允许同时上传的文件数
 $config['max_file_num'] = 1;
 // 提取文件hash

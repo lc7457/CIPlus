@@ -13,12 +13,11 @@ class Upload extends MY_Controller {
 
     public function __construct() {
         parent::__construct(array(
-            'tokenVerifier' => true, // 是否验证token
-            'strict' => true //是否开启严格模式，严格模式只能输出API信息
+            'tokenVerifier' => false, // 是否验证token
+            'strict' => false //是否开启严格模式，严格模式只能输出API信息
         ));
-        $this->LoadConf();
-        $this->CheckLogin();
         $this->load->model('storage_model');
+        $this->LoadConf();
     }
 
     /**
@@ -41,16 +40,32 @@ class Upload extends MY_Controller {
     }
 
     public function Image($type = 'file') {
-        $file = $this->input->post('file');
-        if (empty($file)) {
-            exit;
-        }
         if ($type === "file") {
             $this->upload->File($_FILES, 'image');
         } elseif ($type === "stream") {
+            $file = $this->input->post('file');
+            if (empty($file)) {
+                exit;
+            }
             $this->upload->Base64($file, 'image');
         }
-        $this->file = $this->upload->FileInfo();
+        $re = $this->KeepImage();
+    }
+
+    private function KeepImage() {
+        $re = false;
+        $fileInfo = $this->upload->FileInfo();
+        if (!$this->CheckExistFile()) {
+            $fileInfo['type'] = 'image';
+            $re = $this->storage_model->insert($fileInfo);
+        }
+        return $re;
+    }
+
+    private function CheckExistFile() {
+        $fileInfo = $this->upload->FileInfo();
+        $num = $this->storage_model->count(array('hash' => $fileInfo['hash']));
+        return $num > 0;
     }
 
 
