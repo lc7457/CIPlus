@@ -49,7 +49,10 @@ class Upload extends MY_Controller {
             }
             $this->upload->Base64($file, 'image');
         }
-        $re = $this->KeepImage();
+        $data = $this->upload->FileInfo();
+        $this->SetCode(20000);
+        $this->SetData($data);
+        $this->Respond();
     }
 
     private function KeepImage() {

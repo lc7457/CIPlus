@@ -8,7 +8,7 @@ $config['create_usage_folder'] = TRUE;
 // 按用户标识创建文件夹
 $config['create_user_folder'] = FALSE;
 // 允许上传的文件夹大小
-$config['max_file_size'] = 4096 * 4096 * 10;
+$config['max_file_size'] = 10 * 1024 * 1024;
 // 允许同时上传的文件数
 $config['max_file_num'] = 1;
 // 提取文件hash
@@ -23,5 +23,9 @@ $config['usages'] = array(
     'uvw' => array('png'),
 );
 
+// 创建缩略图
+$config['thumb_folder'] = 'thumb';
+$config['thumb_factor'] = array(360, 720, 1080);
+$config['thumb_save'] = true;
 
 
