@@ -1,8 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-$config['tokenVerifier'] = TRUE;
+// 严格模式，开启后无法输出其他内容
 $config['strict'] = TRUE;
-
+// 默认返回的API数据格式
 $config['respondFormat'] = 'json';
+// 支持的API数据格式
 $config['supportedFormats'] = [
     'json' => 'application/json',
     'array' => 'application/json',

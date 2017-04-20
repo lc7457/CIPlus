@@ -10,11 +10,9 @@ abstract class API_Controller extends CI_Controller {
 
     const PARAMS_FORMAT = '_format';
 
-    private $tokenVerifier = true; // 是否验证token
     private $strict = true; // 是否打开严格模式，打开后除了接口信息其他输出无效
     private $respondFormat = 'json'; // 默认数据格式
     private $supportedFormats = array(); // 可被支持的数据格式
-
 
     private $code = 40000;
     private $message = 'Access API Failed';
@@ -28,9 +26,6 @@ abstract class API_Controller extends CI_Controller {
         $this->AnalysisParameters();
         $this->load->library('format');
         $this->load->library('OauthClient');
-        if ($this->tokenVerifier) {
-            $this->Verifier();
-        }
         ob_start();
     }
 
@@ -100,6 +95,16 @@ abstract class API_Controller extends CI_Controller {
     public function Respond() {
         if ($this->strict) {
             ob_end_clean();
+        }
+        $args = func_get_args();
+        foreach ($args as $arg) {
+            if (is_numeric($arg)) {
+                $this->SetCode($arg);
+            } elseif (is_string($arg)) {
+                $this->SetMessage($arg);
+            } elseif (is_array($arg)) {
+                $this->SetData($arg);
+            }
         }
         $arr = array(
             self::KEY_CODE => $this->code,

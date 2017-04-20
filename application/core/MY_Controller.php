@@ -8,6 +8,7 @@ abstract class MY_Controller extends API_Controller {
     public $isLogin = false;
     public $isAdmin = false;
     private $powerKey = 'none';
+    private $tokenVerifier = true;
 
     protected $checkLogin = false;
     protected $checkPower = false;
@@ -16,6 +17,9 @@ abstract class MY_Controller extends API_Controller {
         parent::__construct($config);
         $this->SetConf($config);
         $this->AnalysisData();
+        if ($this->tokenVerifier) {
+            $this->Verifier();
+        }
         if ($this->checkLogin) {
             $this->CheckLogin();
         }

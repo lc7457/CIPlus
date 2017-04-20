@@ -23,7 +23,7 @@ $config['usages'] = array(
     'uvw' => array('png'),
 );
 
-// 创建缩略图
+// 缩略图配置
 $config['thumb_folder'] = 'thumb';
 $config['thumb_factor'] = array(360, 720, 1080);
 $config['thumb_save'] = true;
