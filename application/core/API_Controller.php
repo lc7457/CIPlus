@@ -79,16 +79,19 @@ abstract class API_Controller extends CI_Controller {
         if ($inDict) {
             $this->message = $this->lang->line('m' . $code, FALSE);
         }
+        return $this;
     }
 
     // API Message
     protected function SetMessage($message) {
         $this->message = $message;
+        return $this;
     }
 
     // API Data
     protected function SetData(array $data = array()) {
         $this->data = $data;
+        return $this;
     }
 
     // 响应事件，最后执行
