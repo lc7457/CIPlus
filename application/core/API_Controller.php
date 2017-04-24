@@ -140,7 +140,7 @@ abstract class API_Controller extends CI_Controller {
     }
 
     // 构造参数验证方法，若存在该特殊方法则进行调用并验证参数
-    protected function VerifyParamsHandle($key, $value) {
+    protected function VerifyParamsHandle($key, &$value) {
         $verifyMethod = 'Verify_' . $key;
         if (method_exists($this, $verifyMethod)) {
             $this->$verifyMethod($value);

@@ -21,7 +21,13 @@ class Content extends MY_Controller {
     }
 
     public function More() {
-        $this->Request(array());
+        $this->Request(array(), array('p', 'n'));
+        echo $p = $this->optional['p'];
+        //echo $n = $this->optional['n'];
+    }
+
+    protected function Verify_p($value) {
+        $value = 1;
     }
 
 }
