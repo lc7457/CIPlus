@@ -12,8 +12,8 @@ class Content extends MY_Controller {
     }
 
     public function Index() {
-        $this->Request(array('id'), array('author'));
-        $data = $this->content_model->row($this->required);
+        $this->Request(array('id'));
+        $data = $this->content_model->row($this->RequestData());
         if (!empty($data)) {
             $this->SetCode(20000);
         }

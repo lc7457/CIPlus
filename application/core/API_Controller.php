@@ -21,8 +21,8 @@ abstract class API_Controller extends CI_Controller {
     private $message = 'Access API Failed';
     private $data = array();
 
-    protected $required; // 必填参数
-    protected $optional; // 选填参数
+    protected $required = array(); // 必填参数
+    protected $optional = array(); // 选填参数
 
     public function __construct() {
         parent::__construct();
