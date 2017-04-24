@@ -25,7 +25,6 @@ abstract class API_Controller extends CI_Controller {
         $this->SetConf($config);
         $this->AnalysisParameters();
         $this->load->library('format');
-        $this->load->library('OauthClient');
         ob_start();
     }
 
@@ -62,14 +61,6 @@ abstract class API_Controller extends CI_Controller {
         $f = strtolower($this->_get(self::PARAMS_FORMAT));
         if (!empty($f) && array_key_exists($f, $this->supportedFormats)) {
             $this->respondFormat = $f;
-        }
-    }
-
-    // 接口验证
-    protected function Verifier() {
-        $this->oauthclient->Access();
-        if ($this->oauthclient->key) {
-            $this->oauthclient->AnalyseToken();
         }
     }
 
@@ -119,6 +110,16 @@ abstract class API_Controller extends CI_Controller {
         $this->output->set_output($this->format->factory($arr)->$toFormat());
         $this->output->_display();
         exit;
+    }
+
+    // 使用属性绑定接口数据
+    protected function Request() {
+        $post = $this->_request();
+        foreach ($post as $key => $val) {
+            if (property_exists($this, $key)) { // php5.3+
+                $this->$key = $val;
+            }
+        }
     }
 
     // get

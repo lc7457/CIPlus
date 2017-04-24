@@ -8,8 +8,8 @@ abstract class MY_Controller extends API_Controller {
     public $isLogin = false;
     public $isAdmin = false;
     private $powerKey = 'none';
-    private $tokenVerifier = true;
 
+    protected $tokenVerifier = true;
     protected $checkLogin = false;
     protected $checkPower = false;
 
@@ -17,6 +17,7 @@ abstract class MY_Controller extends API_Controller {
         parent::__construct($config);
         $this->SetConf($config);
         $this->AnalysisData();
+        $this->load->library('OauthClient');
         if ($this->tokenVerifier) {
             $this->Verifier();
         }
@@ -28,15 +29,11 @@ abstract class MY_Controller extends API_Controller {
         }
     }
 
-    /**
-     * 接收数据
-     */
-    protected function Request() {
-        $post = $this->_request();
-        foreach ($post as $key => $val) {
-            if (property_exists($this, $key)) { // php5.3+
-                $this->$key = $val;
-            }
+    // 接口验证
+    protected function Verifier() {
+        $this->oauthclient->Access();
+        if ($this->oauthclient->key) {
+            $this->oauthclient->AnalyseToken();
         }
     }
 
