@@ -1,5 +1,4 @@
-<?php
-defined('BASEPATH') or exit ('No direct script access allowed');
+<?php defined('BASEPATH') or exit ('No direct script access allowed');
 
 /**
  * 收件人信息接口

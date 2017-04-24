@@ -1,4 +1,4 @@
-<?php
+<?php defined('BASEPATH') or exit ('No direct script access allowed');
 
 /**
  * API 控制器
@@ -8,21 +8,26 @@ abstract class API_Controller extends CI_Controller {
     const KEY_MESSAGE = 'message';
     const KEY_DATA = 'data';
 
+    // 配置全局参数变量名称：接收API返回数据格式
     const PARAMS_FORMAT = '_format';
 
+    // 详见config/api.php
     private $strict = true; // 是否打开严格模式，打开后除了接口信息其他输出无效
     private $respondFormat = 'json'; // 默认数据格式
     private $supportedFormats = array(); // 可被支持的数据格式
 
+    // API默认返回数据
     private $code = 40000;
     private $message = 'Access API Failed';
     private $data = array();
 
-    public function __construct(array $config = array()) {
+    protected $required; // 必填参数
+    protected $optional; // 选填参数
+
+    public function __construct() {
         parent::__construct();
         $this->lang->load('api_message');
         $this->LoadConf();
-        $this->SetConf($config);
         $this->AnalysisParameters();
         $this->load->library('format');
         ob_start();
@@ -56,7 +61,7 @@ abstract class API_Controller extends CI_Controller {
         $this->_format();
     }
 
-    // _get('_format');
+    // 配置全局参数变量：API返回数据格式 _get('_format');
     private function _format() {
         $f = strtolower($this->_get(self::PARAMS_FORMAT));
         if (!empty($f) && array_key_exists($f, $this->supportedFormats)) {
@@ -113,13 +118,38 @@ abstract class API_Controller extends CI_Controller {
     }
 
     // 使用属性绑定接口数据
-    protected function Request() {
-        $post = $this->_request();
-        foreach ($post as $key => $val) {
-            if (property_exists($this, $key)) { // php5.3+
-                $this->$key = $val;
+    protected function Request($required = array(), $optional = array(), $method = 'request') {
+        $method = '_' . $method;
+        $params = $this->$method();
+        foreach ($required as $key) {
+            if (empty($params[$key])) {
+                $this->Respond(40001);
+            } else {
+                $this->VerifyParamsHandle($key, $params[$key]);
+                $this->required[$key] = $params[$key];
+
             }
         }
+        foreach ($optional as $key) {
+            if (array_key_exists($key, $params)) {
+                $this->VerifyParamsHandle($key, $params[$key]);
+                $this->optional[$key] = $params[$key];
+            }
+        }
+        return $this;
+    }
+
+    // 构造参数验证方法，若存在该特殊方法则进行调用并验证参数
+    protected function VerifyParamsHandle($key, $value) {
+        $verifyMethod = 'Verify_' . $key;
+        if (method_exists($this, $verifyMethod)) {
+            $this->$verifyMethod($value);
+        }
+    }
+
+    // 返回所有的合法参数
+    protected function RequestData() {
+        return array_merge($this->required, $this->optional);
     }
 
     // get

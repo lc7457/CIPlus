@@ -1,5 +1,4 @@
-<?php
-defined('BASEPATH') or exit ('No direct script access allowed');
+<?php defined('BASEPATH') or exit ('No direct script access allowed');
 require_once APPPATH . 'core/API_Controller.php';
 
 abstract class MY_Controller extends API_Controller {
@@ -9,17 +8,17 @@ abstract class MY_Controller extends API_Controller {
     public $isAdmin = false;
     private $powerKey = 'none';
 
-    protected $tokenVerifier = true;
-    protected $checkLogin = false;
-    protected $checkPower = false;
+    protected $checkToken = true;
+    protected $checkLogin = true;
+    protected $checkPower = true;
 
     public function __construct($config) {
-        parent::__construct($config);
+        parent::__construct();
         $this->SetConf($config);
-        $this->AnalysisData();
         $this->load->library('OauthClient');
-        if ($this->tokenVerifier) {
+        if ($this->checkToken) {
             $this->Verifier();
+            $this->AnalysisData();
         }
         if ($this->checkLogin) {
             $this->CheckLogin();
