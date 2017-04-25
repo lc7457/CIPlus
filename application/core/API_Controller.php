@@ -155,14 +155,14 @@ abstract class API_Controller extends CI_Controller {
     /**
      * 过滤数据
      * @param $arr
-     * @param bool $is true：差集；false：交集
+     * @param bool $is true：交集；false：差集
      * @return array
      */
     protected function FilterData($arr, $is = true) {
         if ($is) {
-            return array_diff_key($this->RequestData(), array_flip($arr));
-        } else {
             return array_intersect_key($this->RequestData(), array_flip($arr));
+        } else {
+            return array_diff_key($this->RequestData(), array_flip($arr));
         }
     }
 
