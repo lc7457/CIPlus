@@ -22,12 +22,10 @@ class Content extends MY_Controller {
 
     public function More() {
         $this->Request(array(), array('p', 'n'));
-        echo $p = $this->optional['p'];
+//        echo $p = $this->optional['p'];
         //echo $n = $this->optional['n'];
-    }
-
-    protected function Verify_p($value) {
-        $value = 1;
+        $arr = $this->FilterData(array('p', 's'), true);
+        print_r($arr);
     }
 
 }
