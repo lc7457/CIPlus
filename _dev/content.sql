@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50547
 File Encoding         : 65001
 
-Date: 2017-04-24 17:23:44
+Date: 2017-04-26 17:48:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -28,10 +28,13 @@ CREATE TABLE `content` (
   `createtime` int(10) DEFAULT NULL COMMENT '创建时间',
   `link` text COMMENT '原文链接',
   `cover` text COMMENT '封面图片',
-  `status` tinyint(1) unsigned DEFAULT '0' COMMENT '状态(0冻结，1正常）',
   `type` varchar(20) DEFAULT NULL COMMENT '内容类型',
+  `rc` tinyint(1) DEFAULT '0' COMMENT '是否推荐',
+  `sort` tinyint(2) DEFAULT '0' COMMENT '排序',
+  `language` varchar(20) DEFAULT 'zh_CN' COMMENT '语言',
+  `status` tinyint(1) unsigned DEFAULT '0' COMMENT '状态(0冻结，1正常）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='内容表：基础表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='内容表：基础表';
 
 -- ----------------------------
 -- Table structure for content_media
@@ -44,10 +47,9 @@ CREATE TABLE `content_media` (
   `type` varchar(10) DEFAULT NULL COMMENT '内容类型',
   `link` text COMMENT '源链接',
   `sort` int(10) unsigned DEFAULT '0' COMMENT '排序',
-  `language` varchar(20) DEFAULT '' COMMENT '语言类型',
   `content_id` int(10) unsigned DEFAULT NULL COMMENT '内容ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='内容表：多媒体';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='内容表：多媒体';
 
 -- ----------------------------
 -- Table structure for content_rtf
@@ -57,11 +59,9 @@ CREATE TABLE `content_rtf` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '序列ID',
   `title` varchar(50) DEFAULT NULL COMMENT '子标题',
   `content` text COMMENT '内容',
-  `type` varchar(10) DEFAULT NULL COMMENT '内容类型',
   `link` text COMMENT '源链接',
   `sort` int(10) unsigned DEFAULT '0' COMMENT '排序',
-  `language` varchar(20) DEFAULT '' COMMENT '语言类型',
   `content_id` int(10) unsigned DEFAULT NULL COMMENT '内容ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='内容表：富文本';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='内容表：富文本';
 SET FOREIGN_KEY_CHECKS=1;
