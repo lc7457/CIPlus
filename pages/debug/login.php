@@ -13,9 +13,9 @@
     <input type="submit">
 </form>
 管理员登录：
-<form id="reg" action="https://passport.jciuc.com/passport/admin/login" method="post" onsubmit="return pwmd5();">
+<form id="reg" action="https://passport.jciuc.com/passport/admin/login" method="post" onsubmit="return apwmd5();">
     ID:<input type="text" name="admin">
-    password： <input type="text" name="password">
+    password： <input type="text" id="password" name="password">
     <input type="submit">
 </form>
 <script type="text/javascript" src="/assets/jquery/jquery-3.1.1.min.js"></script>
@@ -24,6 +24,10 @@
     function pwmd5() {
         var pw = $("input[name=password]").val();
         $("input[name=password]").val($.md5(pw));
+    }
+    function apwmd5() {
+        var pw = $("#password").val();
+        $("#password").val($.md5(pw));
     }
 </script>
 </body>

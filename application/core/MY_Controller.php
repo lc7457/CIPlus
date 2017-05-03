@@ -18,21 +18,21 @@ abstract class MY_Controller extends API_Controller {
         $this->load->library('OauthClient');
         if ($this->checkToken) {
             $this->Verifier();
-            $this->AnalysisData();
-        }
-        if ($this->checkLogin) {
-            $this->CheckLogin();
-        }
-        if ($this->checkPower) {
-            $this->CheckPower();
+            if ($this->checkLogin) {
+                $this->CheckLogin();
+            }
+            if ($this->checkPower) {
+                $this->CheckPower();
+            }
         }
     }
 
     // 接口验证
     protected function Verifier() {
-        $this->oauthclient->Access();
+        $this->oauthclient->Connect();
         if ($this->oauthclient->key) {
-            $this->oauthclient->AnalyseToken();
+            $this->oauthclient->TokenDecode();
+            $this->AnalysisData();
         }
     }
 
@@ -95,13 +95,15 @@ abstract class MY_Controller extends API_Controller {
     }
 
     public function Debug() {
-        echo 'token : ' . $this->oauthclient->token . "\n";
-        echo 'timestamp : ' . $this->oauthclient->timestamp . "\n";
-        echo 'role : ' . $this->oauthclient->role . "\n" . "<br>";
-        echo 'key : ' . $this->oauthclient->key . "\n" . "<br>";
-        echo 'illegalLevel : ' . $this->oauthclient->illegalLevel . "\n";
-        echo 'handle : ' . json_encode($this->oauthclient->handle) . "\n";
-        echo 'security :' . json_encode($this->oauthclient->securityData) . "\n";
-        echo 'mismatch:' . json_encode($this->oauthclient->mismatch) . "\n";
+        echo 'token : ' . $this->oauthclient->token . "<br>";
+        echo 'timestamp : ' . $this->oauthclient->timestamp . "<br>";
+        echo 'role : ' . $this->oauthclient->role . "<br>";
+        echo 'key : ' . $this->oauthclient->key . "<br>";
+        echo 'illegalLevel : ' . $this->oauthclient->illegalLevel . "<br>";
+        echo 'handle : ' . json_encode($this->oauthclient->handle) . "<br>";
+        echo 'security :' . json_encode($this->oauthclient->securityData) . "<br>";
+        echo 'mismatch:' . json_encode($this->oauthclient->mismatch) . "<br>";
+        echo 'uid:' . $this->uid;
+        exit;
     }
 }

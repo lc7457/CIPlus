@@ -8,8 +8,9 @@ class Content_model extends MY_model {
     // 冻结数据
     public function freeze($whereIn) {
         $dataArr['status'] = 0;
-        $this->db->where_in($whereIn);
+        $this->db->where_in('id', $whereIn);
         $this->db->update($this->table, $dataArr);
+        log_message('error', $this->db->last_query());
         return $this->db->affected_rows();
     }
 }

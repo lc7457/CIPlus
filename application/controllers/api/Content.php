@@ -2,6 +2,9 @@
 
 class Content extends MY_Controller {
 
+    const TYPE_RTF = array('rtf');
+    const TYPE_MEDIA = array('image', 'video', 'audio', 'mixed');
+
     public function __construct() {
         parent::__construct(array(
             'checkToken' => false,
@@ -17,9 +20,9 @@ class Content extends MY_Controller {
         if (!empty($data)) {
             $this->SetCode(20000);
         }
-        if ($data['type'] === 'rtf') {
+        if (in_array($data['type'], self::TYPE_RTF)) {
             $data['content'] = $this->WithRtf();
-        } elseif ($data['type'] === 'media') {
+        } elseif (in_array($data['type'], self::TYPE_MEDIA)) {
             $data['content'] = $this->WithMedia();
         }
         $this->Respond($data);
@@ -38,38 +41,48 @@ class Content extends MY_Controller {
     }
 
     public function More() {
-        $this->Request(array(), array('p', 'n', 'rc', 'order'));
+        $this->Request(array(), array('title', 'keywords', 'p', 'n', 'rc', 'order'));
         $whereArr = $this->FilterData(array('rc'));
         $whereArr['status'] = 1;
-        $re = $this->content_model->order($this->optional['order'])->result(
-            $whereArr,
-            $this->optional['p'],
-            $this->optional['n']
-        );
+        $data['total'] = $this->content_model
+            ->like($this->FilterData(array('title', 'keywords')))
+            ->count($whereArr);
+        $re = $this->content_model
+            ->like($this->FilterData(array('title', 'keywords')))
+            ->order($this->optional['order'])
+            ->result(
+                $whereArr,
+                $this->optional['p'],
+                $this->optional['n']
+            );
         if (!empty($re)) {
             $this->SetCode(20000);
+            $data['list'] = $re;
         }
-        $this->Respond($re);
+        $this->Respond($data);
     }
 
     public function Add() {
-        $this->Request(array('title'), array('author', 'abstract', 'keywords', 'link', 'cover', 'type'));
+        $this->Request(array('title', 'type'), array('author', 'abstract', 'keywords', 'src', 'cover'), 'post');
         $data = $this->RequestData();
         $data['createtime'] = time();
         $re = $this->content_model->insert($data);
-        if ($re > 0) $this->SetCode(20000);
+        if ($re > 0) {
+            $this->SetCode(20000);
+            $this->SetData(array('id' => $re));
+        }
         $this->Respond();
     }
 
     public function Delete() {
         $this->Request(array('id'), array());
-        $re = $this->content_model->freeze($this->RequestData());
+        $re = $this->content_model->freeze($this->required['id']);
         if ($re > 0) $this->SetCode(20000);
         $this->Respond();
     }
 
     public function Edit() {
-        $this->Request(array('id'), array('title', 'author', 'abstract', 'keywords', 'link', 'cover', 'rc', 'sort', 'status'));
+        $this->Request(array('id'), array('title', 'author', 'abstract', 'keywords', 'src', 'cover', 'rc', 'sort', 'status'), 'post');
         $dataArr = $this->FilterData(array('id'), false);
         $whereArr = array('id' => $this->required['id']);
         $re = $this->content_model->update($dataArr, $whereArr);

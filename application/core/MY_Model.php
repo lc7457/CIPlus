@@ -46,6 +46,15 @@ abstract class MY_Model extends CI_Model {
         return $this;
     }
 
+    public function like($column, $string = '', $type = 'both') {
+        if (is_array($column)) {
+            $this->db->like($column);
+        } else {
+            $this->db->like($column, $string, $type);
+        }
+        return $this;
+    }
+
     /**
      * 添加数据
      * @param $dataArr :(array)插入的数据

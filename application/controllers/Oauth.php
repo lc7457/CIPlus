@@ -24,7 +24,7 @@ class Oauth extends CI_Controller {
     }
 
     private function Callback() {
-        //ob_end_clean();
+        ob_end_clean();
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode(
             $this->oauthserver->Respond()

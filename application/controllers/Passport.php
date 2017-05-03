@@ -8,30 +8,11 @@ require_once APPPATH . 'core/API_Controller.php';
 
 class Passport extends API_Controller {
     public function __construct() {
-        parent::__construct(array(
-            'tokenVerifier' => false
-        ));
+        parent::__construct();
         $this->load->library('user_agent');
         $this->load->library('OauthServer');
     }
-
-    public function Server() {
-        //$this->OauthClient->Access();
-    }
-
-    public function Code() {
-        $this->load->library('OauthServer');
-        $appid = $this->_get('appid');
-        echo $this->oauthserver->CreateCode($appid);
-    }
-
-    public function Token() {
-        $this->load->library('OauthServer');
-        $code = $this->_get('code');
-        $secret = $this->_get('secret');
-        echo $this->oauth->CreateToken($code, $secret);
-    }
-
+    
     public function User($type = 'login') {
         if ($type === 'login') {
             $this->UserLogin();

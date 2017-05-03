@@ -5,14 +5,6 @@
  * Class Addressee
  */
 class Addressee extends MY_Controller {
-    protected $name;
-    protected $tel;
-    protected $national_code;
-    protected $postal_code;
-    protected $province;
-    protected $city;
-    protected $area;
-    protected $address;
 
     protected $id;
     protected $hash;
@@ -21,56 +13,82 @@ class Addressee extends MY_Controller {
 
     public function __construct() {
         parent::__construct(array(
-            'tokenVerifier' => true, // 是否验证token
-            'strict' => true,//是否开启严格模式，严格模式只能输出API信息
-            'checkLogin' => true
+            'checkToken' => true, // 是否验证token
+            'checkLogin' => true,
+            'checkPower' => false
         ));
         $this->load->model('user_addressee_model');
-        $this->Request();
-    }
-
-
-    /**
-     * 主要数据
-     * @return array
-     */
-    private function MainData() {
-        return array(
-            'name' => $this->name,
-            'province' => $this->province,
-            'city' => $this->city,
-            'area' => $this->area,
-            'address' => $this->address,
-            'tel' => $this->tel
-        );
     }
 
     /**
-     * 附加数据
-     * @return array
+     * 读取单条数据，不指定ID则读取默认收件人信息
      */
-    private function ExtraData() {
-        return array(
-            'national_code' => $this->national_code,
-            'postal_code' => $this->postal_code
-        );
-    }
-
-    /**
-     * 数据验证
-     */
-    private function Validate() {
-        if (
-            empty($this->name) &&
-            empty($this->tel) &&
-            empty($this->province) &&
-            empty($this->city) &&
-            empty($this->area) &&
-            empty($this->address)
-        ) {
-            $this->SetCode(40001);
-            $this->Respond();
+    public function Index() {
+        $this->Request(array(), array('id'));
+        if (empty($this->optional['id'])) {
+            $whereArr['is_default'] = 1;
+        } else {
+            $whereArr['id'] = $this->optional['id'];
         }
+        $whereArr['uid'] = $this->uid;
+        $row = $this->user_addressee_model->row($whereArr);
+        if (!empty($row)) {
+            $this->SetCode(20000);
+            $this->SetData($row);
+        }
+        $this->Respond();
+    }
+
+    /**
+     * 读取多条信息
+     */
+    public function More() {
+        $whereArr['uid'] = $this->uid;
+        $res = $row = $this->user_addressee_model->result($whereArr, 1, self::LIMIT_ADDRESSEE_NUMBER);
+        if (!empty($res))
+            $this->SetCode(20000);
+        $this->SetData($res);
+        $this->Respond();
+    }
+
+    /**
+     * 添加信息
+     */
+    public function Add() {
+        $this->Limit();
+        $this->Request(
+            array('name', 'tel', 'province', 'city', 'area', 'address'),
+            array('national_code', 'postal_code')
+        );
+        $whereArr['hash'] = $this->AddressHash();
+        $whereArr['uid'] = $this->uid;
+        if (!$this->ExistAddress()) {
+            $data = array_merge($this->RequestData(), $whereArr);
+            $this->user_addressee_model->insert($data);
+            $this->SetCode(20000);
+        }
+        $this->Respond();
+    }
+
+    /**
+     * 编辑收件人信息+
+     */
+    public function Edit() {
+        $this->Request(
+            array('id', 'name', 'tel', 'province', 'city', 'area', 'address'),
+            array('national_code', 'postal_code')
+        );
+        $whereArr['id'] = $this->required['id'];
+        $whereArr['uid'] = $this->uid;
+        $data = $this->FilterData(array('id'), false);
+        $data['hash'] = $this->AddressHash();
+        if (!$this->ExistAddress()) {
+            $re = $this->user_addressee_model->update($data, $whereArr);
+            if ($re) {
+                $this->SetCode(20000);
+            }
+        }
+        $this->Respond();
     }
 
     /**
@@ -78,7 +96,7 @@ class Addressee extends MY_Controller {
      * @return string
      */
     private function AddressHash() {
-        return sha1(implode('+', $this->MainData()));
+        return sha1(implode('+', $this->required));
     }
 
     /**
@@ -101,101 +119,27 @@ class Addressee extends MY_Controller {
         $whereArr['hash'] = $this->AddressHash();
         $whereArr['uid'] = $this->uid;
         if ($this->user_addressee_model->count($whereArr) > 0) {
-            $this->SetCode(40002);
-            $this->Respond();
+            $this->Respond(40002);
         }
+        return false;
     }
 
-    /**
-     * 添加信息
-     */
-    public function Add() {
-        $this->Validate();
-        $this->Limit();
-        $whereArr['hash'] = $this->AddressHash();
-        $whereArr['uid'] = $this->uid;
-        if (!$this->ExistAddress()) {
-            $data = array_merge($this->MainData(), $this->ExtraData(), $whereArr);
-            $this->user_addressee_model->insert($data);
-            $this->SetCode(20000);
-        }
-        $this->Respond();
-    }
 
     /**
      * 设为默认收货地址
      */
     public function SetDefault() {
-        $re = $this->user_addressee_model->update(array('is_default' => 1), array(
-            'uid' => $this->uid,
-            'hash' => $this->hash
-        ));
+        $this->Request(array('id'));
+        $whereArr['uid'] = $this->uid;
+        $this->user_addressee_model->update(array('is_default' => 0), $whereArr);
+        $whereArr['id'] = $this->required['id'];
+        $re = $this->user_addressee_model->update(array('is_default' => 1), $whereArr);
         if ($re) {
-            $this->user_addressee_model->update(array('is_default' => 0), array(
-                'uid' => $this->uid,
-                'hash !=' => $this->hash
-            ));
             $this->SetCode(20000);
-        } else {
-            $this->SetCode(40000);
         }
         $this->Respond();
     }
 
-    /**
-     * 编辑收件人信息+
-     */
-    public function Edit() {
-        $this->Validate();
-        $whereArr['id'] = $this->id;
-        $whereArr['uid'] = $this->uid;
-        $data = array_merge($this->MainData(), $this->ExtraData());
-        $data['hash'] = $this->AddressHash();
-        if (!$this->ExistAddress()) {
-            $re = $this->user_addressee_model->update($data, $whereArr);
-            if ($re) {
-                $this->SetCode(20000);
-            } else {
-                $this->SetCode(40000);
-            }
-        }
-        $this->Respond();
-    }
-
-    /**
-     * 读取单条数据，不指定ID则读取默认收件人信息
-     */
-    public function Index() {
-        if (empty($this->id)) {
-            $whereArr['is_default'] = 1;
-        } else {
-            $whereArr['id'] = $this->id;
-        }
-        $whereArr['uid'] = $this->uid;
-        $row = $this->user_addressee_model->row($whereArr);
-        if (empty($row)) {
-            $this->SetCode(40000);
-        } else {
-            $this->SetCode(20000);
-            $this->SetData($row);
-        }
-        $this->Respond();
-    }
-
-    /**
-     * 读取多条信息
-     */
-    public function More() {
-        $whereArr['uid'] = $this->uid;
-        $res = $row = $this->user_addressee_model->result($whereArr, 1, self::LIMIT_ADDRESSEE_NUMBER);
-        if (empty($res)) {
-            $this->SetCode(40000);
-        } else {
-            $this->SetCode(20000);
-            $this->SetData($res);
-        }
-        $this->Respond();
-    }
 }
 
 

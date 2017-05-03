@@ -45,7 +45,7 @@ class OauthClient {
         }
     }
 
-    public function Access() {
+    public function Connect() {
         $url = $this->channel;
         $url = $this->$url . $this->entry;
         $params = $this->AnalysisParameters();
@@ -53,36 +53,12 @@ class OauthClient {
         $this->CI->curl->option(CURLOPT_USERAGENT, sprintf('%s (%s) %s', $this->appid, $this->platform, $this->agent));
         $this->CI->curl->ssl(false);
         $access = $this->CI->curl->simple_post($url, $params);
-
         $access = json_decode($access, true);
         $this->role = $access['role'];
-        $this->key = $this->AnalyseKey($access['key']);
+        $this->key = $this->UnsignedKey($access['key']);
         $this->illegalLevel = $access['illegalLevel'];
         $this->handle = $access['handle'];
         $this->mismatch = $access['mismatch'];
-    }
-
-    public function AnalyseToken() {
-        $this->CI->load->library('encryption');
-        $data = str_split($this->token, strlen($this->token) - 4);
-        $token = base64_decode($data[0]);
-        $res = $this->CI->encryption->decrypt($token, array(
-            'cipher' => 'aes-128',
-            'mode' => 'cbc',
-            'key' => hex2bin($this->key),
-            'hmac' => false
-        ));
-        $this->securityData = json_decode($res, true);
-        return $this->securityData;
-    }
-
-    private function AnalyseKey($key) {
-        if (!empty($key)) {
-            $this->CI->load->library('encrypt');
-            $key = urldecode($key);
-            $key = $this->CI->encrypt->decode($key, $this->secret);
-        }
-        return $key;
     }
 
     private function AnalysisParameters() {
@@ -99,6 +75,30 @@ class OauthClient {
         return $params;
     }
 
+    private function UnsignedKey($key) {
+        if (!empty($key)) {
+            $key = url64_decode($key);
+            $this->CI->load->library('encrypt');
+            $key = $this->CI->encrypt->decode($key, $this->secret);
+        }
+        return $key;
+    }
+
+    public function TokenDecode() {
+        $this->CI->load->library('encryption');
+        $data = str_split($this->token, strlen($this->token) - 4);
+        $token = url64_decode($data[0]);
+        $res = $this->CI->encryption->decrypt($token, array(
+            'cipher' => 'aes-128',
+            'mode' => 'cbc',
+            'key' => url64_decode($this->key),
+            'hmac' => false
+        ));
+        $this->securityData = $res;
+        return $this->securityData;
+    }
+
+
     private function UserAgent() {
         $this->CI->load->library('user_agent');
         return $this->CI->agent->agent_string();
@@ -112,5 +112,6 @@ class OauthClient {
     private function DeviceInfo() {
         return $this->CI->input->post_get('_device');
     }
+
 
 }
