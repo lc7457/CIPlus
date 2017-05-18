@@ -13,8 +13,9 @@ class Upload extends MY_Controller {
 
     public function __construct() {
         parent::__construct(array(
-            'tokenVerifier' => false, // 是否验证token
-            'strict' => false //是否开启严格模式，严格模式只能输出API信息
+            'checkToken' => false,
+            'checkLogin' => false,
+            'checkPower' => false
         ));
         $this->load->model('storage_model');
         $this->LoadConf();
@@ -50,6 +51,7 @@ class Upload extends MY_Controller {
             $this->upload->Base64($file, 'image');
         }
         $data = $this->upload->FileInfo();
+        $this->KeepImage($data);
         $this->SetCode(20000);
         $this->SetData($data);
         $this->Respond();

@@ -113,5 +113,7 @@ class OauthClient {
         return $this->CI->input->post_get('_device');
     }
 
+    private function Domain() {
 
+    }
 }

@@ -108,7 +108,7 @@ class Upload {
         fclose($file);
         $ext = $this->GetExtFromMime($mime);
         $this->file['name'] = 'temp.' . $ext;
-        $this->file['type'] = $mime;
+        $this->file['mime'] = $mime;
         $this->file['tmp_name'] = $tmpFile;
         $this->file['error'] = 0;
         $this->file['size'] = filesize($tmpFile);
@@ -122,6 +122,7 @@ class Upload {
     public function FileInfo() {
         $this->file['url'] = $this->url;
         unset($this->file['tmp_name']);
+        $this->file['mime'] = $this->file['type'];
         return $this->file;
     }
 
@@ -254,7 +255,7 @@ class Upload {
         if (!empty($config['type'])) {
             $type = 'RN_' . strtolower($config['type']);
             $newName = $this->$type();
-            $this->file['localName'] = $this->file['name'];
+            $this->file['local_name'] = $this->file['name'];
             $this->file['name'] = $newName;
         }
         if ($config['keep_ext']) {

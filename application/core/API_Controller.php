@@ -94,6 +94,8 @@ abstract class API_Controller extends CI_Controller {
     public function Respond() {
         if ($this->strict) {
             ob_end_clean();
+            header("Access-Control-Allow-Origin: *");
+            header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With');
         }
         $args = func_get_args();
         foreach ($args as $arg) {
@@ -127,7 +129,6 @@ abstract class API_Controller extends CI_Controller {
             } else {
                 $this->VerifyParamsHandle($key, $params[$key]);
                 $this->required[$key] = $params[$key];
-
             }
         }
         foreach ($optional as $key) {
@@ -147,9 +148,18 @@ abstract class API_Controller extends CI_Controller {
         }
     }
 
-    // 返回所有的合法参数
-    protected function RequestData() {
-        return array_merge($this->required, $this->optional);
+    /**
+     * 返回所有合法参数
+     * @param array $arr 过滤项
+     * @return array
+     */
+    protected function RequestData(array $arr = array()) {
+        $r = array_merge($this->required, $this->optional);
+        if (!empty($arr)) {
+            return array_intersect_key($r, array_flip($arr));
+        } else {
+            return $r;
+        }
     }
 
     /**
@@ -176,9 +186,11 @@ abstract class API_Controller extends CI_Controller {
         return $this->input->post($key);
     }
 
-    // post & get
+    // post & get, post优先
     protected function _request($key = null) {
-        return $this->input->post_get($key);
+        $get = $this->input->get($key);
+        $post = $this->input->post($key);
+        return array_merge($get, $post);
     }
 
 

@@ -29,6 +29,7 @@ class Passport extends API_Controller {
         $code = $this->user->ValidUser($email, $phone, $password);
         $this->SetCode($code);
         $data = array('uid' => $this->user->uid);
+        $this->SetSessionData($data);
         $data = $this->oauthserver->Track($this->user->uid, 'user', $data);
         $this->SetData($data);
         $this->Respond();
@@ -61,6 +62,7 @@ class Passport extends API_Controller {
         $data = array('uid' => $admin);
         $data = $this->oauthserver->Track($this->admin->uid, 'admin', $data);
         $this->SetData($data);
+        $this->SetSessionData($data);
         $this->Respond();
     }
 
@@ -74,8 +76,16 @@ class Passport extends API_Controller {
     }
 
     public function Refresh() {
-        $this->load->library('curl');
-        $this->curl->ssl(false);
-        echo $this->curl->simple_get('https://passport.jciuc.com/debug/ua');
+    }
+    private function SetSessionData($data) {
+        $this->load->library('session');
+        $this->session->set_userdata($data);
+        return true;
+    }
+    public function Session() {
+        $this->load->library('session');
+        $data = $this->session->all_userdata();
+        echo json_encode($data);
+        exit;
     }
 }

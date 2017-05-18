@@ -3,11 +3,17 @@
 class Demo extends MY_Controller {
     public function __construct() {
         parent::__construct(array(
-            'strict' => false
+            'checkToken' => false, // ÊÇ·ñÑéÖ¤token
+            'checkLogin' => false,
+            'checkPower' => false
         ));
     }
 
     public function Index() {
-        $this->Respond(2000, 5000, array(1, 2));
+        $this->Request(array(), array('name', 'age'));
+        $arr = $this->RequestData();
+        print_r($arr);
+    }
+    public function Test() {
     }
 }
