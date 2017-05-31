@@ -1,5 +1,5 @@
-*/storage/*
-*/storage/!index.html
+/storage/
+/storage/!index.html
 */config/development
 */config/development/!index.html
 */config/testing

@@ -73,7 +73,7 @@ class WechatThirdPlatform {
      * @return string
      */
     public function DecryptMsg($postStr) {
-        require_once FCPATH . 'classes/WXMsgCrypt/wxBizMsgCrypt.php';
+        require_once FCPATH . 'sdk/WXMsgCrypt/wxBizMsgCrypt.php';
 
         $timeStamp = $this->CI->input->get('timestamp');
         $nonce = $this->CI->input->get('nonce');

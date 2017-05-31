@@ -13,6 +13,7 @@ abstract class API_Controller extends CI_Controller {
 
     // 详见config/api.php
     private $strict = true; // 是否打开严格模式，打开后除了接口信息其他输出无效
+    private $cors = false; // 是否开启CORS跨域访问，必须开打严格模式才可以启动
     private $respondFormat = 'json'; // 默认数据格式
     private $supportedFormats = array(); // 可被支持的数据格式
 
@@ -94,8 +95,10 @@ abstract class API_Controller extends CI_Controller {
     public function Respond() {
         if ($this->strict) {
             ob_end_clean();
-            header("Access-Control-Allow-Origin: *");
-            header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With');
+            if ($this->cors) {
+                header("Access-Control-Allow-Origin: *");
+                header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With');
+            }
         }
         $args = func_get_args();
         foreach ($args as $arg) {
@@ -159,6 +162,20 @@ abstract class API_Controller extends CI_Controller {
             return array_intersect_key($r, array_flip($arr));
         } else {
             return $r;
+        }
+    }
+
+    /**
+     * 返回参数值
+     * @param $key
+     * @return null
+     */
+    protected function RequestParam($key) {
+        $r = array_merge($this->required, $this->optional);
+        if (array_key_exists($key, $r)) {
+            return $r[$key];
+        } else {
+            return null;
         }
     }
 

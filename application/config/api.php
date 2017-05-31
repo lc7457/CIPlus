@@ -1,6 +1,8 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 // 严格模式，开启后无法输出其他内容
 $config['strict'] = TRUE;
+// 是否在代码层开启CORS跨域共享
+$config['cors'] = FALSE;
 // 默认返回的API数据格式
 $config['respondFormat'] = 'json';
 // 支持的API数据格式
