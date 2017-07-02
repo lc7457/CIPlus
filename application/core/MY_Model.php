@@ -56,6 +56,15 @@ abstract class MY_Model extends CI_Model {
     }
 
     /**
+     * 替换数据
+     * @param $dataArr :(array)插入的数据
+     * return:当前插入的数据id
+     */
+    public function replace($dataArr = array()) {
+        return $this->db->replace($this->table, $dataArr);
+    }
+
+    /**
      * 添加数据
      * @param $dataArr :(array)插入的数据
      * return:当前插入的数据id
