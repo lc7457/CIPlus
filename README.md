@@ -174,11 +174,7 @@ Array ( [b] => 2 [age] => 10 )
 class Demo extends MY_Controller {
 
     public function __construct() {
-        parent::__construct(array(
-            'checkToken' => true, // 是否验证token
-            'checkLogin' => true, // 是否验证用户登录
-            'checkPower' => false // 是否验证用户权限
-        ));
+        parent::__construct();
      
     }
 }

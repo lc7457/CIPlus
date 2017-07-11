@@ -41,7 +41,7 @@ abstract class API_Controller extends CI_Controller {
         $config = $CI->config->item('api');
         if (is_array($config)) {
             foreach ($config as $key => $val) {
-                if (isset($this->$key)) {
+                if (property_exists($this, $key)) {
                     $this->$key = $val;
                 }
             }
@@ -205,9 +205,15 @@ abstract class API_Controller extends CI_Controller {
 
     // post & get, post优先
     protected function _request($key = null) {
+        $data = NULL;
         $get = $this->input->get($key);
         $post = $this->input->post($key);
-        return array_merge($get, $post);
+        if (empty($key)) {
+            $data = array_merge($get, $post);
+        } else {
+            $data = empty($post) ? $get : $post;
+        }
+        return $data;
     }
 
 
