@@ -87,4 +87,5 @@ defined('EXIT__AUTO_MAX') OR define('EXIT__AUTO_MAX', 125); // highest automatic
  * 自定义常量
  * MY Constants
  */
-defined("SPAFOLDER") OR define("SPAFOLDER", FCPATH . "apps" . DIRECTORY_SEPARATOR);
+defined("AUTH_PACKAGE") OR define("AUTH_PACKAGE", APPPATH . 'third_party' . DIRECTORY_SEPARATOR . 'auth');
+defined("WECHAT_PACKAGE") OR define("WECHAT_PACKAGE", APPPATH . 'third_party' . DIRECTORY_SEPARATOR . 'wechat');

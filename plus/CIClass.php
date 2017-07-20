@@ -6,18 +6,23 @@
 namespace CIPlus;
 
 abstract class CIClass {
-    public function __construct(array $params = array()) {
+    public function __construct(array $config = array()) {
         $this->CI =& get_instance();
-        if (!empty($params)) {
-            $this->Init($params);
+        if (!empty($config)) {
+            $this->InitConf($config);
         }
     }
 
     /**
-     * 初始化类
-     * @param $params
+     * 根据参数初始化类
+     * @param $config
      */
-    private function Init($params) {
+    private function InitConf($config) {
+        foreach ($config as $key => $val) {
+            if (property_exists($this, $key)) {
+                $this->$key = $val;
+            }
+        }
     }
 
     /**

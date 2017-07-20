@@ -1,11 +1,11 @@
 /storage/
 /storage/!index.html
-*/config/development
-*/config/development/!index.html
-*/config/testing
-*/config/testing/!index.html
-*/config/production
-*/config/production/!index.html
+*/config/development/*.php
+*/config/testing/*.php
+*/config/production/*.php
+*/*/*/config/development/*.php
+*/*/*/config/testing/*.php
+*/*/*/config/production/*.php
 */logs/log-*.php
 */logs/!index.html
 */cache/*
