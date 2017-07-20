@@ -11,6 +11,8 @@
  * @author            Philip Sturgeon
  * @license         http://philsturgeon.co.uk/code/dbad-license
  * @link            http://philsturgeon.co.uk/code/codeigniter-curl
+ * @method simple_post($url, $params = array(), $options = array())
+ * @method simple_get($url, $params = array(), $options = array())
  */
 class Curl {
 

@@ -1,5 +1,4 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -103,7 +102,7 @@ $autoload['helper'] = array('language', 'url');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = array('ciplus');
 
 /*
 | -------------------------------------------------------------------
