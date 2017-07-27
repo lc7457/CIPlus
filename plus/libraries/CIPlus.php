@@ -3,10 +3,10 @@
 require_once CIPLUS_PATH . 'CIClass.php';
 
 /**
- * 全局参数管理
- * Class GlobalParams
+ * CIPlus组件全局控制类
+ * Class CIPlus
  */
-class GlobalParams extends \CIPlus\CIClass {
+class CIPlus extends \CIPlus\CIClass {
     public function __construct() {
         parent::__construct();
     }
