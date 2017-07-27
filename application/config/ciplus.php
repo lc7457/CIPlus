@@ -5,6 +5,7 @@
  * --------------------------------------------------------------------------
  */
 defined("CIPLUS_VERSION") OR define("CIPLUS_VERSION", "1.0");
+defined("CIPLUS_PATH") OR define("CIPLUS_PATH", FCPATH . 'ciplus' . DIRECTORY_SEPARATOR);
 defined("PLUGINS_PATH") OR define("PLUGINS_PATH", FCPATH . 'plugins' . DIRECTORY_SEPARATOR);
 
 $config['ciplus_version'] = CIPLUS_VERSION;
