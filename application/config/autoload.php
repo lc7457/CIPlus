@@ -38,7 +38,7 @@
 |  $autoload['packages'] = array(APPPATH.'third_party', '/usr/local/shared');
 |
 */
-$autoload['packages'] = array(FCPATH . 'ciplus');
+$autoload['packages'] = array(FCPATH . 'plus');
 
 /*
 | -------------------------------------------------------------------
