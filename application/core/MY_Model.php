@@ -113,7 +113,6 @@ abstract class MY_Model extends CI_Model {
      * @param $whereArr :(array)查询的条件
      * @param $num :单页显示的条数
      * @param $page :当前页数
-     * @param $orderby :排序条件
      * return:查询结果
      */
     public function result($whereArr, $page = 1, $num = 10) {
