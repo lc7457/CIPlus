@@ -5,7 +5,8 @@ require_once CIPLUS_PATH . 'CIClass.php';
 /**
  * 全局参数获取
  * Class GlobalParams
- * @method Load($key)
+ * @method Load($key)           => LoadFrom.$this->driver
+ * @method Set($key, $value)    => SetIn.$this->driver
  */
 class GlobalParams extends \CIPlus\CIClass {
     protected $driver;
@@ -28,9 +29,16 @@ class GlobalParams extends \CIPlus\CIClass {
      * @return mixed
      */
     public function __call($method, $params) {
-        $method = $method . 'From' . ucfirst($this->driver);
-        if (method_exists($this, $method)) {
-            return $this->$method($params[0]);
+        if ($method === "Load") {
+            $method = $method . 'From' . ucfirst($this->driver);
+            if (method_exists($this, $method)) {
+                return $this->$method($params[0]);
+            }
+        } elseif ($method === "Set") {
+            $method = $method . 'In' . ucfirst($this->driver);
+            if (method_exists($this, $method)) {
+                return $this->$method($params[0], $params[1]);
+            }
         }
         return null;
     }
@@ -71,17 +79,37 @@ class GlobalParams extends \CIPlus\CIClass {
     /**
      * 将参数写入session
      */
-    public function SetInSession() {
+    public function SaveInSession() {
         $this->CI->session->set_userdata($this->params);
     }
 
     /**
      * 将参数写入cookie
      */
-    public function SetInCookie() {
+    public function SaveInCookie() {
         foreach ($this->params as $key => $value) {
             $this->CI->input->set_cookie($key, $value, 7200);
         }
+    }
+
+    /**
+     * 设置Session中的参数
+     * @param $key
+     * @param $value
+     */
+    public function SetInSession($key, $value) {
+        $key = $this->ParamsKey($key);
+        $this->CI->session->set_userdata($key, $value);
+    }
+
+    /**
+     * 设置cookie中的参数
+     * @param $key
+     * @param $value
+     */
+    public function SetInCookie($key, $value) {
+        $key = $this->ParamsKey($key);
+        $this->CI->input->set_cookie($key, $value, 7200);
     }
 
     /**
@@ -117,14 +145,14 @@ class GlobalParams extends \CIPlus\CIClass {
                 $this->params = array_merge($this->params, array($key => $params[$key]));
             }
         }
-        $this->SetInDriver();
+        $this->SaveInDriver();
     }
 
     /**
      * 保存至会话引擎
      */
-    private function SetInDriver() {
-        $method = 'SetIn' . ucfirst($this->driver);
+    private function SaveInDriver() {
+        $method = 'SaveIn' . ucfirst($this->driver);
         $this->$method();
     }
 

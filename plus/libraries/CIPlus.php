@@ -8,16 +8,21 @@ require_once CIPLUS_PATH . 'CIClass.php';
  */
 class CIPlus extends \CIPlus\CIClass {
 
-    public $gp;
-
     public function __construct() {
         parent::__construct();
-        $this->CI->load->library('Session');
-        $this->HandleGlobalParams();
+        $this->PreLoad();
     }
 
-    private function HandleGlobalParams() {
-        $this->CI->load->library('GlobalParams');
-        $this->gp =& $this->CI->globalparams;
+    // 预加载
+    private function PreLoad() {
+        $this->CI->load->library('Session');
+        $this->CI->load->library('GlobalParams', null, 'gp');
     }
+
+    // 初始化
+    private function Init() {
+    }
+
+
+
 }
