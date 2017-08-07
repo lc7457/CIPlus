@@ -6,6 +6,7 @@
 namespace CIPlus;
 
 abstract class CIClass {
+    protected $CI;
     public function __construct(array $config = array()) {
         $this->CI =& get_instance();
         if (!empty($config)) {
@@ -28,6 +29,7 @@ abstract class CIClass {
     /**
      * 加载CI config配置文件
      * @param $name : 配置文件名称
+     * @return array
      */
     protected function LoadConf($name) {
         $this->CI = &get_instance();
@@ -40,5 +42,6 @@ abstract class CIClass {
                 }
             }
         }
+        return $config;
     }
 }
