@@ -57,7 +57,7 @@ $autoload['packages'] = array(FCPATH . 'plus');
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('Session', 'Curl', 'CIPlus');
+$autoload['libraries'] = array('CIPlus', 'Session');
 
 /*
 | -------------------------------------------------------------------
@@ -102,7 +102,7 @@ $autoload['helper'] = array('language', 'url');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('ciplus');
+$autoload['config'] = array();
 
 /*
 | -------------------------------------------------------------------
