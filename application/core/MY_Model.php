@@ -115,7 +115,7 @@ abstract class MY_Model extends CI_Model {
      * @param $page :当前页数
      * return:查询结果
      */
-    public function result($whereArr, $page = 1, $num = 10) {
+    public function result($whereArr = array(), $page = 1, $num = 10) {
         if ($page <= 0) $page = 1;
         $offset = ($page - 1) * $num;
         $this->db->where($whereArr);
@@ -128,7 +128,7 @@ abstract class MY_Model extends CI_Model {
      * @param $whereArr
      * @return mixed
      */
-    public function count($whereArr) {
+    public function count($whereArr = array()) {
         $this->db->where($whereArr);
         $query = $this->db->get($this->table);
         return $query->num_rows();
