@@ -127,18 +127,16 @@ abstract class API_Controller extends CI_Controller {
         $method = '_' . $method;
         $params = $this->$method();
         foreach ($required as $key) {
-            if (empty($params[$key])) {
-                $this->Respond(40001);
-            } else {
+            if (array_key_exists($key, $params)) {
                 $this->VerifyParamsHandle($key, $params[$key]);
                 $this->required[$key] = $params[$key];
+            } else {
+                $this->Respond(40001);
             }
         }
         foreach ($optional as $key) {
-            if (array_key_exists($key, $params)) {
-                $this->VerifyParamsHandle($key, $params[$key]);
-                $this->optional[$key] = $params[$key];
-            }
+            $this->VerifyParamsHandle($key, $params[$key]);
+            $this->optional[$key] = $params[$key];
         }
         return $this;
     }
@@ -152,7 +150,7 @@ abstract class API_Controller extends CI_Controller {
     }
 
     /**
-     * 返回所有合法参数
+     * 返回合法参数
      * @param array $arr 过滤项
      * @return array
      */
@@ -166,6 +164,15 @@ abstract class API_Controller extends CI_Controller {
     }
 
     /**
+     * 过滤数据
+     * @param $arr
+     * @return array
+     */
+    protected function RequestFilter(array $arr = array()) {
+        return array_diff_key($this->RequestData(), array_flip($arr));
+    }
+
+    /**
      * 返回参数值
      * @param $key
      * @return null
@@ -176,20 +183,6 @@ abstract class API_Controller extends CI_Controller {
             return $r[$key];
         } else {
             return null;
-        }
-    }
-
-    /**
-     * 过滤数据
-     * @param $arr
-     * @param bool $is true：交集；false：差集
-     * @return array
-     */
-    protected function FilterData($arr, $is = true) {
-        if ($is) {
-            return array_intersect_key($this->RequestData(), array_flip($arr));
-        } else {
-            return array_diff_key($this->RequestData(), array_flip($arr));
         }
     }
 
