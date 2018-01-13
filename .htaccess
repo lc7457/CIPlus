@@ -9,7 +9,7 @@ DefaultLanguage zh-CN
 Header always set Access-Control-Allow-Origin "*"
 Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
 Header always set Access-Control-Max-Age "1000"
-Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, Content-Length, origin, authorization, accept, token"
+Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, Content-Length, origin, accept, token"
 
 <ifmodule mod_rewrite.c>
 # Added a rewrite to respond with a 200 SUCCESS on every OPTIONS request.
