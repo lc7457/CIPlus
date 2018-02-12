@@ -40,11 +40,6 @@ abstract class MY_Model extends CI_Model {
         return $this;
     }
     
-    /**
-     * 排序条件
-     * @param string $by
-     * @return $this
-     */
     public function order($by = '') {
         if (!empty($by)) {
             $by = str_replace("@", " ", $by);
@@ -53,13 +48,6 @@ abstract class MY_Model extends CI_Model {
         return $this;
     }
     
-    /**
-     * 模糊匹配字段
-     * @param $column
-     * @param string $string
-     * @param string $type
-     * @return $this
-     */
     public function like($column, $string = '', $type = 'both') {
         if (is_array($column)) {
             $this->db->like($column);
@@ -134,17 +122,6 @@ abstract class MY_Model extends CI_Model {
         $offset = ($page - 1) * $num;
         $this->db->where($whereArr);
         $query = $this->db->get($this->table, $num, $offset);
-        return $query->result_array();
-    }
-    
-    /**
-     * 查询并返回全部数据
-     * @param array $whereArr
-     * @return mixed
-     */
-    public function result_all($whereArr = array()) {
-        $this->db->where($whereArr);
-        $query = $this->db->get($this->table);
         return $query->result_array();
     }
     
