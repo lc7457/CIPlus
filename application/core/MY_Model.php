@@ -17,17 +17,19 @@
 abstract class MY_Model extends CI_Model {
     // 数据表名称
     protected $table;
-
+    
     /**
      * 构造函数
-     * @param $table :数据表
+     * MY_Model constructor.
+     * @param string $table
+     * @param string $database
      */
     public function __construct($table = '', $database = 'default') {
         parent::__construct();
         $this->db = $this->load->database($database, TRUE);
         $this->table = $table;
     }
-
+    
     /**
      * 查询字段
      * @param string $selected
@@ -37,7 +39,12 @@ abstract class MY_Model extends CI_Model {
         $this->db->select($selected);
         return $this;
     }
-
+    
+    /**
+     * 排序条件
+     * @param string $by
+     * @return $this
+     */
     public function order($by = '') {
         if (!empty($by)) {
             $by = str_replace("@", " ", $by);
@@ -45,7 +52,14 @@ abstract class MY_Model extends CI_Model {
         }
         return $this;
     }
-
+    
+    /**
+     * 模糊匹配字段
+     * @param $column
+     * @param string $string
+     * @param string $type
+     * @return $this
+     */
     public function like($column, $string = '', $type = 'both') {
         if (is_array($column)) {
             $this->db->like($column);
@@ -54,66 +68,66 @@ abstract class MY_Model extends CI_Model {
         }
         return $this;
     }
-
+    
     /**
      * 替换数据
-     * @param $dataArr :(array)插入的数据
-     * return:当前插入的数据id
+     * @param array $dataArr
+     * @return mixed
      */
     public function replace($dataArr = array()) {
         return $this->db->replace($this->table, $dataArr);
     }
-
+    
     /**
      * 添加数据
-     * @param $dataArr :(array)插入的数据
-     * return:当前插入的数据id
+     * @param array $dataArr
+     * @return mixed
      */
     public function insert($dataArr = array()) {
         $this->db->insert($this->table, $dataArr);
         return $this->db->insert_id();
     }
-
+    
     /**
      * 修改数据
-     * @param $dataArr :(array)更新的数据
-     * @param $whereArr :(array)更新的条件
-     * return:更新的数据条数
+     * @param $dataArr
+     * @param $whereArr
+     * @return mixed
      */
     public function update($dataArr, $whereArr) {
         $this->db->where($whereArr);
         $this->db->update($this->table, $dataArr);
         return $this->db->affected_rows();
     }
-
+    
     /**
      * 删除数据
-     * @param $whereArr :(array)删除的条件
-     * return:删除的数据条数
+     * @param $whereArr
+     * @return mixed
      */
     public function delete($whereArr) {
         $this->db->where($whereArr);
         $this->db->delete($this->table);
         return $this->db->affected_rows();
     }
-
+    
     /**
      * 查询并返回一条数据
-     * @param $whereArr :(array)查询的条件
-     * return:查询结果
+     * @param $whereArr
+     * @return mixed
      */
     public function row($whereArr) {
         $this->db->where($whereArr);
         $query = $this->db->get($this->table);
         return $query->row_array();
     }
-
+    
     /**
      * 查询并返回多条数据
-     * @param $whereArr :(array)查询的条件
-     * @param $num :单页显示的条数
-     * @param $page :当前页数
-     * return:查询结果
+     * @param array $whereArr
+     * @param int $page
+     * @param int $num
+     * @return mixed
      */
     public function result($whereArr = array(), $page = 1, $num = 10) {
         if ($page <= 0) $page = 1;
@@ -122,9 +136,20 @@ abstract class MY_Model extends CI_Model {
         $query = $this->db->get($this->table, $num, $offset);
         return $query->result_array();
     }
-
+    
     /**
-     * 查询数据条数
+     * 查询并返回全部数据
+     * @param array $whereArr
+     * @return mixed
+     */
+    public function result_all($whereArr = array()) {
+        $this->db->where($whereArr);
+        $query = $this->db->get($this->table);
+        return $query->result_array();
+    }
+    
+    /**
+     * 查询数据总数
      * @param $whereArr
      * @return mixed
      */
@@ -133,5 +158,5 @@ abstract class MY_Model extends CI_Model {
         $query = $this->db->get($this->table);
         return $query->num_rows();
     }
-
+    
 }
