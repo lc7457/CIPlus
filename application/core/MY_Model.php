@@ -70,6 +70,17 @@ abstract class MY_Model extends CI_Model {
     }
     
     /**
+     * 匹配多条数据
+     * @param $key
+     * @param array $array
+     * @return $this
+     */
+    public function where_in($key, array $array = array()) {
+        $this->db->where_in($key, $array);
+        return $this;
+    }
+    
+    /**
      * 替换数据
      * @param array $dataArr
      * @return mixed

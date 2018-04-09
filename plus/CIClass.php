@@ -44,4 +44,29 @@ abstract class CIClass {
         }
         return $config;
     }
+
+    /**
+     * 加载插件库
+     * @param $plugins
+     * @return bool
+     */
+    protected function LoadPlugins($plugins) {
+        if (is_array($plugins)) {
+            foreach ($plugins as $item) {
+                $this->LoadPlugin($item);
+            }
+            return true;
+        } else {
+            $this->LoadPlugin($plugins);
+        }
+        return false;
+    }
+
+    protected function LoadPlugin($plugin) {
+        if (is_string($plugin)) {
+            $this->CI->load->add_package_path(FCPATH . 'plugins' . DIRECTORY_SEPARATOR . $plugin);
+            return true;
+        }
+        return false;
+    }
 }
