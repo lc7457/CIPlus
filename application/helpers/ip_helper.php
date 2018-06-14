@@ -28,3 +28,13 @@ if (!function_exists('client_ip')) {
         return $ip;
     }
 }
+/**
+ * 判断内网ip
+ */
+if (!function_exists('is_intranet_ip')) {
+    function is_intranet_ip($ip) {
+        $reg_intranet_ipv4 = "/^(192)\.(168)\.(8|9|10)\.(\d|[01]?\d\d|2[0-4]\d|25[0-5])$/";
+        $flag = (bool) preg_match($reg_intranet_ipv4, $ip);
+        return $flag;
+    }
+}
