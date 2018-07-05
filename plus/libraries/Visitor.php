@@ -14,20 +14,20 @@ class Visitor extends \CIPlus\CIClass {
     
     public function __construct() {
         parent::__construct();
-        $this->UserAgent();
-        $this->Environment();
-        $this->UniqueCode();
+        $this->userAgent();
+        $this->environment();
+        $this->uniqueCode();
     }
     
     // 获取user agent
-    public function UserAgent() {
+    public function userAgent() {
         $this->CI->load->library('user_agent');
         $this->ua = $this->CI->agent->agent_string();
         return $this->ua;
     }
     
     // 访问环境检测
-    public function Environment() {
+    public function environment() {
         if (strpos($this->ua, 'MicroMessenger') !== false) {
             $this->env = "wechat";
             return $this->env;
@@ -36,10 +36,10 @@ class Visitor extends \CIPlus\CIClass {
     }
     
     // 生成唯一码
-    public function UniqueCode() {
+    public function uniqueCode() {
         $code = empty($_SESSION['code']) ? null : $_SESSION['code'];
         if (empty($code)) {
-            $code = md5($this->IP() . time() . rand(1000, 9999));
+            $code = md5($this->ip() . time() . rand(1000, 9999));
         }
         $this->CI->session->set_userdata(
             array('code' => $code)
@@ -49,18 +49,18 @@ class Visitor extends \CIPlus\CIClass {
     
     
     // 获取用户 ip
-    public function IP() {
+    public function ip() {
         $this->CI->load->helper('IP');
         return client_ip();
     }
     
     // 获取来访域名
-    public function Domain() {
+    public function domain() {
         return $_SERVER['HTTP_HOST'];
     }
     
     // 获取设备信息
-    public function Device() {
+    public function device() {
         return $this->CI->input->post_get('device');
     }
 }

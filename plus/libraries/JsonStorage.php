@@ -16,21 +16,21 @@ Class JsonStorage extends \CIPlus\CIClass {
     protected $save_path = '';
     protected $save_extension = '';
     protected $security_extension = "";
-
+    
     public function __construct(array $params = array()) {
         parent::__construct($params);
         // 优先加载系统配置
         $this->LoadConf('json_storage');
         // 加载用户配置，可覆盖之前配置
     }
-
+    
     /**
      * 读取json文件
      * @param $fileName :文件名
      * @param $toArray :是否转为数组
      * @return bool|mixed|string
      */
-    public function Read($fileName, $toArray = true) {
+    public function read($fileName, $toArray = true) {
         $file_path = $this->save_path . $fileName . '.' . $this->save_extension;
         if (file_exists($file_path)) {
             $json = file_get_contents($file_path);
@@ -42,14 +42,14 @@ Class JsonStorage extends \CIPlus\CIClass {
             return false;
         }
     }
-
+    
     /**
      * 写入json文件
      * @param $fileName
      * @param $str
      * @return bool
      */
-    public function Write($fileName, $str) {
+    public function write($fileName, $str) {
         // 将数组转换为json
         if (is_array($str)) {
             $str = json_encode($str);
@@ -68,14 +68,14 @@ Class JsonStorage extends \CIPlus\CIClass {
             return false;
         }
     }
-
+    
     /**
      * 读取需要保护的json文件
      * @param $fileName
      * @param bool $toArray
      * @return bool|mixed|string
      */
-    public function Load($fileName, $toArray = true) {
+    public function load($fileName, $toArray = true) {
         $file_path = $this->save_path . $fileName . '.' . $this->security_extension;
         if (file_exists($file_path)) {
             $json = trim(substr(file_get_contents($file_path), 15));
@@ -87,14 +87,14 @@ Class JsonStorage extends \CIPlus\CIClass {
             return false;
         }
     }
-
+    
     /**
      * 写入需要保护的json文件
      * @param $fileName
      * @param $str
      * @return bool
      */
-    public function Save($fileName, $str) {
+    public function save($fileName, $str) {
         // 将数组转换为json
         if (is_array($str)) {
             $str = json_encode($str);
@@ -113,5 +113,5 @@ Class JsonStorage extends \CIPlus\CIClass {
             return false;
         }
     }
-
+    
 }

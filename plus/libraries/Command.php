@@ -19,9 +19,9 @@ class Command extends \CIPlus\CIClass {
     
     public function __construct() {
         parent::__construct();
-        $this->LoadConf('command');
-        $this->LoadDriver();
-        $this->AnalyseCommand();
+        $this->loadConf('command');
+        $this->loadDriver();
+        $this->analyseCommand();
     }
     
     /**
@@ -29,7 +29,7 @@ class Command extends \CIPlus\CIClass {
      * @param $key
      * @return string
      */
-    public function Get($key) {
+    public function get($key) {
         $key = $key = $this->ParamsKey($key);
         if (key_exists($key, $this->params)) {
             return $this->params[$key];
@@ -44,13 +44,13 @@ class Command extends \CIPlus\CIClass {
      * @return mixed
      */
     public function __call($method, $params) {
-        if ($method === "Set") {
+        if ($method === "set") {
             $method = $method . 'In' . ucfirst($this->driver);
             if (method_exists($this, $method)) {
                 return $this->$method($params[0], $params[1]);
             }
             
-        } elseif ($method === "Load") {
+        } elseif ($method === "load") {
             $method = $method . 'From' . ucfirst($this->driver);
             if (method_exists($this, $method)) {
                 return $this->$method($params[0]);
@@ -62,7 +62,7 @@ class Command extends \CIPlus\CIClass {
     /**
      * 加载全局参数会话引擎
      */
-    private function LoadDriver() {
+    private function loadDriver() {
         if ($this->driver === 'session') {
             $this->CI->load->library('session');
         } elseif ($this->driver === 'cookie') {
@@ -75,23 +75,23 @@ class Command extends \CIPlus\CIClass {
     /**
      * 解析全局参数
      */
-    private function AnalyseCommand() {
+    private function analyseCommand() {
         $params = $this->CI->input->get();
         foreach ($this->command_white_list as $key) {
-            $key = $this->ParamsKey($key);
+            $key = $this->paramsKey($key);
             if (key_exists($key, $params)) {
 //                $this->params = array_merge($this->params, array($key => $params[$key]));
                 $this->params[$key] = $params[$key];
             }
         }
-        $this->SaveInDriver();
+        $this->saveInDriver();
     }
     
     /**
      * 保存至会话引擎
      */
-    private function SaveInDriver() {
-        $method = 'SaveIn' . ucfirst($this->driver);
+    private function saveInDriver() {
+        $method = 'saveIn' . ucfirst($this->driver);
         $this->$method();
     }
     
@@ -100,8 +100,8 @@ class Command extends \CIPlus\CIClass {
      * @param $key
      * @return mixed
      */
-    private function LoadFromSession($key) {
-        $key = $this->ParamsKey($key);
+    private function loadFromSession($key) {
+        $key = $this->paramsKey($key);
         return $this->CI->session->$key;
     }
     
@@ -110,22 +110,22 @@ class Command extends \CIPlus\CIClass {
      * @param $key
      * @return mixed
      */
-    private function LoadFromCookie($key) {
-        $key = $this->ParamsKey($key);
+    private function loadFromCookie($key) {
+        $key = $this->paramsKey($key);
         return $this->CI->input->cookie($key);
     }
     
     /**
      * 将参数写入session
      */
-    private function SaveInSession() {
+    private function saveInSession() {
         $this->CI->session->set_userdata($this->params);
     }
     
     /**
      * 将参数写入cookie
      */
-    private function SaveInCookie() {
+    private function saveInCookie() {
         foreach ($this->params as $key => $value) {
             $this->CI->input->set_cookie($key, $value, 7200);
         }
@@ -136,7 +136,7 @@ class Command extends \CIPlus\CIClass {
      * @param $key
      * @param $value
      */
-    private function SetInSession($key, $value) {
+    private function setInSession($key, $value) {
         $key = $this->ParamsKey($key);
         $this->CI->session->set_userdata($key, $value);
     }
@@ -146,7 +146,7 @@ class Command extends \CIPlus\CIClass {
      * @param $key
      * @param $value
      */
-    private function SetInCookie($key, $value) {
+    private function setInCookie($key, $value) {
         $key = $this->ParamsKey($key);
         $this->CI->input->set_cookie($key, $value, 7200);
     }
@@ -156,7 +156,7 @@ class Command extends \CIPlus\CIClass {
      * @param $key
      * @return string
      */
-    private function ParamsKey($key) {
+    private function paramsKey($key) {
         return $this->prefix . $key;
     }
     
