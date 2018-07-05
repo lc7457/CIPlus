@@ -6,8 +6,7 @@ $config['prefix'] = '_'; // 全局参数前缀
 /**
  * 允许的全局参数白名单
  */
-$config['global_params_list'] = array(
+$config['command_white_list'] = array(
     'format',
-    'global',
-    'style'
+    'header'
 );

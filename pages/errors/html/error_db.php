@@ -6,3 +6,4 @@ echo json_encode(array(
     'message' => strip_tags($message),
     'data' => null
 ));
+exit;

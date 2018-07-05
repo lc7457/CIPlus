@@ -6,3 +6,4 @@ echo json_encode(array(
     'message' => 'API not found',
     'data' => null
 ));
+exit;

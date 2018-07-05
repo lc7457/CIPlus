@@ -1,11 +1,11 @@
 <?php
+
 namespace CIPlus;
 /**
  * 数据格式验证
  */
 class Validated {
-
-    //static public $rules = array(
+    
     const REGEXP_ID = "/^(\w){4,20}$/"; // ID: 字母、数字、下划线组成
     const REGEXP_PASSWORD = "/^(\S){6,20}$/"; // 密码
     const REGEXP_MD5 = "/^(\S){32}$/"; // md5 编码
@@ -22,7 +22,7 @@ class Validated {
     const REGEXP_ZH_PHONE = "/^1[34578]\d{9}$/"; //中国手机号码
     const REGEXP_ZH_CID = "/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X|x)$/";// 中国身份证号码
     const REGEXP_ZH_POSTCODE = "/^[1-9]\d{5}(?!\d)$/"; // 中国邮政编码
-
+    
     /**
      * 正则匹配数据验证
      * @param $rule
@@ -32,5 +32,5 @@ class Validated {
     public function Regexp($rule, $str) {
         return preg_match(constant('self::REGEXP_' . strtoupper($rule)), $str);
     }
-
+    
 }

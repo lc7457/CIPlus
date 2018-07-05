@@ -19,3 +19,14 @@ function url64_decode($string) {
     return base64_decode($data);
 }
 }
+if (!function_exists('add_get_params')) {
+    function add_get_params($url, $params) {
+        $url = parse_url($url);
+        if (key_exists('query', $url)) {
+            $u = array();
+            parse_str($url['query'], $u);
+            $params = array_merge($u, $params);
+        }
+        return '//' . $url['host'] . $url['path'] . '?' . http_build_query($params);
+    }
+}
