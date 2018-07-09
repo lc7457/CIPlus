@@ -17,11 +17,3 @@ $hook['pre_system'] = function () {
     defined("CIPLUS_PATH") OR define("CIPLUS_PATH", FCPATH . 'plus' . DIRECTORY_SEPARATOR);
     defined("PLUGINS_PATH") OR define("PLUGINS_PATH", FCPATH . 'plugins' . DIRECTORY_SEPARATOR);
 };
-
-$hook['post_controller_constructor'] = array(
-    'class' => 'CIPlus',
-    'function' => 'autoload',
-    'filename' => 'CIPlus.php',
-    'filepath' => 'hooks',
-    'params' => array()
-);

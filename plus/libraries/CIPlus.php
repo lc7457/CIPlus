@@ -1,16 +1,16 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+require_once FCPATH . 'plus/CIClass.php';
+
 /**
  * CIPlus 全局工具加载类
  * Class CIPlus
  */
-class CIPlus {
+class CIPlus extends \CIPlus\CIClass {
     
     public function __construct() {
-    }
-    
-    public function autoload() {
-        $this->CI->load->add_package_path(CIPLUS_PATH);
+        parent::__construct();
+        $this->loadConf('ciplus');
         // 全局加载工具类
         $this->CI->load->library('Command');
         $this->CI->load->library('Curl');
