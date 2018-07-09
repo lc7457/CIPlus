@@ -9,8 +9,8 @@ require_once CIPLUS_PATH . 'CIClass.php';
  */
 class Visitor extends \CIPlus\CIClass {
     
-    public $env; // 访问环境
-    public $ua; // user agent
+    private $env; // 访问环境
+    private $ua; // user agent
     
     public function __construct() {
         parent::__construct();

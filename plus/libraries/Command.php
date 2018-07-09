@@ -5,10 +5,10 @@ require_once CIPLUS_PATH . 'CIClass.php';
 /**
  * 全局命令
  * Class Command
- * method Get($key)
+ * method get($key)
  * // FOR IDE
- * @method Set($key, $value)    => SetIn.$this->driver
- * @method Load($key)           => LoadFrom.$this->driver
+ * @method set($key, $value)    => setIn.$this->driver
+ * @method load($key)           => loadFrom.$this->driver
  */
 class Command extends \CIPlus\CIClass {
     protected $driver;
@@ -137,7 +137,7 @@ class Command extends \CIPlus\CIClass {
      * @param $value
      */
     private function setInSession($key, $value) {
-        $key = $this->ParamsKey($key);
+        $key = $this->paramsKey($key);
         $this->CI->session->set_userdata($key, $value);
     }
     
@@ -147,7 +147,7 @@ class Command extends \CIPlus\CIClass {
      * @param $value
      */
     private function setInCookie($key, $value) {
-        $key = $this->ParamsKey($key);
+        $key = $this->paramsKey($key);
         $this->CI->input->set_cookie($key, $value, 7200);
     }
     
