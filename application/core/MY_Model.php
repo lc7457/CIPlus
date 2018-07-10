@@ -70,6 +70,21 @@ abstract class MY_Model extends CI_Model {
     }
     
     /**
+     * 模糊匹配字段
+     * @param $column
+     * @param string $string
+     * @param string $type
+     * @return $this
+     */
+    public function or_like($column, $string = '', $type = 'both') {
+        if (is_array($column)) {
+            $this->db->or_like($column);
+        } else {
+            $this->db->or_like($column, $string, $type);
+        }
+        return $this;
+    }
+    /**
      * 匹配多条数据
      * @param $key
      * @param array $array
@@ -77,6 +92,15 @@ abstract class MY_Model extends CI_Model {
      */
     public function where_in($key, array $array = array()) {
         $this->db->where_in($key, $array);
+        return $this;
+    }
+    /**
+     * 分组处理
+     * @param $key
+     * @return $this
+     */
+    public function group_by($key) {
+        $this->db->group_by($key);
         return $this;
     }
     

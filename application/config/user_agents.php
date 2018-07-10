@@ -61,7 +61,7 @@ $platforms = array(
 $browsers = array(
     'OPR' => 'Opera',
     'Flock' => 'Flock',
-	'Edge'			=> 'Edge',
+    'Edge' => 'Edge',
     'Chrome' => 'Chrome',
     // Opera 10+ always reports Opera/9.80 and appends Version/<real version> to the user agent string
     'Opera.*?Version' => 'Opera',
@@ -106,7 +106,7 @@ $mobiles = array(
 //	'ericsson'			=> 'Ericsson',
 //	'blackberry'		=> 'BlackBerry',
 //	'motorola'			=> 'Motorola'
-
+    
     // Phones and Manufacturers
     'motorola' => 'Motorola',
     'nokia' => 'Nokia',
@@ -150,7 +150,7 @@ $mobiles = array(
     'wii' => 'Nintendo Wii',
     'open web' => 'Open Web',
     'openweb' => 'OpenWeb',
-
+    
     // Operating Systems
     'android' => 'Android',
     'symbian' => 'Symbian',
@@ -158,7 +158,7 @@ $mobiles = array(
     'elaine' => 'Palm',
     'series60' => 'Symbian S60',
     'windows ce' => 'Windows CE',
-
+    
     // Browsers
     'obigo' => 'Obigo',
     'netfront' => 'Netfront Browser',
@@ -168,7 +168,7 @@ $mobiles = array(
     'opera mini' => 'Opera Mini',
     'opera mobi' => 'Opera Mobile',
     'fennec' => 'Firefox Mobile',
-
+    
     // Other
     'digital paths' => 'Digital Paths',
     'avantgo' => 'AvantGo',
@@ -177,7 +177,7 @@ $mobiles = array(
     'vodafone' => 'Vodafone',
     'docomo' => 'NTT DoCoMo',
     'o2' => 'O2',
-
+    
     // Fallback
     'mobile' => 'Generic Mobile',
     'wireless' => 'Generic Mobile',
