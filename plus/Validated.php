@@ -29,7 +29,7 @@ class Validated {
      * @param $str
      * @return bool
      */
-    public function Regexp($rule, $str) {
+    public function regexp($rule, $str) {
         return preg_match(constant('self::REGEXP_' . strtoupper($rule)), $str);
     }
     

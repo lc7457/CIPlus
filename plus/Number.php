@@ -20,7 +20,7 @@ class Number {
      * @param bool $customize
      * @return string
      */
-    public function Encode($num, $rule = 36, $customize = false) {
+    public function encode($num, $rule = 36, $customize = false) {
         $dict = $customize ? $rule : constant('self::DICT_' . $rule);
         $len = strlen($dict);
         $k = (int)fmod($num, $len);// php使用“%”求余可能会溢出，使用“fmod()”函数
@@ -39,7 +39,7 @@ class Number {
      * @param bool $customize
      * @return bool|int
      */
-    public function Decode($str, $rule = 36, $customize = false) {
+    public function decode($str, $rule = 36, $customize = false) {
         $rule = $customize ? $rule : constant('self::DICT_' . $rule);
         $len = strlen($rule);
         $n = strlen($str);
@@ -57,7 +57,7 @@ class Number {
      * @param $type
      * @return string
      */
-    public function Zerofill($num, $len = 10, $type = 0) {
+    public function zerofill($num, $len = 10, $type = 0) {
         return str_pad($num, $len, '0', $type);
     }
 }
