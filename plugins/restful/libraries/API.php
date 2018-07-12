@@ -28,6 +28,7 @@ Class API extends \CIPlus\CIClass {
         parent::__construct();
         $this->loadConf('api');
         $this->CI->lang->load('message');
+        $this->message = lang('m40000');
         $this->analysisCommand();
         ob_start();
     }
@@ -137,6 +138,17 @@ Class API extends \CIPlus\CIClass {
     public function setData(array $data = array()) {
         $this->data = $data;
         return $this;
+    }
+    
+    /**
+     * 更新接口参数数据
+     * @param $key
+     * @param $value
+     * @return mixed
+     */
+    public function updateParam($key, $value) {
+        $this->params[$key] = $value;
+        return $value;
     }
     
     // 处理URL参数命令
