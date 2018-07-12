@@ -51,7 +51,7 @@ Class API extends \CIPlus\CIClass {
             }
         }
         foreach ($optional as $key) {
-            $this->optional[$key] = $params[$key];
+            $this->optional[$key] = empty($params[$key]) ? null : $params[$key];
         }
         $this->params = array_merge($this->required, $this->optional);
         return $this->params;
@@ -68,6 +68,14 @@ Class API extends \CIPlus\CIClass {
         } else {
             return $this->params;
         }
+    }
+    
+    /**
+     * 返回所有非空的有效参数
+     * @return array
+     */
+    public function pureParams() {
+        return array_filter($this->params);
     }
     
     /**

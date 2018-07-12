@@ -61,7 +61,7 @@ abstract class Restful_Controller extends CI_Controller {
      * @return array
      */
     public function requestData(array $arr = array()) {
-        $r = $this->api->requestParams();
+        $r = $this->api->pureParams();
         if (!empty($arr)) {
             return array_intersect_key($r, array_flip($arr));
         } else {
