@@ -11,6 +11,7 @@
 */cache/*
 */cache/!index.html
 */cache/!.htaccess
+/application/vendor
 
 
 # IDE
