@@ -8,7 +8,7 @@ require_once FCPATH . 'plus/CIClass.php';
  * 保存Json为文件
  * 读取本地Json文件
  * ===================================================================
- * Version 1.0.0 BETA
+ * Version 1.0.0
  * Create by LeeNux @ 2016-3-2
  * Update by LeeNux @ 2016-3-2
  */

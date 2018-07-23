@@ -50,14 +50,4 @@ class Number {
         return $x;
     }
 
-    /**
-     * 填充0（零）
-     * @param int $num
-     * @param int $len
-     * @param $type
-     * @return string
-     */
-    public function zerofill($num, $len = 10, $type = 0) {
-        return str_pad($num, $len, '0', $type);
-    }
 }
