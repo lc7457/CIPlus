@@ -35,7 +35,7 @@ abstract class MY_Model extends CI_Model {
      * @param $whereArr
      * @return mixed 影响的行数
      */
-    protected function update($table, $dataArr, $whereArr) {
+    protected function update($table, $dataArr, $whereArr = array()) {
         $this->db->where($whereArr);
         $this->db->update($table, $dataArr);
         return $this->db->affected_rows();
@@ -47,7 +47,7 @@ abstract class MY_Model extends CI_Model {
      * @param $whereArr
      * @return mixed 影响的行数
      */
-    protected function delete($table, $whereArr) {
+    protected function delete($table, $whereArr = array()) {
         $this->db->where($whereArr);
         $this->db->delete($table);
         return $this->db->affected_rows();
