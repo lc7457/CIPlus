@@ -63,10 +63,12 @@ Class API extends \CIPlus\CIClass {
      * @return array|mixed
      */
     public function requestParams($key = '') {
-        if (!empty($key) && array_key_exists($key, $this->params)) {
+        if (empty($key)) {
+            return $this->params;
+        } elseif (array_key_exists($key, $this->params)) {
             return $this->params[$key];
         } else {
-            return $this->params;
+            return null;
         }
     }
     

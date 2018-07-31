@@ -93,8 +93,7 @@ abstract class MY_Model extends CI_Model {
      * @return mixed
      */
     protected function count($table) {
-        $query = $this->db->get($table);
-        return $query->num_rows();
+        return $this->db->count_all_results($table);
     }
     
     /**
