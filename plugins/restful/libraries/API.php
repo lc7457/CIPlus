@@ -189,12 +189,12 @@ Class API extends \CIPlus\CIClass {
     // post or get method
     protected function _request($key = null) {
         $data = NULL;
-        $get = $this->CI->input->get($key);
-        $post = $this->CI->input->post($key);
         if (empty($key)) {
+            $get = $this->CI->input->get($key);
+            $post = $this->CI->input->post($key);
             $data = array_merge($get, $post);
         } else {
-            $data = (strlen($post) == 0) ? $get : $post;
+            $data = $this->CI->input->post_get($key);
         }
         return $data;
     }
