@@ -57,7 +57,7 @@ $autoload['packages'] = array(CIPLUS_PATH);
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('CIPlus', 'Session');
+$autoload['libraries'] = array('CIPlus');
 
 /*
 | -------------------------------------------------------------------

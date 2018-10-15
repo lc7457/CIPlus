@@ -3,36 +3,36 @@
 require_once FCPATH . 'plus/CIClass.php';
 
 Class API extends \CIPlus\CIClass {
-
+    
     const KEY_CODE = 'code';
     const KEY_MESSAGE = 'message';
     const KEY_DATA = 'data';
-
+    
     // 详见config/api.php
     protected $strict = true; // 是否打开严格模式，打开后除了接口信息其他输出无效
     protected $cors = false; // 是否开启CORS跨域访问，必须开打严格模式才可以启动
     protected $respondFormat = 'json'; // 默认数据格式
     protected $supportedFormats = array(); // 可被支持的数据格式
-
+    
     // API默认返回数据
     private $code = 40000;
     private $message = 'Access API Failed';
     private $data = array();
-
+    
     // 接口参数
     private $required = array(); // 必填参数
     private $optional = array(); // 选填参数
     private $params = array(); // 参数集合
-
+    
     public function __construct(array $config = array()) {
         parent::__construct();
         $this->loadConf('api');
-        $this->CI->lang->load('message');
+        $this->CI->lang->load('respond');
         $this->message = lang('m40000');
         $this->analysisCommand();
         ob_start();
     }
-
+    
     /**
      * 获取接口参数
      * @param array $required
@@ -56,7 +56,7 @@ Class API extends \CIPlus\CIClass {
         $this->params = array_merge($this->required, $this->optional);
         return $this->params;
     }
-
+    
     /**
      * 返回请求参数
      * @param $key
@@ -71,7 +71,7 @@ Class API extends \CIPlus\CIClass {
             return null;
         }
     }
-
+    
     /**
      * 返回所有非空的有效参数
      * @return array
@@ -79,7 +79,7 @@ Class API extends \CIPlus\CIClass {
     public function pureParams() {
         return array_filter($this->params);
     }
-
+    
     /**
      * 抛出接口回调数据
      * param int $code 接口参数
@@ -115,7 +115,7 @@ Class API extends \CIPlus\CIClass {
         $this->CI->output->_display();
         exit;
     }
-
+    
     /**
      * Set Respond Code
      * @param int $code 代码
@@ -129,7 +129,7 @@ Class API extends \CIPlus\CIClass {
         }
         return $this;
     }
-
+    
     /**
      * Set Respond Message
      * @param string $message
@@ -139,7 +139,7 @@ Class API extends \CIPlus\CIClass {
         $this->message = $message;
         return $this;
     }
-
+    
     /**
      * Set Respond Data
      * @param array $data
@@ -149,7 +149,7 @@ Class API extends \CIPlus\CIClass {
         $this->data = $data;
         return $this;
     }
-
+    
     /**
      * 更新接口参数数据
      * @param $key
@@ -160,13 +160,13 @@ Class API extends \CIPlus\CIClass {
         $this->params[$key] = $value;
         return $value;
     }
-
+    
     // 处理URL参数命令
     private function analysisCommand() {
         $this->CI->load->library('command');
         $this->_format();
     }
-
+    
     // 修改API数据格式
     private function _format() {
         $this->CI->load->library('format');
@@ -175,17 +175,17 @@ Class API extends \CIPlus\CIClass {
             $this->respondFormat = $f;
         }
     }
-
+    
     // get method
     protected function _get($key = null) {
         return $this->CI->input->get($key);
     }
-
+    
     // post method
     protected function _post($key = null) {
         return $this->CI->input->post($key);
     }
-
+    
     // post or get method
     protected function _request($key = null) {
         $data = NULL;
@@ -198,5 +198,5 @@ Class API extends \CIPlus\CIClass {
         }
         return $data;
     }
-
+    
 }
