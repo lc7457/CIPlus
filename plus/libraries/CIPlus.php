@@ -12,7 +12,6 @@ class CIPlus extends \CIPlus\CIClass {
         parent::__construct();
         $this->loadConf('ciplus');
         // 全局加载工具类
-        $this->CI->load->library('Command');
         $this->CI->load->library('Curl');
         $this->CI->load->library('Visitor');
         // 全局加载辅助函数

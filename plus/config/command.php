@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-$config['driver'] = 'session'; // 全局参数会话引擎: session || cookie
+$config['driver'] = 'cookie'; // 全局参数会话引擎: session || cookie
 $config['prefix'] = '_'; // 全局参数前缀
 
 /**

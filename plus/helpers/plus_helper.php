@@ -1,12 +1,35 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 if (!function_exists('unique_code')) {
+    /**
+     * 构造唯一的随机字符串
+     * @return string
+     */
     function unique_code() {
         return md5(uniqid(mt_rand(), true));
     }
 }
 
+if (!function_exists('is_json')) {
+    /**
+     * 判断是否为合法的JSON字符串
+     * @param $string
+     * @return bool
+     */
+    function is_json($string) {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+}
+
 if (!function_exists('zero_fill')) {
+    /**
+     * 字符串填充零
+     * @param string $num 被填充的字符串
+     * @param int $len 总长度
+     * @param int $type 填充位置
+     * @return string
+     */
     function zero_fill($num, $len = 10, $type = 0) {
         return str_pad($num, $len, '0', $type);
     }
