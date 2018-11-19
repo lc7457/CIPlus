@@ -1,20 +1,21 @@
 <?php
-/**
- * CI Class 模板类
- */
 
 namespace CIPlus;
-
+/**
+ * 类模板
+ * Class CIClass
+ * @package CIPlus
+ */
 abstract class CIClass {
     protected $CI;
-    
+
     public function __construct(array $config = array()) {
         $this->CI =& get_instance();
         if (!empty($config)) {
             $this->initConf($config);
         }
     }
-    
+
     /**
      * 根据参数初始化类
      * @param $config
@@ -26,7 +27,7 @@ abstract class CIClass {
             }
         }
     }
-    
+
     /**
      * 加载CI config配置文件
      * @param $name : 配置文件名称
@@ -44,7 +45,7 @@ abstract class CIClass {
         }
         return $config;
     }
-    
+
     /**
      * 加载插件库
      * @param $plugins
@@ -61,7 +62,7 @@ abstract class CIClass {
         }
         return false;
     }
-    
+
     protected function loadPlugin($plugin) {
         if (is_string($plugin)) {
             $this->CI->load->add_package_path(FCPATH . 'plugins' . DIRECTORY_SEPARATOR . $plugin);

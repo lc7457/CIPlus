@@ -1,13 +1,13 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once FCPATH . 'plus/CIClass.php';
+require_once FCPATH . 'plus/CIClass.abstract.php';
 
 /**
  * CIPlus 全局工具加载类
  * Class CIPlus
  */
 class CIPlus extends \CIPlus\CIClass {
-    
+
     public function __construct() {
         parent::__construct();
         $this->loadConf('ciplus');
@@ -19,5 +19,5 @@ class CIPlus extends \CIPlus\CIClass {
         // 全局加载语言文件
 //        $this->CI->lang->load();
     }
-    
+
 }

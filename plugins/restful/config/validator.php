@@ -16,7 +16,7 @@ $config['token_sources'] = 'request'; // [header || request]
 $config['token_sources_key'] = 'token';
 
 /* token 验证服务器API */
-$config['token_inspect_api'] = 'http://rap.ciplus.com/spi/inspector/token';
+$config['token_inspect_api'] = base_url('api/cp/info');
 
 /* token 验证方法 */
 $config['token_inspect_method'] = 'get'; // [get || post]
