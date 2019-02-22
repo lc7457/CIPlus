@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once FCPATH . 'plus/CIClass.php';
+require_once FCPATH . 'plus/CIClass.abstract.php';
 
 /**
  * Class JsonStorage
@@ -8,7 +8,7 @@ require_once FCPATH . 'plus/CIClass.php';
  * 保存Json为文件
  * 读取本地Json文件
  * ===================================================================
- * Version 1.0.0 BETA
+ * Version 1.0.0
  * Create by LeeNux @ 2016-3-2
  * Update by LeeNux @ 2016-3-2
  */
@@ -20,7 +20,7 @@ Class JsonStorage extends \CIPlus\CIClass {
     public function __construct(array $params = array()) {
         parent::__construct($params);
         // 优先加载系统配置
-        $this->LoadConf('json_storage');
+        $this->loadConf('json_storage');
         // 加载用户配置，可覆盖之前配置
     }
     

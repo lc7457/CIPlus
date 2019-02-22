@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once CIPLUS_PATH . 'CIClass.php';
+require_once CIPLUS_PATH . 'CIClass.abstract.php';
 
 /**
  * 访客类
@@ -16,7 +16,6 @@ class Visitor extends \CIPlus\CIClass {
         parent::__construct();
         $this->userAgent();
         $this->environment();
-        $this->uniqueCode();
     }
     
     // 获取user agent
@@ -34,19 +33,6 @@ class Visitor extends \CIPlus\CIClass {
         }
         return "browser";
     }
-    
-    // 生成唯一码
-    public function uniqueCode() {
-        $code = empty($_SESSION['code']) ? null : $_SESSION['code'];
-        if (empty($code)) {
-            $code = md5($this->ip() . time() . rand(1000, 9999));
-        }
-        $this->CI->session->set_userdata(
-            array('code' => $code)
-        );
-        return $code;
-    }
-    
     
     // 获取用户 ip
     public function ip() {

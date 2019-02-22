@@ -1,16 +1,19 @@
-/storage/
-/storage/!index.html
+# /storage/
+!/storage/index.html
 */config/development/*.php
 */config/testing/*.php
 */config/production/*.php
-*/*/*/config/development/*.php
-*/*/*/config/testing/*.php
-*/*/*/config/production/*.php
+*/*/config/development/*.php
+*/*/config/testing/*.php
+*/*/config/production/*.php
+*/tmp/*
+!*/tmp/index.html
 */logs/log-*.php
 */logs/!index.html
 */cache/*
-*/cache/!index.html
-*/cache/!.htaccess
+!*/cache/index.html
+!*/cache/.htaccess
+/application/vendor
 
 
 # IDE

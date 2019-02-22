@@ -3,15 +3,17 @@
 $config['strict'] = TRUE;
 // 是否在代码层开启CORS跨域共享
 $config['cors'] = FALSE;
+// 格式命令
+$config['param_format'] = '_format';
 // 默认返回的API数据格式
 $config['respondFormat'] = 'json';
 // 支持的API数据格式
 $config['supportedFormats'] = [
     'json' => 'application/json',
-    'array' => 'application/json',
+//    'array' => 'application/json',
     'csv' => 'application/csv',
     'html' => 'text/html',
-    'jsonp' => 'application/javascript',
+//    'jsonp' => 'application/javascript',
     'php' => 'text/plain',
     'serialized' => 'application/vnd.php.serialized',
     'xml' => 'application/xml'

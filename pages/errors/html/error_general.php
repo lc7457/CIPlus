@@ -2,7 +2,7 @@
 
 header('content-type:application/json;charset=utf8');
 echo json_encode(array(
-    'code' => $status_code,
+    'code' => $heading,
     'message' => strip_tags($message),
     'data' => null
 ));

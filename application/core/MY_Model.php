@@ -1,12 +1,12 @@
 <?php defined('BASEPATH') or exit ('No direct script access allowed');
 
 abstract class MY_Model extends CI_Model {
-    
+
     public function __construct($database = 'default') {
         parent::__construct();
         $this->db = $this->load->database($database, TRUE);
     }
-    
+
     /**
      * 替换数据
      * @param $table
@@ -14,9 +14,10 @@ abstract class MY_Model extends CI_Model {
      * @return mixed
      */
     protected function replace($table, array $dataArr) {
+        $this->cache_clear();
         return $this->db->replace($table, $dataArr);
     }
-    
+
     /**
      * 添加数据
      * @param $table
@@ -24,10 +25,11 @@ abstract class MY_Model extends CI_Model {
      * @return mixed 插入的id
      */
     protected function insert($table, array $dataArr) {
+        $this->cache_clear();
         $this->db->insert($table, $dataArr);
         return $this->db->insert_id();
     }
-    
+
     /**
      * 修改数据
      * @param $table
@@ -35,24 +37,26 @@ abstract class MY_Model extends CI_Model {
      * @param $whereArr
      * @return mixed 影响的行数
      */
-    protected function update($table, $dataArr, $whereArr) {
+    protected function update($table, $dataArr, $whereArr = array()) {
+        $this->cache_clear();
         $this->db->where($whereArr);
         $this->db->update($table, $dataArr);
         return $this->db->affected_rows();
     }
-    
+
     /**
      * 删除数据
      * @param $table
      * @param $whereArr
      * @return mixed 影响的行数
      */
-    protected function delete($table, $whereArr) {
+    protected function delete($table, $whereArr = array()) {
+        $this->cache_clear();
         $this->db->where($whereArr);
         $this->db->delete($table);
         return $this->db->affected_rows();
     }
-    
+
     /**
      * 查询并返回一条数据
      * @param $table
@@ -62,7 +66,7 @@ abstract class MY_Model extends CI_Model {
         $query = $this->db->get($table);
         return $query->row_array();
     }
-    
+
     /**
      * 查询并返回多条数据
      * @param $table
@@ -76,7 +80,7 @@ abstract class MY_Model extends CI_Model {
         $query = $this->db->get($table, $num, $offset);
         return $query->result_array();
     }
-    
+
     /**
      * 查询并返回全部数据
      * @param $table
@@ -86,24 +90,23 @@ abstract class MY_Model extends CI_Model {
         $query = $this->db->get($table);
         return $query->result_array();
     }
-    
+
     /**
      * 查询数据总数
      * @param $table
      * @return mixed
      */
     protected function count($table) {
-        $query = $this->db->get($table);
-        return $query->num_rows();
+        return $this->db->count_all_results($table);
     }
-    
+
     /**
-     * 清除所有数据缓存
+     * 清除数据缓存
      */
     public function cache_clear() {
-        $this->db->cache_delete_all();
+        $this->db->cache_delete();
     }
-    
+
     /**
      * 重置查询条件缓存
      */
@@ -111,5 +114,5 @@ abstract class MY_Model extends CI_Model {
         $this->db->reset_query();
         $this->db->flush_cache();
     }
-    
+
 }
