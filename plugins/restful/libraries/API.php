@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once FCPATH . 'plus/CIClass.abstract.php';
+require_once FCPATH . 'plus/CIClass.php';
 
 Class API extends \CIPlus\CIClass {
 
@@ -11,7 +11,6 @@ Class API extends \CIPlus\CIClass {
     // 详见config/api.php
     protected $strict = true; // 是否打开严格模式，打开后除了接口信息其他输出无效
     protected $cors = false; // 是否开启CORS跨域访问，必须开打严格模式才可以启动
-    protected $param_format; // 数据格式参数
     protected $respondFormat = 'json'; // 默认数据格式
     protected $supportedFormats = array(); // 可被支持的数据格式
 
@@ -28,9 +27,9 @@ Class API extends \CIPlus\CIClass {
     public function __construct(array $config = array()) {
         parent::__construct();
         $this->loadConf('api');
-        $this->CI->load->library('format');
-        $this->CI->lang->load('respond');
+        $this->CI->lang->load('message');
         $this->message = lang('m40000');
+        $this->analysisCommand();
         ob_start();
     }
 
@@ -52,7 +51,7 @@ Class API extends \CIPlus\CIClass {
             }
         }
         foreach ($optional as $key) {
-            $this->optional[$key] = empty($params[$key]) ? null : $params[$key];
+            $this->optional[$key] = (strlen($params[$key]) == 0) ? null : $params[$key];
         }
         $this->params = array_merge($this->required, $this->optional);
         return $this->params;
@@ -64,12 +63,10 @@ Class API extends \CIPlus\CIClass {
      * @return array|mixed
      */
     public function requestParams($key = '') {
-        if (empty($key)) {
-            return $this->params;
-        } elseif (array_key_exists($key, $this->params)) {
+        if (!empty($key) && array_key_exists($key, $this->params)) {
             return $this->params[$key];
         } else {
-            return null;
+            return $this->params;
         }
     }
 
@@ -88,17 +85,13 @@ Class API extends \CIPlus\CIClass {
      * param array $data 接口参数
      */
     public function respond() {
-        $this->_format();
-        // 清理输出缓冲区
         if ($this->strict) {
             ob_end_clean();
-            // 构造允许跨域 header
             if ($this->cors) {
                 header("Access-Control-Allow-Origin: *");
                 header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With');
             }
         }
-        // 根据参数类型解析参数
         $args = func_get_args();
         foreach ($args as $arg) {
             if (is_numeric($arg)) {
@@ -109,7 +102,6 @@ Class API extends \CIPlus\CIClass {
                 $this->setData($arg);
             }
         }
-        // 构造回调数据
         $arr = array(
             self::KEY_CODE => $this->code,
             self::KEY_MESSAGE => $this->message,
@@ -167,9 +159,16 @@ Class API extends \CIPlus\CIClass {
         return $value;
     }
 
+    // 处理URL参数命令
+    private function analysisCommand() {
+        $this->CI->load->library('command');
+        $this->_format();
+    }
+
     // 修改API数据格式
     private function _format() {
-        $f = strtolower($this->_request($this->param_format));
+        $this->CI->load->library('format');
+        $f = strtolower($this->CI->command->get('format'));
         if (!empty($f) && array_key_exists($f, $this->supportedFormats)) {
             $this->respondFormat = $f;
         }
@@ -188,12 +187,12 @@ Class API extends \CIPlus\CIClass {
     // post or get method
     protected function _request($key = null) {
         $data = NULL;
+        $get = $this->CI->input->get($key);
+        $post = $this->CI->input->post($key);
         if (empty($key)) {
-            $get = $this->CI->input->get($key);
-            $post = $this->CI->input->post($key);
             $data = array_merge($get, $post);
         } else {
-            $data = $this->CI->input->post_get($key);
+            $data = empty($post) ? $get : $post;
         }
         return $data;
     }
