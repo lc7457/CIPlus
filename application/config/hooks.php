@@ -12,15 +12,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-$hook['pre_system'][] = function () {
-    defined("CIPLUS_VERSION") OR define("CIPLUS_VERSION", "1.0");
-    defined("CIPLUS_PATH") OR define("CIPLUS_PATH", FCPATH . 'plus' . DIRECTORY_SEPARATOR);
-    defined("PLUGINS_PATH") OR define("PLUGINS_PATH", FCPATH . 'plugins' . DIRECTORY_SEPARATOR);
-};
+$hook['pre_system'][] = array(
+    'class' => 'CIPlusHook',
+    'function' => 'pre_system',
+    'filename' => 'CIPlusHook.php',
+    'filepath' => 'hooks',
+);
 
-$hook['pre_controller'][] = array(
-    'class' => 'MyHooks',
-    'function' => 'pre_controller',
-    'filename' => 'MyHooks.php',
+$hook['post_controller_constructor'][] = array(
+    'class' => 'CIPlusHook',
+    'function' => 'post_controller_constructor',
+    'filename' => 'CIPlusHook.php',
     'filepath' => 'hooks',
 );

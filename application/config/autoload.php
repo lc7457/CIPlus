@@ -57,7 +57,7 @@ $autoload['packages'] = array(CIPLUS_PATH);
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('CIPlus');
+$autoload['libraries'] = array('curl', 'visitor');
 
 /*
 | -------------------------------------------------------------------
@@ -88,7 +88,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('language', 'url');
+$autoload['helper'] = array('language', 'url', 'plus');
 
 /*
 | -------------------------------------------------------------------
@@ -102,7 +102,7 @@ $autoload['helper'] = array('language', 'url');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = array('ciplus');
 
 /*
 | -------------------------------------------------------------------
@@ -116,7 +116,7 @@ $autoload['config'] = array();
 | "codeigniter_lang.php" would be referenced as array('codeigniter');
 |
 */
-$autoload['language'] = array('base');
+$autoload['language'] = array();
 
 /*
 | -------------------------------------------------------------------

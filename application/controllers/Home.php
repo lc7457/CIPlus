@@ -4,7 +4,7 @@ class Home extends CI_Controller {
     
     public function __construct() {
         parent::__construct();
-        echo "!";
+        echo "Hello CIPlus!";
     }
     
     public function index() {
