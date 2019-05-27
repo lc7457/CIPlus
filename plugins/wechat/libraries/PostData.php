@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-require_once FCPATH . 'plus/CIClass.php';
+require_once FCPATH . 'plus/CIClass.abstract.php';
 
 class PostData extends \CIPlus\CIClass {
     protected $wechat_open_token;

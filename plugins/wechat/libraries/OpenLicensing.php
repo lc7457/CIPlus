@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-require_once FCPATH . 'plus/CIClass.php';
+require_once FCPATH . 'plus/CIClass.abstract.php';
 
 /**
  * 微信开放平台公众号授权

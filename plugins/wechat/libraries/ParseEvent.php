@@ -1,5 +1,5 @@
 <?php
-require_once FCPATH . 'plus/CIClass.php';
+require_once FCPATH . 'plus/CIClass.abstract.php';
 
 class ParseEvent extends \CIPlus\CIClass {
     

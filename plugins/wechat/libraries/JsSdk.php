@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-require_once FCPATH . 'plus/CIClass.php';
+require_once FCPATH . 'plus/CIClass.abstract.php';
 
 class JsSdk extends \CIPlus\CIClass {
     const GET_JS_TICKET_URL = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi';

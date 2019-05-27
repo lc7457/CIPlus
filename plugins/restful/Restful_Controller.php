@@ -57,28 +57,25 @@ abstract class Restful_Controller extends CI_Controller {
 
     /**
      * 返回合法参数
-     * @param array $arr 交集过滤
      * @return array
      */
-    public function requestData(array $arr = array()) {
-        $r = $this->api->pureParams();
-        if (!empty($arr)) {
-            return array_intersect_key($r, array_flip($arr));
-        } else {
-            return $r;
-        }
+    public function requestData() {
+        return array_intersect_key($this->api->requestParams(), array_flip(func_get_args()));
     }
 
     /**
      * 补集过滤
-     * @param array $arr 不需要的数据项
      * @return array
      */
-    public function requestFilter(array $arr = array()) {
-        return array_diff_key($this->api->requestParams(), array_flip($arr));
+    public function requestFilter() {
+        return array_diff_key($this->api->requestParams(), array_flip(func_get_args()));
     }
 
-    // 返回参数值
+    /**
+     * 返回参数值
+     * @param string $key
+     * @return array|mixed
+     */
     public function requestParam($key = '') {
         return $this->api->requestParams($key);
     }
