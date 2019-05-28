@@ -10,6 +10,5 @@ class CIPlusHook {
 
     public function post_controller_constructor() {
         $CI = &get_instance();
-        $CI->load->library('CIPlus');
     }
 }

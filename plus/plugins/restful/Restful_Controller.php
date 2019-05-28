@@ -5,7 +5,7 @@ abstract class Restful_Controller extends CI_Controller {
     public function __construct(array $security = array()) {
         parent::__construct();
         $this->load->add_package_path(PLUGINS_PATH . 'restful');
-        $this->load->library('API');
+        $this->load->library('Request');
         $this->validator($security);
     }
 
@@ -13,7 +13,7 @@ abstract class Restful_Controller extends CI_Controller {
      * Set Respond Code
      * @param $code
      * @param bool $sync
-     * @return API
+     * @return Request
      */
     public function setCode($code, $sync = true) {
         $this->api->setCode($code, $sync);
@@ -23,7 +23,7 @@ abstract class Restful_Controller extends CI_Controller {
     /**
      * Set Respond Message
      * @param string $message
-     * @return API
+     * @return Request
      */
     public function setMessage($message) {
         $this->api->setMessage($message);
@@ -33,7 +33,7 @@ abstract class Restful_Controller extends CI_Controller {
     /**
      * Set Respond Data
      * @param array $data
-     * @return API
+     * @return Request
      */
     public function setData(array $data = array()) {
         $this->api->setData($data);

@@ -102,7 +102,7 @@ $autoload['helper'] = array('language', 'url', 'plus');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('ciplus');
+$autoload['config'] = array();
 
 /*
 | -------------------------------------------------------------------

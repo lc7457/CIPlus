@@ -2,13 +2,13 @@
 
 require_once FCPATH . 'plus/CIClass.abstract.php';
 
-Class API extends \CIPlus\CIClass {
+Class Respond extends \CIPlus\CIClass {
 
     const KEY_CODE = 'code';
     const KEY_MESSAGE = 'message';
     const KEY_DATA = 'data';
 
-    // 详见config/api.php
+    // 详见config/restful.php
     protected $strict = true; // 是否打开严格模式，打开后除了接口信息其他输出无效
     protected $cors = false; // 是否开启CORS跨域访问，必须开打严格模式才可以启动
     protected $param_format; // 数据格式参数
@@ -20,57 +20,13 @@ Class API extends \CIPlus\CIClass {
     private $message = 'Access API Failed';
     private $data = array();
 
-    // 接口参数
-    private $required = array(); // 必填参数
-    private $optional = array(); // 选填参数
-    private $params = array(); // 参数集合
-
     public function __construct(array $config = array()) {
         parent::__construct();
-        $this->loadConf('api');
+        $this->loadConf('restful');
         $this->CI->load->library('format');
         $this->CI->lang->load('respond');
         $this->message = lang('m40000');
         ob_start();
-    }
-
-    /**
-     * 获取接口参数
-     * @param array $required
-     * @param array $optional
-     * @param string $method
-     * @return array
-     */
-    public function request($required = array(), $optional = array(), $method = 'request') {
-        $method = '_' . $method;
-        $params = $this->$method();
-        foreach ($required as $key) {
-            if (array_key_exists($key, $params)) {
-                $this->required[$key] = $params[$key];
-            } else {
-                $this->respond(40001);
-            }
-        }
-        foreach ($optional as $key) {
-            $this->optional[$key] = $params[$key];
-        }
-        $this->params = array_merge($this->required, $this->optional);
-        return $this->params;
-    }
-
-    /**
-     * 返回请求参数
-     * @param $key
-     * @return array|mixed
-     */
-    public function requestParams($key = '') {
-        if (empty($key)) {
-            return $this->params;
-        } elseif (array_key_exists($key, $this->params)) {
-            return $this->params[$key];
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -148,46 +104,11 @@ Class API extends \CIPlus\CIClass {
         return $this;
     }
 
-    /**
-     * 更新接口参数数据
-     * @param $key
-     * @param $value
-     * @return mixed
-     */
-    public function updateParam($key, $value) {
-        $this->params[$key] = $value;
-        return $value;
-    }
-
     // 修改API数据格式
     private function _format() {
-        $f = strtolower($this->_request($this->param_format));
+        $f = strtolower($this->CI->input->get($this->param_format));
         if (!empty($f) && array_key_exists($f, $this->supportedFormats)) {
             $this->respondFormat = $f;
         }
     }
-
-    // get method
-    protected function _get($key = null) {
-        return $this->CI->input->get($key);
-    }
-
-    // post method
-    protected function _post($key = null) {
-        return $this->CI->input->post($key);
-    }
-
-    // post or get method
-    protected function _request($key = null) {
-        $data = NULL;
-        if (empty($key)) {
-            $get = $this->CI->input->get($key);
-            $post = $this->CI->input->post($key);
-            $data = array_merge($get, $post);
-        } else {
-            $data = $this->CI->input->post_get($key);
-        }
-        return $data;
-    }
-
 }
