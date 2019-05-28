@@ -2,8 +2,8 @@
 
 class MY_Loader extends CI_Loader {
     public function __construct() {
-        echo "loader";
         parent::__construct();
-
+        $this->add_package_path(CIPLUS_PATH);
+        $this->helper('language');
     }
 }

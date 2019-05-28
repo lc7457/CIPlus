@@ -1,9 +1,7 @@
 # /storage/
 !/storage/index.html
-*/config/development/*.php
 */config/testing/*.php
 */config/production/*.php
-*/*/config/development/*.php
 */*/config/testing/*.php
 */*/config/production/*.php
 */tmp/*

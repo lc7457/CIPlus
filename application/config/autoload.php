@@ -1,4 +1,5 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -38,7 +39,7 @@
 |  $autoload['packages'] = array(APPPATH.'third_party', '/usr/local/shared');
 |
 */
-$autoload['packages'] = array(CIPLUS_PATH);
+$autoload['packages'] = array();
 
 /*
 | -------------------------------------------------------------------
@@ -57,7 +58,7 @@ $autoload['packages'] = array(CIPLUS_PATH);
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('curl', 'visitor');
+$autoload['libraries'] = array();
 
 /*
 | -------------------------------------------------------------------
@@ -88,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('language', 'url', 'plus');
+$autoload['helper'] = array();
 
 /*
 | -------------------------------------------------------------------

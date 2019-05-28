@@ -11,17 +11,3 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	https://codeigniter.com/user_guide/general/hooks.html
 |
 */
-
-$hook['pre_system'][] = array(
-    'class' => 'CIPlusHook',
-    'function' => 'pre_system',
-    'filename' => 'CIPlusHook.php',
-    'filepath' => 'hooks',
-);
-
-$hook['post_controller_constructor'][] = array(
-    'class' => 'CIPlusHook',
-    'function' => 'post_controller_constructor',
-    'filename' => 'CIPlusHook.php',
-    'filepath' => 'hooks',
-);

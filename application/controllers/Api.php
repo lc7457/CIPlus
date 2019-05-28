@@ -3,6 +3,7 @@
 class Api extends CI_Controller {
 
     public function __construct() {
+        echo "a";
         parent::__construct();
         $this->load->add_package_path(FCPATH . 'api' . DIRECTORY_SEPARATOR);
     }
