@@ -113,10 +113,10 @@ Class Respond extends \CIPlus\CIClass {
     }
 
     public function invalidRequest() {
-        $this->respond(40001);
+        $this->output(40001);
     }
 
     public function invalidToken() {
-        $this->respond(40099);
+        $this->output(40099);
     }
 }

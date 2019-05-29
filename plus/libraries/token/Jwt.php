@@ -3,23 +3,66 @@
 class Jwt {
     protected $CI;
 
-    public function __construct(array $data = array()) {
+    protected $expire_time;
+    protected $refresh_time;
+
+    protected $sheet;
+
+    protected $header;
+    protected $payload;
+
+    protected $typ; // Token 序列类型
+    protected $rap; // Token 加密方法
+
+    protected $id; // 系统身份标识
+    protected $iat; // 开始时间
+    protected $exp; // 过期时间
+
+    private $key;
+
+    public function __construct() {
         $this->CI =& get_instance();
-        echo $this->CI->config->item('encryption_key');
+        $this->loadConf('token');
+        $this->key = $this->CI->config->item('encryption_key');
     }
 
     /**
-     * 通过配置文件初始化
-     * 目前必须包含header
-     * @param array $data
-     * @return $this
+     * 加载CI config配置文件
+     * @param $name
+     * @return string|null
      */
-    public function init(array $data) {
-        if (is_array($data) && key_exists('header', $data)) {
-            $this->header = $data['header'];
-            $this->parseHeader($this->header);
+    protected function loadConf($name) {
+        $this->CI->config->load($name, true, true);
+        $config = $this->CI->config->item($name);
+        if (is_array($config)) {
+            foreach ($config as $key => $val) {
+                if (property_exists($this, $key)) {
+                    $this->$key = $val;
+                }
+            }
+        }
+        return $config;
+    }
+
+
+    public function setHeader($header) {
+        if ($this->parseHeader($header)) {
+            $this->header = $header;
+        } else {
+            $this->typ = 'jwt';
+            $this->rap = 'norm';
+            $this->header = json_encode(array(
+                'typ' => $this->typ,
+                'rap' => $this->rap
+            ));
         }
         return $this;
+    }
+
+    public function parseHeader($header) {
+        if (is_json($header)) {
+            $header = json_decode($header, true);
+        }
     }
 
     /**

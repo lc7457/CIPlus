@@ -35,7 +35,7 @@ class Api extends CI_Controller {
         $api_path = $lib_path . '/' . $method;
         $api = $this->api_model->by_path($api_path);
         if ($api && $api['validated']) $this->verifyToken();
-        $this->verifyRequest($api);
+        return $this->verifyRequest($api);
     }
 
     private function verifyToken() {
