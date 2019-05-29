@@ -11,7 +11,7 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 28/05/2019 17:56:29
+ Date: 29/05/2019 17:33:38
 */
 
 SET NAMES utf8mb4;
@@ -24,14 +24,22 @@ DROP TABLE IF EXISTS `api`;
 CREATE TABLE `api`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '序列ID',
   `key` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '唯一标识',
-  `title` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '显示名称',
-  `path` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '访问路径',
-  `required` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '必要参数',
-  `optional` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '可选参数',
-  `validated` tinyint(1) NULL DEFAULT 1 COMMENT '需要验证',
+  `title` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '显示名称',
+  `path` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '访问路径',
+  `required` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '[]' COMMENT '必要参数',
+  `optional` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '[]' COMMENT '可选参数',
+  `method` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'request' COMMENT '请求方法[request/get/post]',
+  `validated` tinyint(1) NOT NULL DEFAULT 1 COMMENT '需要验证',
+  `usable` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否可用',
   PRIMARY KEY (`id`, `key`) USING BTREE,
   INDEX `key`(`key`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '接口表：#####' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '接口表：#####' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of api
+-- ----------------------------
+INSERT INTO `api` VALUES (1, '', '用户登录', 'user/login', '[\"password\"]', '[\"account\",\"email\",\"phone\"]', 'request', 1, 1);
+INSERT INTO `api` VALUES (2, '', '用户注册', 'user/reg', '[]', '[]', 'request', 0, 1);
 
 -- ----------------------------
 -- Table structure for role
@@ -62,8 +70,8 @@ CREATE TABLE `role_api`  (
   `api_key` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '接口KEY',
   INDEX `role_key`(`role_key`) USING BTREE,
   INDEX `api_key`(`api_key`) USING BTREE,
-  CONSTRAINT `role_key` FOREIGN KEY (`role_key`) REFERENCES `role` (`key`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `api_key` FOREIGN KEY (`api_key`) REFERENCES `api` (`key`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `api_key` FOREIGN KEY (`api_key`) REFERENCES `api` (`key`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `role_key` FOREIGN KEY (`role_key`) REFERENCES `role` (`key`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表：接口权限' ROW_FORMAT = Compact;
 
 -- ----------------------------
@@ -84,7 +92,7 @@ CREATE TABLE `user`  (
   `account` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '账号',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT 'Email',
   `phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '手机号',
-  `password` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
   `usable` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '账号状态',
   `create_time` int(10) UNSIGNED NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
@@ -93,7 +101,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1000000000, NULL, 'admin@cprap.com', '', 'oZqNVn1oJP7qYgyhkK6VGPujgbEGHLK0k4vtAKIVxhjbgja6MGjgLvQQfAfmpJIDazaEYP046H1sbUG1F6y/rubDxzM519cP0odzxTNflMxoXOCZMVdvOYtcIYdzzoFa', 1, 0);
+INSERT INTO `user` VALUES (1000000000, 'admin', 'admin@cprap.com', '', 'b34e50b8b8b4b1fe831a20e37db6285b38adb5c0510afdd7dd62ac5a8412e5be4685b5a8408cf3cfc7b70058be2309a759009be6273ccc0a44f3fa57391abc80qfPIU29n4I6A0e8kEPx/RvuHex93c9Bl9sN9X333S7kspgczaGFXuC00KBoBvctArV/3yC0h8oErepMIFMFKBg==', 1, 0);
 
 -- ----------------------------
 -- Table structure for user_info
