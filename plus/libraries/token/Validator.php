@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once FCPATH . 'plus/CIClass.abstract.php';
+require_once CIPLUS_PATH . 'CIClass.abstract.php';
 
 Class Validator extends \CIPlus\CIClass {
 

@@ -5,13 +5,10 @@ require_once FCPATH . 'plus/CIClass.abstract.php';
 Class Request extends \CIPlus\CIClass {
 
     // 接口参数
-    private $required = array(); // 必填参数
-    private $optional = array(); // 选填参数
-    private $params = array(); // 参数集合
+    private $_params = array(); // 参数集合
 
     public function __construct(array $config = array()) {
         parent::__construct();
-        $this->loadConf('restful');
     }
 
     /**
@@ -19,23 +16,23 @@ Class Request extends \CIPlus\CIClass {
      * @param array $required
      * @param array $optional
      * @param string $method
-     * @return array
+     * @return bool
      */
-    public function request($required = array(), $optional = array(), $method = 'request') {
+    public function init($required = array(), $optional = array(), $method = 'request') {
         $method = '_' . $method;
         $params = $this->$method();
         foreach ($required as $key) {
-            if (array_key_exists($key, $params)) {
-                $this->required[$key] = $params[$key];
-            } else {
-                $this->respond(40001);
+            if (!array_key_exists($key, $params)) {
+                return false;
             }
         }
         foreach ($optional as $key) {
-            $this->optional[$key] = $params[$key];
+            if (!array_key_exists($key, $params)) {
+                $params[$key] = null;
+            }
         }
-        $this->params = array_merge($this->required, $this->optional);
-        return $this->params;
+        $this->_params = $params;
+        return true;
     }
 
     /**
@@ -43,11 +40,11 @@ Class Request extends \CIPlus\CIClass {
      * @param $key
      * @return array|mixed
      */
-    public function requestParams($key = '') {
+    public function params($key = '') {
         if (empty($key)) {
-            return $this->params;
-        } elseif (array_key_exists($key, $this->params)) {
-            return $this->params[$key];
+            return $this->_params;
+        } elseif (array_key_exists($key, $this->_params)) {
+            return $this->_params[$key];
         } else {
             return null;
         }
@@ -60,7 +57,7 @@ Class Request extends \CIPlus\CIClass {
      * @return mixed
      */
     public function updateParam($key, $value) {
-        $this->params[$key] = $value;
+        $this->_params[$key] = $value;
         return $value;
     }
 
@@ -79,8 +76,8 @@ Class Request extends \CIPlus\CIClass {
     protected function _request($key = null) {
         $data = NULL;
         if (empty($key)) {
-            $get = $this->CI->input->get($key);
-            $post = $this->CI->input->post($key);
+            $get = $this->CI->input->get();
+            $post = $this->CI->input->post();
             $data = array_merge($get, $post);
         } else {
             $data = $this->CI->input->post_get($key);

@@ -2,6 +2,7 @@
 defined('REGEXP_SHA1') OR define('REGEXP_SHA1', "/^(\S){40}$/"); // SHA1 密文
 defined('REGEXP_MD5') OR define('REGEXP_MD5', "/^(\S){32}$/"); // MD5 密文
 
+defined('REGEXP_ACCOUNT') OR define('REGEXP_ACCOUNT', "/^[a-zA-Z0-9_]{4,20}$/"); // 颜色哈希代码
 defined('REGEXP_COLOR_HEX') OR define('REGEXP_COLOR_HEX', "/^#([a-fA-F0-9]){3}(([a-fA-F0-9]){3})?$/"); // 颜色哈希代码
 defined('REGEXP_IPV4') OR define('REGEXP_IPV4', "/^(\d|[01]?\d\d|2[0-4]\d|25[0-5])\.(\d|[01]?\d\d|2[0-4] \d|25[0-5])\.(\d|[01]?\d\d|2[0-4]\d|25[0-5])\.(\d|[01]?\d\d|2[0-4] \d|25[0-5])$/"); // IPv4 地址
 defined('REGEXP_EMAIL') OR define('REGEXP_EMAIL', "/^[A-Za-z0-9]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/"); // Email

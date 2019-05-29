@@ -15,6 +15,7 @@ class user_model extends MY_Model {
      * @return int|null
      */
     public function verify_account($account, $password) {
+        $this->db->where('usable', 1);
         $this->db->where('account', $account);
         $user = $this->row(self::TB_USER);
         return $this->compare_password($user, $password);
@@ -27,6 +28,7 @@ class user_model extends MY_Model {
      * @return int|null
      */
     public function verify_email($email, $password) {
+        $this->db->where('usable', 1);
         $this->db->where('email', $email);
         $user = $this->row(self::TB_USER);
         return $this->compare_password($user, $password);
@@ -39,6 +41,7 @@ class user_model extends MY_Model {
      * @return int|null
      */
     public function verify_phone($phone, $password) {
+        $this->db->where('usable', 1);
         $this->db->where('phone', $phone);
         $user = $this->row(self::TB_USER);
         return $this->compare_password($user, $password);
@@ -51,7 +54,8 @@ class user_model extends MY_Model {
      * @return int|null
      */
     private function compare_password($user, $password) {
-        if ($this->decryptPassword($user['password']) === $password) {
+        print_r($this->decrypt($user['password']));
+        if ($this->decrypt($user['password']) === $password) {
             return $user['id'];
         }
         return null;
@@ -59,16 +63,18 @@ class user_model extends MY_Model {
 
     /**
      * 添加用户账号
+     * @param $account
      * @param $email
      * @param $phone
      * @param $password
      * @return mixed
      */
-    public function add($email, $phone, $password) {
+    public function add($account, $email, $phone, $password) {
         $data = array(
+            'account' => $account,
             'email' => $email,
             'phone' => $phone,
-            'password' => $this->encryptPassword($password),
+            'password' => $this->encrypt($password),
             'create_time' => time()
         );
         $re = $this->insert(self::TB_USER, $data);
@@ -125,8 +131,8 @@ class user_model extends MY_Model {
     public function changePassword($id, $old_password, $new_password) {
         $this->db->where('id', $id);
         $m = $this->row(self::TB_USER);
-        if (!empty($m) && $this->decryptPassword($m['password']) === $old_password) {
-            return $this->update(self::TB_USER, ['password' => $this->encryptPassword($new_password)], ['id' => $id]);
+        if (!empty($m) && $this->decrypt($m['password']) === $old_password) {
+            return $this->update(self::TB_USER, ['password' => $this->encrypt($new_password)], ['id' => $id]);
         }
         return false;
     }
@@ -136,7 +142,7 @@ class user_model extends MY_Model {
      * @param $password
      * @return string
      */
-    private function encryptPassword($password) {
+    private function encrypt($password) {
         $this->load->library('encryption');
         return $this->encryption->encrypt($password);
     }
@@ -146,7 +152,7 @@ class user_model extends MY_Model {
      * @param $password
      * @return string
      */
-    private function decryptPassword($password) {
+    private function decrypt($password) {
         $this->load->library('encryption');
         return $this->encryption->decrypt($password);
     }

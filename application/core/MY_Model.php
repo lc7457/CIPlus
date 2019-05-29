@@ -60,9 +60,11 @@ abstract class MY_Model extends CI_Model {
     /**
      * 查询并返回一条数据
      * @param $table
+     * @param array $whereArr
      * @return mixed 数据数组
      */
-    protected function row($table) {
+    protected function row($table, $whereArr = array()) {
+        $this->db->where($whereArr);
         $query = $this->db->get($table);
         return $query->row_array();
     }
@@ -72,9 +74,11 @@ abstract class MY_Model extends CI_Model {
      * @param $table
      * @param int $page
      * @param int $num
-     * @return mixed 数据数组集
+     * @param array $whereArr
+     * @return mixed
      */
-    protected function result($table, $page = 1, $num = 10) {
+    protected function result($table, $page = 1, $num = 10, $whereArr = array()) {
+        $this->db->where($whereArr);
         if ($page <= 0) $page = 1;
         $offset = ($page - 1) * $num;
         $query = $this->db->get($table, $num, $offset);
@@ -84,9 +88,11 @@ abstract class MY_Model extends CI_Model {
     /**
      * 查询并返回全部数据
      * @param $table
+     * @param array $whereArr
      * @return mixed
      */
-    protected function result_all($table) {
+    protected function result_all($table, $whereArr = array()) {
+        $this->db->where($whereArr);
         $query = $this->db->get($table);
         return $query->result_array();
     }
@@ -94,9 +100,11 @@ abstract class MY_Model extends CI_Model {
     /**
      * 查询数据总数
      * @param $table
+     * @param array $whereArr
      * @return mixed
      */
-    protected function count($table) {
+    protected function count($table, $whereArr = array()) {
+        $this->db->where($whereArr);
         return $this->db->count_all_results($table);
     }
 

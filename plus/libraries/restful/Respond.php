@@ -35,7 +35,7 @@ Class Respond extends \CIPlus\CIClass {
      * param string $message 接口参数
      * param array $data 接口参数
      */
-    public function respond() {
+    public function output() {
         $this->_format();
         // 清理输出缓冲区
         if ($this->strict) {
@@ -110,5 +110,13 @@ Class Respond extends \CIPlus\CIClass {
         if (!empty($f) && array_key_exists($f, $this->supportedFormats)) {
             $this->respondFormat = $f;
         }
+    }
+
+    public function invalidRequest() {
+        $this->respond(40001);
+    }
+
+    public function invalidToken() {
+        $this->respond(40099);
     }
 }

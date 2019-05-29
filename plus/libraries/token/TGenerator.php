@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit ('No direct script access allowed');
-require_once FCPATH . 'plugins' . DIRECTORY_SEPARATOR . 'restful' . DIRECTORY_SEPARATOR . 'Token.abstract.php';
+require_once './Token.abstract.php';
 
-class Token_generator extends Token {
+class TGenerator extends Token {
     public function __construct(array $data = array()) {
         parent::__construct();
         $this->init($data);
