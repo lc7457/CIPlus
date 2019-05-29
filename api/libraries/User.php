@@ -17,9 +17,9 @@ class User {
         }
         if ($uid) {
             $respond->setCode(20000);
-            $CI->load->library('token/generator', ['header' => $request->params('header')]);
-            $token = $this->generator->initPayload($uid)->generate();
-            $respond->setData(['token' => $token]);
+            $CI->load->library('token/jwt', ['header' => $request->params('header')]);
+//            $token = $this->generator->initPayload($uid)->generate();
+//            $respond->setData(['token' => $token]);
         }
 //        $respond->output();
     }
