@@ -30,10 +30,7 @@ Class Respond extends \CIPlus\CIClass {
     }
 
     /**
-     * 抛出接口回调数据
-     * param int $code 接口参数
-     * param string $message 接口参数
-     * param array $data 接口参数
+     * 输出接口响应数据
      */
     public function output() {
         $this->_format();
@@ -44,17 +41,6 @@ Class Respond extends \CIPlus\CIClass {
             if ($this->cors) {
                 header("Access-Control-Allow-Origin: *");
                 header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With');
-            }
-        }
-        // 根据参数类型解析参数
-        $args = func_get_args();
-        foreach ($args as $arg) {
-            if (is_numeric($arg)) {
-                $this->setCode($arg);
-            } elseif (is_string($arg)) {
-                $this->setMessage($arg);
-            } elseif (is_array($arg)) {
-                $this->setData($arg);
             }
         }
         // 构造回调数据
@@ -68,6 +54,27 @@ Class Respond extends \CIPlus\CIClass {
         $this->CI->output->set_output($this->CI->format->factory($arr)->$toFormat());
         $this->CI->output->_display();
         exit;
+    }
+
+    /**
+     * Set Respond Params
+     * param int $code 接口参数
+     * param string $message 接口参数
+     * param array $data 接口参数
+     */
+    public function set() {
+        // 根据参数类型解析参数
+        $args = func_get_args();
+        foreach ($args as $arg) {
+            if (is_numeric($arg)) {
+                $this->setCode($arg);
+            } elseif (is_string($arg)) {
+                $this->setMessage($arg);
+            } elseif (is_array($arg)) {
+                $this->setData($arg);
+            }
+        }
+        return $this;
     }
 
     /**
@@ -113,10 +120,10 @@ Class Respond extends \CIPlus\CIClass {
     }
 
     public function invalidRequest() {
-        $this->output(40001);
+        $this->setCode(40001)->output();
     }
 
     public function invalidToken() {
-        $this->output(40099);
+        $this->setCode(40099)->output();
     }
 }

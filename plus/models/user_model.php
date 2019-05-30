@@ -54,7 +54,6 @@ class user_model extends MY_Model {
      * @return int|null
      */
     private function compare_password($user, $password) {
-        print_r($this->decrypt($user['password']));
         if ($this->decrypt($user['password']) === $password) {
             return $user['id'];
         }

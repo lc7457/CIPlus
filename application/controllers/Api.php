@@ -17,7 +17,8 @@ class Api extends CI_Controller {
             $this->validator($lib_path, $method);
             $this->load->library($lib_path, null, 'api');
             if (is_callable(array($this->api, $method))) {
-                $this->api->$method($this->request, $this->respond);
+                $res = $this->api->$method($this->request, $this->respond);
+                if ($res instanceof Respond) $res->output();
             }
         } else {
             show_404();

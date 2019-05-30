@@ -29,36 +29,52 @@ abstract class Jwt {
      */
     public function generator(array $header, array $payload) {
         if ($this->verifyHeader($header) && key_exists('id', $payload)) {
+
             $header = $this->normHeader($header);
             $payload = $this->normPayload($payload);
-            $sign = $this->signed($header, $payload);
+            $rap = $header['rap'];
 
             $header = $this->encode(json_encode($header));
             $payload = $this->encode(json_encode($payload));
-            $sign = $this->encode($sign);
 
-            return sprintf("%s.%s,%s", $header, $payload, $sign);
+            $cipher = $header . "." . $payload;
+            $sign = $this->encrypt($cipher, $rap);
+            return $cipher . "." . $sign;
+
         } else {
+
             return null;
+
         }
     }
 
     /**
      * 验证 Token
      * @param $token
-     * @return bool
+     * @return array
      */
     public function validator($token) {
         $tkr = explode('.', $token);
         if (count($tkr) === 3) {
-            $header = json_decode($this->decode($tkr[0]), true);
-            $payload = json_decode($this->decode($tkr[1]), true);
-            $sign = $this->decode($tkr[3]);
-            return $this->signed($header, $payload) === $sign;
-//            && $this->verifyHeader($tkr[0]) && $this->verifyPayload($tkr[1])) {
-//                return $this->signed($tkr[0], $tkr[1]) === $tkr[3];
-//            }
+            $header = $tkr[0];
+            $payload = $tkr[1];
+            $sign = $tkr[2];
+
+            $cipher = $header . '.' . $payload;
+
+            $header = $this->decode($header);
+            $rap = $header['rap'];
+            $payload = $this->decode($payload);
+
+            if ($this->decrypt($sign, $rap) === $cipher) {
+                return array(
+                    'header' => $header,
+                    'payload' => $payload,
+                    'sign' => $sign
+                );
+            }
         }
+
         return null;
     }
 
@@ -110,11 +126,12 @@ abstract class Jwt {
 
     /**
      * 安全编码
-     * @param $string
+     * @param $data
      * @return mixed|string
      */
-    protected function encode($string) {
-        $data = base64_encode($string);
+    protected function encode($data) {
+        if (is_array($data)) $data = json_encode($data);
+        $data = base64_encode($data);
         $data = str_replace(array('+', '/', '='), array('-', '_', ''), $data);
         return $data;
     }
@@ -122,23 +139,33 @@ abstract class Jwt {
     /**
      * 安全解码
      * @param $string
+     * @param $toArray
      * @return bool|string
      */
-    protected function decode($string) {
+    protected function decode($string, $toArray = true) {
         $data = str_replace(array('-', '_'), array('+', '/'), $string);
         $mod4 = strlen($data) % 4;
         if ($mod4) {
             $data .= substr('====', $mod4);
         }
-        return base64_decode($data);
+        $data = base64_decode($data);
+        if ($toArray) $data = json_decode($data, true);
+        return $data;
     }
 
     /**
-     * 签名
-     * @param $header
-     * @param $payload
+     * 加密
+     * @param $cipher
+     * @param $rap
      * @return mixed
      */
-    abstract function signed($header, $payload);
+    abstract function encrypt($cipher, $rap);
 
+    /**
+     * 解密
+     * @param $sign
+     * @param $rap
+     * @return mixed
+     */
+    abstract function decrypt($sign, $rap);
 }
