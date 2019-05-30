@@ -39,7 +39,7 @@ class Api extends CI_Controller {
     }
 
     private function verifyToken() {
-        $this->load->library('token/validator');
+//        $this->load->library('token/validator');
     }
 
     private function verifyRole() {
