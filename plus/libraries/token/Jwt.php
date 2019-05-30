@@ -24,16 +24,14 @@ class Jwt extends CIPlus\Jwt {
     public function encrypt($cipher, $rap) {
         $this->CI->load->library('encryption');
         $alg = $this->sheet[$rap];
-        $alg['key'] = $this->key;
         $this->CI->encryption->initialize($alg);
         $sign = $this->CI->encryption->encrypt($cipher);
-        return $this->encode($sign);
+        return $sign;
     }
 
     public function decrypt($sign, $rap) {
         $this->CI->load->library('encryption');
         $alg = $this->sheet[$rap];
-        $sign = $this->decode($sign, false);
         $this->CI->encryption->initialize($alg);
         $cipher = $this->CI->encryption->decrypt($sign);
         return $cipher;

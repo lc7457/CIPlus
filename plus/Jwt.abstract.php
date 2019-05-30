@@ -39,7 +39,7 @@ abstract class Jwt {
 
             $cipher = $header . "." . $payload;
             $sign = $this->encrypt($cipher, $rap);
-            return $cipher . "." . $sign;
+            return $cipher . "." . $this->encode($sign);
 
         } else {
 
@@ -58,7 +58,7 @@ abstract class Jwt {
         if (count($tkr) === 3) {
             $header = $tkr[0];
             $payload = $tkr[1];
-            $sign = $tkr[2];
+            $sign = $this->decode($tkr[2], false);
 
             $cipher = $header . '.' . $payload;
 
@@ -70,7 +70,6 @@ abstract class Jwt {
                 return array(
                     'header' => $header,
                     'payload' => $payload,
-                    'sign' => $sign
                 );
             }
         }
