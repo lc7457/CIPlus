@@ -31,13 +31,11 @@ abstract class Jwt {
         if ($this->verifyHeader($header) && key_exists('id', $payload)) {
             $header = $this->normHeader($header);
             $payload = $this->normPayload($payload);
-            $sign = $this->signed($header, $payload);
 
-            $header = $this->encode(json_encode($header));
-            $payload = $this->encode(json_encode($payload));
-            $sign = $this->encode($sign);
+            $cipher = $this->encode(json_encode($header)) . "." . $this->encode(json_encode($payload));
+            $sign = $this->signed($cipher);
 
-            return sprintf("%s.%s,%s", $header, $payload, $sign);
+            return $cipher . '.' . $sign;
         } else {
             return null;
         }
@@ -135,10 +133,9 @@ abstract class Jwt {
 
     /**
      * 签名
-     * @param $header
-     * @param $payload
+     * @param $cipher
      * @return mixed
      */
-    abstract function signed($header, $payload);
+    abstract function signed($cipher);
 
 }
