@@ -18,9 +18,31 @@ class User {
         if ($uid) {
             $respond->setCode(20000);
             $CI->load->library('token/jwt');
-//            $token = $this->generator->initPayload($uid)->generate();
-//            $respond->setData(['token' => $token]);
+
+            $header = json_decode($request->params('header'), true);
+            $header = $header ? $header : $CI->jwt->initHeader();
+
+            $payload = array('id' => $uid);
+
+            $token = $CI->jwt->generator($header, $payload);
+            $respond->setData(array('token' => $token));
         }
-//        $respond->output();
+        return $respond;
+    }
+
+    public function info(Request $request, Respond $respond) {
+        $CI = &get_instance();
+        $CI->load->library('token/jwt');
+        $CI->load->model("user_model");
+        $token = $request->params('token');
+        $token = $CI->jwt->validator($token);
+        if ($token) {
+            $payload = $token['payload'];
+            $info = $CI->user_model->getInfo($payload['id']);
+            if ($info) {
+                $respond->setCode(20000)->setData($info);
+            }
+        }
+        return $respond;
     }
 }

@@ -14,54 +14,31 @@ class Jwt extends CIPlus\Jwt {
         parent::__construct($config);
     }
 
-    public function signed($header, $payload) {
-        $this->CI->load->library('encryption');
-        $cipher = $this->encode($header) . "." . $this->encode($payload);
-        $alg = $this->sheet[$header['alg']];
-        $alg['key'] = $this->key;
-        $sign = $this->CI->encryption->encrypt($cipher, $alg);
-        return $cipher . "." . url64_encode($sign);
+    public function initHeader() {
+        return array(
+            'typ' => 'jwt',
+            'rap' => 'norm'
+        );
     }
 
-    public function decrypt($token) {
+    public function encrypt($cipher, $rap) {
         $this->CI->load->library('encryption');
-        $tkr = explode('.', $token);
-        if (count($tkr) === 3) {
-            $header = $this->decode($tkr[0]);
-            $payload = $this->decode($tkr[1]);
-            $sign = url64_decode($tkr[2]);
+        $alg = $this->sheet[$rap];
+        $this->CI->encryption->initialize($alg);
+        $sign = $this->CI->encryption->encrypt($cipher);
+        return $sign;
+    }
 
-            $alg = $this->sheet[$header['alg']];
-            $alg['key'] = $this->key;
-
-            if ($this->CI->encryption->decrypt($sign) === $tkr[0] . '.' . $tkr[1]) {
-                return array(
-                    'header' => $header,
-                    'payload' => $payload,
-                    'sign' => $sign
-                );
-            }
-        }
-
-
-        return array(
-            'header' => $header,
-            'payload' => $payload,
-            'sign' => $sign
-        );
+    public function decrypt($sign, $rap) {
+        $this->CI->load->library('encryption');
+        $alg = $this->sheet[$rap];
+        $this->CI->encryption->initialize($alg);
+        $cipher = $this->CI->encryption->decrypt($sign);
+        return $cipher;
     }
 
     public function refresh($header, $payload) {
         // TODO: Implement refresh() method.
     }
-
-    public function encode(array $array) {
-        return url64_encode(json_encode($array));
-    }
-
-    public function decode($str) {
-        return json_decode(url64_decode($str), true);
-    }
-
 
 }
