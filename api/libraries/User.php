@@ -2,6 +2,7 @@
 
 
 class User {
+    /// 用户登录
     public function login(Request $request, Respond $respond) {
         $CI = &get_instance();
         $CI->load->model("user_model");
@@ -30,18 +31,23 @@ class User {
         return $respond;
     }
 
-    public function info(Request $request, Respond $respond) {
+    /// 登录信息凭据
+    public function cert(Request $request, Respond $respond) {
         $CI = &get_instance();
         $CI->load->library('token/jwt');
         $CI->load->model("user_model");
+        $CI->load->model("role_model");
         $token = $request->params('token');
         $token = $CI->jwt->validator($token);
-        if ($token) {
-            $payload = $token['payload'];
+        $payload = $token['payload'];
+        if ($token && $payload['exp'] > time()) {
             $info = $CI->user_model->getInfo($payload['id']);
             if ($info) {
+                $info['roles'] = $CI->role_model->getRoles($payload['id']);
                 $respond->setCode(20000)->setData($info);
             }
+        } else {
+            $respond->setCode(40099);
         }
         return $respond;
     }

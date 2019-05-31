@@ -18,3 +18,7 @@ $config['supportedFormats'] = [
     'serialized' => 'application/vnd.php.serialized',
     'xml' => 'application/xml'
 ];
+
+// Request
+$config['token_key'] = 'token';
+$config['token_source'] = 'header';

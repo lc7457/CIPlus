@@ -123,6 +123,10 @@ Class Respond extends \CIPlus\CIClass {
         $this->setCode(40001)->output();
     }
 
+    public function invalidRole() {
+        $this->setCode(40002)->output();
+    }
+
     public function invalidToken() {
         $this->setCode(40099)->output();
     }

@@ -2,6 +2,14 @@
 
 class Api extends CI_Controller {
 
+    private $key;
+    private $title;
+    private $path;
+    private $required;
+    private $optional;
+    private $method;
+    private $validated;
+
     public function __construct() {
         parent::__construct();
         $this->load->add_package_path(FCPATH . 'api' . DIRECTORY_SEPARATOR);
@@ -35,18 +43,47 @@ class Api extends CI_Controller {
         $this->load->model('api_model');
         $api_path = $lib_path . '/' . $method;
         $api = $this->api_model->by_path($api_path);
-        if ($api && $api['validated']) $this->verifyToken();
+        foreach ($api as $key => $val) {
+            if (property_exists($this, $key)) {
+                $this->$key = $val;
+            }
+        }
+        if ($this->validated) $this->verifyToken();
         return $this->verifyRequest($api);
     }
 
+    /**
+     * 验证Token合法性
+     */
     private function verifyToken() {
-//        $this->load->library('token/validator');
+        $this->load->library('token/jwt');
+        $token = $this->request->get_token();
+        $token = $this->jwt->validator($token);
+        $payload = $token['payload'];
+        if ($token && $payload['exp'] > time()) {
+            $this->request->set_payload($payload);
+            $this->verifyRole($payload['id']);
+        } else {
+            $this->respond->invalidToken();
+        }
     }
 
-    private function verifyRole() {
-
+    /**
+     * 验证登录用户接口权限
+     * @param $id
+     */
+    private function verifyRole($id) {
+        $this->load->model("role_model");
+        $r = $this->role_model->verify($id, $this->key);
+        if (!$r) {
+            $this->respond->invalidRole();
+        }
     }
 
+    /**
+     * 验证接口有效参数
+     * @param $api
+     */
     private function verifyRequest($api) {
         if (!$api) show_404();
         $req = json_decode($api['required'], true);

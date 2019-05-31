@@ -6,9 +6,16 @@ Class Request extends \CIPlus\CIClass {
 
     // 接口参数
     private $_params = array(); // 参数集合
+    private $_payload = array(); // 载荷
+    private $_roles = array(); // 角色
+
+    protected $token = null;
+    protected $token_key;
+    protected $token_source;
 
     public function __construct(array $config = array()) {
         parent::__construct();
+        $this->loadConf('restful');
     }
 
     /**
@@ -61,6 +68,19 @@ Class Request extends \CIPlus\CIClass {
         return $value;
     }
 
+    public function get_token() {
+        switch ($this->token_source) {
+            case 'header':
+                if (key_exists($this->token_key, $_SERVER)) {
+                    $this->token = $_SERVER[$this->token_key];
+                }
+                break;
+            default:
+                $this->token = null;
+        }
+        return $this->token;
+    }
+
 
     // get method
     protected function _get($key = null) {
@@ -83,6 +103,24 @@ Class Request extends \CIPlus\CIClass {
             $data = $this->CI->input->post_get($key);
         }
         return $data;
+    }
+
+    public function set_payload($payload) {
+        $this->_payload = $payload;
+    }
+
+    public function payload($key) {
+        if (empty($key)) {
+            return $this->_payload;
+        } elseif (array_key_exists($key, $this->_payload)) {
+            return $this->_payload[$key];
+        } else {
+            return null;
+        }
+    }
+
+    public function set_roles($roles) {
+        $this->_roles = $roles;
     }
 
 }
