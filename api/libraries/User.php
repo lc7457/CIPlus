@@ -7,12 +7,13 @@ class User {
         $CI = &get_instance();
         $CI->load->model("user_model");
         $CI->load->helper('regexp');
-        if (regexp('account', $request->params('account'))) {
-            $uid = $CI->user_model->verify_account($request->params('account'), $request->params('password'));
-        } elseif (regexp('email', $request->params('email'))) {
-            $uid = $CI->user_model->verify_email($request->params('email'), $request->params('password'));
-        } elseif (regexp('cn_phone', $request->params('phone'))) {
-            $uid = $CI->user_model->verify_phone($request->params('phone'), $request->params('password'));
+        $account = $request->params('account');
+        if (regexp('account', $account)) {
+            $uid = $CI->user_model->verify_account($account, $request->params('password'));
+        } elseif (regexp('email', $account)) {
+            $uid = $CI->user_model->verify_email($account, $request->params('password'));
+        } elseif (regexp('cn_phone', $account)) {
+            $uid = $CI->user_model->verify_phone($account, $request->params('password'));
         } else {
             $uid = null;
         }
