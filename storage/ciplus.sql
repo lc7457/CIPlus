@@ -11,7 +11,7 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 29/05/2019 17:33:38
+ Date: 01/06/2019 17:59:09
 */
 
 SET NAMES utf8mb4;
@@ -33,13 +33,14 @@ CREATE TABLE `api`  (
   `usable` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否可用',
   PRIMARY KEY (`id`, `key`) USING BTREE,
   INDEX `key`(`key`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '接口表：#####' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '接口表：#####' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of api
 -- ----------------------------
-INSERT INTO `api` VALUES (1, '', '用户登录', 'user/login', '[\"password\"]', '[\"account\",\"email\",\"phone\"]', 'request', 1, 1);
-INSERT INTO `api` VALUES (2, '', '用户注册', 'user/reg', '[]', '[]', 'request', 0, 1);
+INSERT INTO `api` VALUES (1, 'login', '用户登录', 'user/login', '[\"password\"]', '[\"account\",\"email\",\"phone\",\"header\"]', 'request', 0, 1);
+INSERT INTO `api` VALUES (2, 'cert', '登录凭证', 'user/cert', '[\"token\"]', '[]', 'request', 0, 1);
+INSERT INTO `api` VALUES (3, 'reg', '用户注册', 'user/reg', '[\"password\"]', '[\"account\",\"email\",\"phone\",\"repassword\"]', 'request', 0, 1);
 
 -- ----------------------------
 -- Table structure for role
@@ -75,6 +76,13 @@ CREATE TABLE `role_api`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表：接口权限' ROW_FORMAT = Compact;
 
 -- ----------------------------
+-- Records of role_api
+-- ----------------------------
+INSERT INTO `role_api` VALUES ('admin', 'login');
+INSERT INTO `role_api` VALUES ('admin', 'cert');
+INSERT INTO `role_api` VALUES ('admin', 'reg');
+
+-- ----------------------------
 -- Table structure for role_users
 -- ----------------------------
 DROP TABLE IF EXISTS `role_users`;
@@ -82,6 +90,11 @@ CREATE TABLE `role_users`  (
   `role_key` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色KEY',
   `user_id` int(10) UNSIGNED NOT NULL COMMENT '用户ID'
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表：用户组' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of role_users
+-- ----------------------------
+INSERT INTO `role_users` VALUES ('admin', 1000000000);
 
 -- ----------------------------
 -- Table structure for user
