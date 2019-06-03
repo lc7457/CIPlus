@@ -1,6 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 defined("CIPLUS_VERSION") OR define("CIPLUS_VERSION", "2.0");
+defined("CIPLUS_DB_PREFIX") OR define("CIPLUS_DB_PREFIX", '');
 defined("CIPLUS_PATH") OR define("CIPLUS_PATH", FCPATH . 'plus' . DIRECTORY_SEPARATOR);
 
 class MY_Loader extends CI_Loader {

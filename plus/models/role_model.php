@@ -1,9 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class role_model extends MY_Model {
-    const TB_ROLE = 'role';
-    const TB_ROLE_USERS = 'role_users';
-    const TB_ROLE_API = 'role_api';
+    const TB_ROLE = CIPLUS_DB_PREFIX . 'role';
+    const TB_ROLE_USERS = CIPLUS_DB_PREFIX . 'role_user';
+    const TB_ROLE_API = CIPLUS_DB_PREFIX . 'role_api';
 
     public function __construct() {
         parent::__construct();
@@ -35,10 +35,12 @@ class role_model extends MY_Model {
      * @return bool
      */
     public function verify($user_id, $api_key) {
+        $roles = $this->getRoles($user_id);
+        if (in_array('admin', $roles)) return true;
+
         $this->db->where('api_key', $api_key);
         $res = $this->result_all(self::TB_ROLE_API);
 
-        $roles = $this->getRoles($user_id);
         $arr = array_intersect_key($roles, $res);
         return count($arr) > 0;
     }

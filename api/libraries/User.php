@@ -53,6 +53,7 @@ class User {
         return $respond;
     }
 
+    // 注销登录
     public function logout(Request $request, Respond $respond) {
         $respond->setCode(20000);
         return $respond;
