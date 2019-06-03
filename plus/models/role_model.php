@@ -36,8 +36,9 @@ class role_model extends MY_Model {
      */
     public function verify($user_id, $api_key) {
         $this->db->where('api_key', $api_key);
-        $roles = $this->getRoles($user_id);
         $res = $this->result_all(self::TB_ROLE_API);
+
+        $roles = $this->getRoles($user_id);
         $arr = array_intersect_key($roles, $res);
         return count($arr) > 0;
     }

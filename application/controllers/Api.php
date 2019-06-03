@@ -43,13 +43,18 @@ class Api extends CI_Controller {
         $this->load->model('api_model');
         $api_path = $lib_path . '/' . $method;
         $api = $this->api_model->by_path($api_path);
-        foreach ($api as $key => $val) {
-            if (property_exists($this, $key)) {
-                $this->$key = $val;
+        if ($api) {
+            foreach ($api as $key => $val) {
+                if (property_exists($this, $key)) {
+                    $this->$key = $val;
+                }
             }
+            if ($this->validated) $this->verifyToken();
+            return $this->verifyRequest($api);
+        } else {
+            show_404();
+            return false;
         }
-        if ($this->validated) $this->verifyToken();
-        return $this->verifyRequest($api);
     }
 
     /**
@@ -85,7 +90,6 @@ class Api extends CI_Controller {
      * @param $api
      */
     private function verifyRequest($api) {
-        if (!$api) show_404();
         $req = json_decode($api['required'], true);
         $opt = json_decode($api['optional'], true);
         $v = $this->request->init($req, $opt, $api['method']);

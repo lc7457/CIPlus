@@ -71,8 +71,9 @@ Class Request extends \CIPlus\CIClass {
     public function get_token() {
         switch ($this->token_source) {
             case 'header':
-                if (key_exists($this->token_key, $_SERVER)) {
-                    $this->token = $_SERVER[$this->token_key];
+                $key = strtoupper('HTTP_' . $this->token_key);
+                if (key_exists($key, $_SERVER)) {
+                    $this->token = $_SERVER[$key];
                 }
                 break;
             default:

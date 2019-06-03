@@ -119,6 +119,7 @@ Class Respond extends \CIPlus\CIClass {
         }
     }
 
+
     public function invalidRequest() {
         $this->setCode(40001)->output();
     }
@@ -130,4 +131,6 @@ Class Respond extends \CIPlus\CIClass {
     public function invalidToken() {
         $this->setCode(40099)->output();
     }
+
+
 }

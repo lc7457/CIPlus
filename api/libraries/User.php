@@ -32,8 +32,8 @@ class User {
         return $respond;
     }
 
-    /// 登录信息凭据
-    public function cert(Request $request, Respond $respond) {
+    /// 登录信息
+    public function info(Request $request, Respond $respond) {
         $CI = &get_instance();
         $CI->load->library('token/jwt');
         $CI->load->model("user_model");
@@ -50,6 +50,11 @@ class User {
         } else {
             $respond->setCode(40099);
         }
+        return $respond;
+    }
+
+    public function logout(Request $request, Respond $respond) {
+        $respond->setCode(20000);
         return $respond;
     }
 }
