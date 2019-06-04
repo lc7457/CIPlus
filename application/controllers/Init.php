@@ -7,8 +7,10 @@ class Init extends CI_Controller {
     }
 
     public function index() {
-        $this->load->model('user_model');
-        $this->user_model->add('admin', 'admin@cprap.com', '', '21232f297a57a5a743894a0e4a801fc3');
+        $this->load->library('migration');
+        if ($this->migration->current() === FALSE) {
+            show_error($this->migration->error_string());
+        }
     }
 
 }
