@@ -44,4 +44,12 @@ class role_model extends MY_Model {
         $arr = array_intersect_key($roles, $res);
         return count($arr) > 0;
     }
+
+    /**
+     * 获取全部权限列表
+     * @return mixed
+     */
+    public function all() {
+        return $this->result_all(self::TB_ROLE);
+    }
 }
