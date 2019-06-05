@@ -7,16 +7,30 @@ class Passport {
         $CI = &get_instance();
         $CI->load->model("user_model");
         $CI->load->helper('regexp');
+
+        $type = null;
+        $password = $request->params('password');
         $passport = $request->params('passport');
+        if ($passport == null) {
+            $passport = $request->params('phone');
+        }
+        if ($passport == null) {
+            $passport = $request->params('email');
+        }
+        if ($passport == null) {
+            $passport = $request->params('account');
+        }
+
         if (regexp('account', $passport)) {
-            $uid = $CI->user_model->verify_account($passport, $request->params('password'));
+            $uid = $CI->user_model->verify_account($passport, $password);
         } elseif (regexp('email', $passport)) {
-            $uid = $CI->user_model->verify_email($passport, $request->params('password'));
+            $uid = $CI->user_model->verify_email($passport, $password);
         } elseif (regexp('cn_phone', $passport)) {
-            $uid = $CI->user_model->verify_phone($passport, $request->params('password'));
+            $uid = $CI->user_model->verify_phone($passport, $password);
         } else {
             $uid = null;
         }
+
         if ($uid) {
             $respond->setCode(20000);
             $CI->load->library('token/jwt');

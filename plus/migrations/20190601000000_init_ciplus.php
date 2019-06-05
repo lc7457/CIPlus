@@ -3,6 +3,7 @@
 class Migration_Init_ciplus extends CI_Migration {
     public function up() {
         $this->create_api();
+        $this->create_module();
         $this->create_role();
         $this->create_role_api();
         $this->create_role_user();
@@ -28,6 +29,11 @@ class Migration_Init_ciplus extends CI_Migration {
             ),
             // 接口标名
             'title' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '20',
+            ),
+            // 模块归属
+            'module' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '20',
             ),
@@ -66,6 +72,7 @@ class Migration_Init_ciplus extends CI_Migration {
                 'constraint' => '1',
                 'default' => 1,
             ),
+            // 只读
             'readonly' => array(
                 'type' => 'TINYINT',
                 'constraint' => '1',
@@ -78,6 +85,48 @@ class Migration_Init_ciplus extends CI_Migration {
             CIPLUS_DB_PREFIX . 'api',
             TRUE,
             $this->attribute('接口表：#####')
+        );
+    }
+
+    private function create_module() {
+        $this->dbforge->add_field(array(
+            // 序列ID
+            'id' => array(
+                'type' => 'INT',
+                'constraint' => 10,
+                'unsigned' => TRUE,
+                'auto_increment' => TRUE
+            ),
+            // 唯一标识
+            'key' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '40',
+                'unique' => TRUE
+            ),
+            // 模块标名
+            'name' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '20',
+            ),
+            // 父模块ID
+            'parent_id' => array(
+                'type' => 'INT',
+                'constraint' => 10,
+                'unsigned' => TRUE,
+            ),
+            // 只读
+            'readonly' => array(
+                'type' => 'TINYINT',
+                'constraint' => '1',
+                'default' => 0,
+            ),
+        ));
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->add_key('key', TRUE);
+        $this->dbforge->create_table(
+            CIPLUS_DB_PREFIX . 'module',
+            TRUE,
+            $this->attribute('模块表：#####')
         );
     }
 
@@ -355,6 +404,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'api_more',
                 'title' => '更多接口',
+                'module' => 'setting',
                 'path' => 'setting/api_more',
                 'required' => json_encode(array()),
                 'optional' => json_encode(array("p", "n", "title")),
@@ -367,6 +417,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'api_add',
                 'title' => '添加接口',
+                'module' => 'setting',
                 'path' => 'setting/api_add',
                 'required' => json_encode(array("title", "path")),
                 'optional' => json_encode(array("required", "optional", "method", "validated")),
@@ -379,6 +430,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'api_edit',
                 'title' => '修改接口',
+                'module' => 'setting',
                 'path' => 'setting/api_edit',
                 'required' => json_encode(array("id")),
                 'optional' => json_encode(array("title", "path", "required", "optional", "method", "validated")),
@@ -391,6 +443,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'api_del',
                 'title' => '移除接口',
+                'module' => 'setting',
                 'path' => 'setting/api_del',
                 'required' => json_encode(array("id")),
                 'optional' => json_encode(array()),
@@ -403,6 +456,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'api_revive',
                 'title' => '恢复接口',
+                'module' => 'setting',
                 'path' => 'setting/api_revive',
                 'required' => json_encode(array("id")),
                 'optional' => json_encode(array()),
@@ -415,6 +469,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'role_all',
                 'title' => '全部角色',
+                'module' => 'role',
                 'path' => 'role/all',
                 'required' => json_encode(array()),
                 'optional' => json_encode(array()),
@@ -427,6 +482,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'role_more',
                 'title' => '更多角色',
+                'module' => 'role',
                 'path' => 'role/more',
                 'required' => json_encode(array()),
                 'optional' => json_encode(array("p", "n")),
@@ -439,6 +495,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'role_add',
                 'title' => '添加角色',
+                'module' => 'role',
                 'path' => 'role/add',
                 'required' => json_encode(array("key", "name")),
                 'optional' => json_encode(array("description")),
@@ -451,6 +508,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'role_edit',
                 'title' => '编辑角色',
+                'module' => 'role',
                 'path' => 'role/edit',
                 'required' => json_encode(array("id")),
                 'optional' => json_encode(array("name", "description")),
@@ -463,6 +521,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'role_del',
                 'title' => '删除角色',
+                'module' => 'role',
                 'path' => 'role/del',
                 'required' => json_encode(array("id")),
                 'optional' => json_encode(array()),
@@ -475,6 +534,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'role_user',
                 'title' => '用户列表',
+                'module' => 'role',
                 'path' => 'role/users',
                 'required' => '[]',
                 'optional' => '["p","n","key","value"]',
@@ -482,6 +542,20 @@ class Migration_Init_ciplus extends CI_Migration {
                 'validated' => 1,
                 'usable' => 1,
                 'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
+                'key' => 'setting',
+                'name' => '系统设置',
+                'parent_id' => 0,
+                'readonly' => 1,
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
+                'key' => 'role',
+                'name' => '角色权限',
+                'parent_id' => 0,
+                'readonly' => 1,
             ));
     }
 
