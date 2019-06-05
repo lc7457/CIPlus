@@ -41,23 +41,70 @@ class api_model extends MY_Model {
         return $this->insert(self::TB_API, $data);
     }
 
+    /**
+     * 修改接口
+     * @param $id
+     * @param $title
+     * @param $path
+     * @param array $required
+     * @param array $optional
+     * @param string $method
+     * @param int $validated
+     * @return mixed
+     */
+    public function edit($id, $title, $path, $required = array(), $optional = array(), $method = 'request', $validated = 1) {
+        $data = array(
+            'key' => unique_code(),
+            'title' => $title,
+            'path' => $path,
+            'required' => $required,
+            'optional' => $optional,
+            'method' => $method,
+            'validated' => $validated
+        );
+        $where = array('id' => $id);
+        return $this->update(self::TB_API, $data, $where);
+    }
+
+    /**
+     * 接口数
+     * @param null $title
+     * @return mixed
+     */
     public function total($title = null) {
         if ($title) $this->db->like('title', $title);
         return $this->count(self::TB_API);
     }
 
+    /**
+     * 接口列表
+     * @param null $title
+     * @param int $p
+     * @param int $n
+     * @return mixed
+     */
     public function more($title = null, $p = 1, $n = 10) {
         if ($title) $this->db->like('title', $title);
         $this->db->order_by('id desc');
         return $this->result(self::TB_API, $p, $n);
     }
 
+    /**
+     * 删除（冻结）接口
+     * @param $id
+     * @return mixed
+     */
     public function del($id) {
         $data = array("usable" => 0);
         $where = array("id" => $id);
         return $this->update(self::TB_API, $data, $where);
     }
 
+    /**
+     * 恢复接口
+     * @param $id
+     * @return mixed
+     */
     public function revive($id) {
         $data = array("usable" => 1);
         $where = array("id" => $id);

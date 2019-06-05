@@ -66,6 +66,11 @@ class Migration_Init_ciplus extends CI_Migration {
                 'constraint' => '1',
                 'default' => 1,
             ),
+            'readonly' => array(
+                'type' => 'TINYINT',
+                'constraint' => '1',
+                'default' => 0,
+            ),
         ));
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->add_key('key', TRUE);
@@ -95,8 +100,13 @@ class Migration_Init_ciplus extends CI_Migration {
             ),
             'description' => array(
                 'type' => 'VARCHAR',
-                'constraint' => '255',
+                'constraint' => '140',
                 'null' => TRUE,
+            ),
+            'readonly' => array(
+                'type' => 'TINYINT',
+                'constraint' => '1',
+                'default' => 0,
             ),
         ));
         $this->dbforge->add_key('id', TRUE);
@@ -205,7 +215,7 @@ class Migration_Init_ciplus extends CI_Migration {
             ),
             'name' => array(
                 'type' => 'VARCHAR',
-                'constraint' => '10',
+                'constraint' => '20',
             ),
             'sex' => array(
                 'type' => 'TINYINT',
@@ -217,6 +227,7 @@ class Migration_Init_ciplus extends CI_Migration {
                 'type' => 'VARCHAR',
                 'constraint' => '200',
                 'null' => TRUE,
+                'default' => '/'
             ),
             'area' => array(
                 'type' => 'VARCHAR',
@@ -261,12 +272,217 @@ class Migration_Init_ciplus extends CI_Migration {
     }
 
     private function init_data() {
-        $this->db->insert(CIPLUS_DB_PREFIX . 'user', array(
-            'account' => 'admin',
-            'email' => 'admin@cprap.com',
-            'password' => 'b34e50b8b8b4b1fe831a20e37db6285b38adb5c0510afdd7dd62ac5a8412e5be4685b5a8408cf3cfc7b70058be2309a759009be6273ccc0a44f3fa57391abc80qfPIU29n4I6A0e8kEPx/RvuHex93c9Bl9sN9X333S7kspgczaGFXuC00KBoBvctArV/3yC0h8oErepMIFMFKBg==',
-            'create_time' => time()
-        ));
+        $id = $this->db->insert(CIPLUS_DB_PREFIX . 'user',
+            array(
+                'account' => 'admin',
+                'email' => 'admin@cprap.com',
+                'password' => 'b34e50b8b8b4b1fe831a20e37db6285b38adb5c0510afdd7dd62ac5a8412e5be4685b5a8408cf3cfc7b70058be2309a759009be6273ccc0a44f3fa57391abc80qfPIU29n4I6A0e8kEPx/RvuHex93c9Bl9sN9X333S7kspgczaGFXuC00KBoBvctArV/3yC0h8oErepMIFMFKBg==',
+                'create_time' => time()
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'user_info',
+            array(
+                'id' => $id,
+                'name' => 'administrator',
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'role',
+            array(
+                'key' => 'admin',
+                'name' => '超级管理员',
+                'description' => '系统超级管理员',
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'role',
+            array(
+                'key' => 'manager',
+                'name' => '管理员',
+                'description' => '系统管理员',
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'role_user',
+            array(
+                'role_key' => 'admin',
+                'user_id' => $id,
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'login',
+                'title' => '用户登录',
+                'path' => 'passport/login',
+                'required' => json_encode(array("password")),
+                'optional' => json_encode(array("account", "email", "phone", "header")),
+                'method' => 'request',
+                'validated' => 0,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'info',
+                'title' => '登录凭证',
+                'path' => 'passport/info',
+                'required' => json_encode(array("token")),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 0,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'reg',
+                'title' => '用户注册',
+                'path' => 'passport/reg',
+                'required' => json_encode(array("password")),
+                'optional' => json_encode(array("account", "email", "phone", "repassword")),
+                'method' => 'request',
+                'validated' => 0,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'logout',
+                'title' => '注销登录',
+                'path' => 'passport/logout',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'api_more',
+                'title' => '更多接口',
+                'path' => 'setting/api_more',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array("p", "n", "title")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'api_add',
+                'title' => '添加接口',
+                'path' => 'setting/api_add',
+                'required' => json_encode(array("title", "path")),
+                'optional' => json_encode(array("required", "optional", "method", "validated")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'api_edit',
+                'title' => '修改接口',
+                'path' => 'setting/api_edit',
+                'required' => json_encode(array("id")),
+                'optional' => json_encode(array("title", "path", "required", "optional", "method", "validated")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'api_del',
+                'title' => '移除接口',
+                'path' => 'setting/api_del',
+                'required' => json_encode(array("id")),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'api_revive',
+                'title' => '恢复接口',
+                'path' => 'setting/api_revive',
+                'required' => json_encode(array("id")),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'role_all',
+                'title' => '全部角色',
+                'path' => 'role/all',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'role_more',
+                'title' => '更多角色',
+                'path' => 'role/more',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array("p", "n")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'role_add',
+                'title' => '添加角色',
+                'path' => 'role/add',
+                'required' => json_encode(array("key", "name")),
+                'optional' => json_encode(array("description")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'role_edit',
+                'title' => '编辑角色',
+                'path' => 'role/edit',
+                'required' => json_encode(array("id")),
+                'optional' => json_encode(array("name", "description")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'role_del',
+                'title' => '删除角色',
+                'path' => 'role/del',
+                'required' => json_encode(array("id")),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'role_user',
+                'title' => '用户列表',
+                'path' => 'role/users',
+                'required' => '[]',
+                'optional' => '["p","n","key","value"]',
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
     }
 
     public function down() {

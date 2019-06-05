@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class User {
+class Passport {
     /// 用户登录
     public function login(Request $request, Respond $respond) {
         $CI = &get_instance();

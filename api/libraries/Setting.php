@@ -1,21 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Setting {
-    // 添加接口
-    public function api_add(Request $request, Respond $respond) {
-        $CI =& get_instance();
-        $CI->load->model("api_model");
-        $CI->api_model->add(
-            $request->params('title'),
-            $request->params('path'),
-            $request->params('required'),
-            $request->params('optional'),
-            $request->params('method'),
-            $request->params('validated')
-        );
-        return $respond;
-    }
-
     // 接口列表
     public function api_more(Request $request, Respond $respond) {
         $CI =& get_instance();
@@ -33,9 +18,48 @@ class Setting {
         return $respond;
     }
 
-    public function api_edit(Request $request, Respond $respond) {
+    // 添加接口
+    public function api_add(Request $request, Respond $respond) {
+        $CI =& get_instance();
+        $CI->load->model("api_model");
+        $id = $CI->api_model->add(
+            $request->params('title'),
+            $request->params('path'),
+            $request->params('required'),
+            $request->params('optional'),
+            $request->params('method'),
+            $request->params('validated')
+        );
+        if ($id > 0) {
+            $respond->setCode(20000)->setData(
+                array('id' => $id)
+            );
+        }
+        return $respond;
     }
 
+    // 编辑接口
+    public function api_edit(Request $request, Respond $respond) {
+        $CI =& get_instance();
+        $CI->load->model("api_model");
+        $id = $CI->api_model->edit(
+            $request->params('id'),
+            $request->params('title'),
+            $request->params('path'),
+            $request->params('required'),
+            $request->params('optional'),
+            $request->params('method'),
+            $request->params('validated')
+        );
+        if ($id > 0) {
+            $respond->setCode(20000)->setData(
+                array('id' => $id)
+            );
+        }
+        return $respond;
+    }
+
+    // 删除接口
     public function api_del(Request $request, Respond $respond) {
         $CI =& get_instance();
         $CI->load->model("api_model");
@@ -46,6 +70,7 @@ class Setting {
         return $respond;
     }
 
+    // 恢复接口
     public function api_revive(Request $request, Respond $respond) {
         $CI =& get_instance();
         $CI->load->model("api_model");

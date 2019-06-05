@@ -19,7 +19,7 @@ class role_user_model extends MY_Model {
      */
     public function users($num, $offset, $key = null, $value = null) {
         $select = 'tb1.id, tb1.account, tb1.email, tb1.phone, tb1.create_time, GROUP_CONCAT(tb2.role_key) as roles';
-        $join = 'role_user.user_id = user.id';
+        $join = 'tb1.id = tb2.user_id';
 
         $select = str_replace(array('tb1', 'tb2'), array(self::TB_USER, self::TB_ROLE_USERS), $select);
         $join = str_replace(array('tb1', 'tb2'), array(self::TB_USER, self::TB_ROLE_USERS), $join);

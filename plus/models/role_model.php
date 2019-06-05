@@ -10,6 +10,87 @@ class role_model extends MY_Model {
     }
 
     /**
+     * 全部角色
+     * @return mixed
+     */
+    public function all() {
+        return $this->result_all(self::TB_ROLE);
+    }
+
+    /**
+     * 角色总数
+     * @return mixed
+     */
+    public function total() {
+        return $this->count(self::TB_ROLE);
+    }
+
+    /**
+     * 更多角色
+     * @param int $p
+     * @param int $n
+     * @return mixed
+     */
+    public function more($p = 1, $n = 10) {
+        $this->db->order_by('id desc');
+        return $this->result(self::TB_ROLE, $p, $n);
+    }
+
+    /**
+     * 添加角色
+     * @param $key
+     * @param $name
+     * @param string $description
+     * @return mixed
+     */
+    public function add($key, $name, $description = "") {
+        $data = array(
+            'key' => $key,
+            'name' => $name,
+            'description' => $description,
+        );
+        return $this->insert(self::TB_ROLE, $data);
+    }
+
+    /**
+     * 编辑角色
+     * @param $id
+     * @param $name
+     * @param string $description
+     * @return mixed
+     */
+    public function edit($id, $name, $description = "") {
+        $data = array(
+            'name' => $name,
+            'description' => $description,
+        );
+        $where = array('id' => $id);
+        return $this->update(self::TB_ROLE, $data, $where);
+    }
+
+    /**
+     * 删除角色
+     * @param $id
+     * @return mixed
+     */
+    public function del($id) {
+        if ($this->readonly($id)) return null;
+        $where = array("id" => $id);
+        return $this->delete(self::TB_ROLE, $where);
+    }
+
+    /**
+     * 是否只读
+     * @param $id
+     * @return bool
+     */
+    public function readonly($id) {
+        $this->db->where('id', $id);
+        $res = $this->row(self::TB_ROLE);
+        return $res['readonly'] == 1;
+    }
+
+    /**
      * 获取用户权限数组
      * @param $user_id
      * @return array
@@ -45,11 +126,5 @@ class role_model extends MY_Model {
         return count($arr) > 0;
     }
 
-    /**
-     * 获取全部权限列表
-     * @return mixed
-     */
-    public function all() {
-        return $this->result_all(self::TB_ROLE);
-    }
+
 }

@@ -22,7 +22,7 @@ class Role {
         return $respond;
     }
 
-    // 全部权限列表
+    // 全部角色
     public function all(Request $request, Respond $respond) {
         $CI =& get_instance();
         $CI->load->model("role_model");
@@ -30,4 +30,68 @@ class Role {
         $respond->setCode(20000)->setData($res);
         return $respond;
     }
+
+    // 更多角色
+    public function more(Request $request, Respond $respond) {
+        $CI =& get_instance();
+        $CI->load->model("role_model");
+        $total = $CI->role_model->total();
+        $data = array(
+            'total' => $total,
+            'roles' => null
+        );
+        if ($total > 0) {
+            $res = $CI->role_model->more($request->params('p'), $request->params('n'));
+            $data['roles'] = $res;
+            $respond->setCode(20000)->setData($data);
+        }
+        return $respond;
+    }
+
+    // 添加角色
+    public function add(Request $request, Respond $respond) {
+        $CI =& get_instance();
+        $CI->load->model("role_model");
+        $id = $CI->role_model->add(
+            $request->params('key'),
+            $request->params('name'),
+            $request->params('description')
+        );
+        if ($id > 0) {
+            $respond->setCode(20000)->setData(
+                array('id' => $id)
+            );
+        }
+        return $respond;
+    }
+
+    // 编辑角色
+    public function edit(Request $request, Respond $respond) {
+        $CI =& get_instance();
+        $CI->load->model("role_model");
+        $n = $CI->role_model->edit(
+            $request->params('id'),
+            $request->params('name'),
+            $request->params('description')
+        );
+        if ($n > 0) {
+            $respond->setCode(20000)->setData(
+                array('n' => $n)
+            );
+        }
+        return $respond;
+    }
+
+    // 删除角色
+    public function del(Request $request, Respond $respond) {
+        $CI =& get_instance();
+        $CI->load->model("role_model");
+        $res = $CI->role_model->del($request->params('id'));
+        if ($res > 0) {
+            $respond->setCode(20000)->setData($res);
+        }
+        return $respond;
+    }
+
+
 }
