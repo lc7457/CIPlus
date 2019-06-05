@@ -309,7 +309,7 @@ class Migration_Init_ciplus extends CI_Migration {
                 'title' => '用户登录',
                 'path' => 'passport/login',
                 'required' => json_encode(array("password")),
-                'optional' => json_encode(array("account", "email", "phone", "header")),
+                'optional' => json_encode(array("passport", "account", "email", "phone", "header")),
                 'method' => 'request',
                 'validated' => 0,
                 'usable' => 1,

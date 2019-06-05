@@ -7,13 +7,13 @@ class Passport {
         $CI = &get_instance();
         $CI->load->model("user_model");
         $CI->load->helper('regexp');
-        $account = $request->params('account');
-        if (regexp('account', $account)) {
-            $uid = $CI->user_model->verify_account($account, $request->params('password'));
-        } elseif (regexp('email', $account)) {
-            $uid = $CI->user_model->verify_email($account, $request->params('password'));
-        } elseif (regexp('cn_phone', $account)) {
-            $uid = $CI->user_model->verify_phone($account, $request->params('password'));
+        $passport = $request->params('passport');
+        if (regexp('account', $passport)) {
+            $uid = $CI->user_model->verify_account($passport, $request->params('password'));
+        } elseif (regexp('email', $passport)) {
+            $uid = $CI->user_model->verify_email($passport, $request->params('password'));
+        } elseif (regexp('cn_phone', $passport)) {
+            $uid = $CI->user_model->verify_phone($passport, $request->params('password'));
         } else {
             $uid = null;
         }
