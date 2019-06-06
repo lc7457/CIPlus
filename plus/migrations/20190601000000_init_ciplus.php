@@ -113,6 +113,7 @@ class Migration_Init_ciplus extends CI_Migration {
                 'type' => 'INT',
                 'constraint' => 10,
                 'unsigned' => TRUE,
+                'default' => 0,
             ),
             // 只读
             'readonly' => array(
@@ -467,6 +468,71 @@ class Migration_Init_ciplus extends CI_Migration {
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'api',
             array(
+                'key' => 'module_all',
+                'title' => '全部模块',
+                'module' => 'setting',
+                'path' => 'setting/module_all',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'module_more',
+                'title' => '更多模块',
+                'module' => 'setting',
+                'path' => 'setting/module_more',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array("p", "n")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'module_add',
+                'title' => '添加模块',
+                'module' => 'setting',
+                'path' => 'setting/module_add',
+                'required' => json_encode(array("key", "name")),
+                'optional' => json_encode(array("parent_key")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'module_edit',
+                'title' => '修改模块',
+                'module' => 'setting',
+                'path' => 'setting/module_edit',
+                'required' => json_encode(array("id")),
+                'optional' => json_encode(array("name", "parent_key")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'module_del',
+                'title' => '移除模块',
+                'module' => 'setting',
+                'path' => 'setting/module_del',
+                'required' => json_encode(array("id")),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
                 'key' => 'role_all',
                 'title' => '全部角色',
                 'module' => 'role',
@@ -547,24 +613,22 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'setting',
                 'name' => '系统设置',
-                'parent_id' => 0,
                 'readonly' => 1,
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'module',
             array(
                 'key' => 'role',
                 'name' => '角色权限',
-                'parent_id' => 0,
                 'readonly' => 1,
             ));
     }
 
     public function down() {
-        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'api');
-        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'role');
-        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'role_api');
-        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'role_user');
-        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'user');
-        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'user_info');
+//        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'api');
+//        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'role');
+//        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'role_api');
+//        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'role_user');
+//        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'user');
+//        $this->dbforge->drop_table(CIPLUS_DB_PREFIX . 'user_info');
     }
 }

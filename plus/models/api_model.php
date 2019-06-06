@@ -19,16 +19,30 @@ class api_model extends MY_Model {
     }
 
     /**
+     * 清理 module key
+     * @param $module
+     * @return mixed
+     */
+    public function remove_module($module) {
+        $data = array(
+            'module' => "",
+        );
+        $where = array('module' => $module);
+        return $this->update(self::TB_API, $data, $where);
+    }
+
+    /**
      * 添加接口
      * @param $title
      * @param $path
      * @param array $required
      * @param array $optional
      * @param string $method
+     * @param string $module
      * @param int $validated
      * @return mixed
      */
-    public function add($title, $path, $required = array(), $optional = array(), $method = 'request', $validated = 1) {
+    public function add($title, $path, $required = array(), $optional = array(), $method = 'request', $module = "", $validated = 1) {
         $data = array(
             'key' => unique_code(),
             'title' => $title,
@@ -36,6 +50,7 @@ class api_model extends MY_Model {
             'required' => $required,
             'optional' => $optional,
             'method' => $method,
+            'module' => $module,
             'validated' => $validated
         );
         return $this->insert(self::TB_API, $data);
@@ -49,10 +64,11 @@ class api_model extends MY_Model {
      * @param array $required
      * @param array $optional
      * @param string $method
+     * @param string $module
      * @param int $validated
      * @return mixed
      */
-    public function edit($id, $title, $path, $required = array(), $optional = array(), $method = 'request', $validated = 1) {
+    public function edit($id, $title, $path, $required = array(), $optional = array(), $method = 'request', $module = "", $validated = 1) {
         $data = array(
             'key' => unique_code(),
             'title' => $title,
@@ -60,6 +76,7 @@ class api_model extends MY_Model {
             'required' => $required,
             'optional' => $optional,
             'method' => $method,
+            'module' => $module,
             'validated' => $validated
         );
         $where = array('id' => $id);
