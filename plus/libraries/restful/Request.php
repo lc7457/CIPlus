@@ -110,7 +110,7 @@ Class Request extends \CIPlus\CIClass {
         $this->_payload = $payload;
     }
 
-    public function payload($key) {
+    public function payload($key = null) {
         if (empty($key)) {
             return $this->_payload;
         } elseif (array_key_exists($key, $this->_payload)) {

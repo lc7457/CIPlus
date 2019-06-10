@@ -67,9 +67,31 @@ class Passport {
         return $respond;
     }
 
+    public function refresh(Request $request, Respond $respond) {
+        $CI = &get_instance();
+
+        $CI->load->library('token/jwt');
+
+        $old_token = $request->get_token();
+
+        $tkr = explode('.', $old_token);
+        $header = json_decode(url64_decode($tkr[0]), true);
+
+        $payload = $request->payload();
+        $token = $CI->jwt->generator($header, $payload);
+        $respond->setData(array('header' => $header, 'payload' => $payload, 'token' => $token));
+        if ($token) {
+            $respond->setCode(20000);
+            $respond->setData(array('token' => $token));
+        }
+        return $respond;
+    }
+
     // 注销登录
     public function logout(Request $request, Respond $respond) {
         $respond->setCode(20000);
         return $respond;
     }
+
+
 }

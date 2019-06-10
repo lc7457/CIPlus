@@ -391,6 +391,18 @@ class Migration_Init_ciplus extends CI_Migration {
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'api',
             array(
+                'key' => 'refresh',
+                'title' => '更新状态',
+                'path' => 'passport/refresh',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
                 'key' => 'logout',
                 'title' => '注销登录',
                 'path' => 'passport/logout',
