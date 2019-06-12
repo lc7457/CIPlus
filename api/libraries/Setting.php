@@ -1,6 +1,15 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Setting {
+    // 全部接口
+    public function api_all(Request $request, Respond $respond) {
+        $CI =& get_instance();
+        $CI->load->model("api_model");
+        $all = $CI->api_model->all();
+        $respond->setCode(20000)->setData($all);
+        return $respond;
+    }
+
     // 接口列表
     public function api_more(Request $request, Respond $respond) {
         $CI =& get_instance();

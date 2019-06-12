@@ -357,6 +357,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'login',
                 'title' => '用户登录',
+                'module' => 'system',
                 'path' => 'passport/login',
                 'required' => json_encode(array("password")),
                 'optional' => json_encode(array("passport", "account", "email", "phone", "header")),
@@ -369,6 +370,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'info',
                 'title' => '登录凭证',
+                'module' => 'system',
                 'path' => 'passport/info',
                 'required' => json_encode(array("token")),
                 'optional' => json_encode(array()),
@@ -381,6 +383,7 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'reg',
                 'title' => '用户注册',
+                'module' => 'system',
                 'path' => 'passport/reg',
                 'required' => json_encode(array("password")),
                 'optional' => json_encode(array("account", "email", "phone", "repassword")),
@@ -392,7 +395,8 @@ class Migration_Init_ciplus extends CI_Migration {
         $this->db->insert(CIPLUS_DB_PREFIX . 'api',
             array(
                 'key' => 'refresh',
-                'title' => '更新状态',
+                'title' => '更新会话',
+                'module' => 'system',
                 'path' => 'passport/refresh',
                 'required' => json_encode(array()),
                 'optional' => json_encode(array()),
@@ -405,7 +409,21 @@ class Migration_Init_ciplus extends CI_Migration {
             array(
                 'key' => 'logout',
                 'title' => '注销登录',
+                'module' => 'system',
                 'path' => 'passport/logout',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'api_all',
+                'title' => '全部接口',
+                'module' => 'setting',
+                'path' => 'setting/api_all',
                 'required' => json_encode(array()),
                 'optional' => json_encode(array()),
                 'method' => 'request',
@@ -614,8 +632,34 @@ class Migration_Init_ciplus extends CI_Migration {
                 'title' => '用户列表',
                 'module' => 'role',
                 'path' => 'role/users',
-                'required' => '[]',
-                'optional' => '["p","n","key","value"]',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array("p", "n", "key", "value")),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'role_api',
+                'title' => '接口权限列表',
+                'module' => 'role',
+                'path' => 'role/apis',
+                'required' => json_encode(array("key")),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'role_api_edit',
+                'title' => '接口权限编辑',
+                'module' => 'role',
+                'path' => 'role/api_edit',
+                'required' => json_encode(array("dict", 'role')),
+                'optional' => json_encode(array()),
                 'method' => 'request',
                 'validated' => 1,
                 'usable' => 1,
@@ -623,8 +667,14 @@ class Migration_Init_ciplus extends CI_Migration {
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'module',
             array(
+                'key' => 'system',
+                'name' => '系统模块',
+                'readonly' => 1,
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
                 'key' => 'setting',
-                'name' => '系统设置',
+                'name' => '设置模块',
                 'readonly' => 1,
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'module',

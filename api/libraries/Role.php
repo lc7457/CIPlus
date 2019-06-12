@@ -22,6 +22,31 @@ class Role {
         return $respond;
     }
 
+    public function apis(Request $request, Respond $respond) {
+        $CI =& get_instance();
+        $CI->load->model("role_api_model");
+        $re = $CI->role_api_model->all($request->params('key'));
+        $respond->setCode(20000)->setData($re);
+        return $respond;
+    }
+
+    public function api_edit(Request $request, Respond $respond) {
+        $CI =& get_instance();
+        $CI->load->model("role_api_model");
+        $dict = $request->params('dict');
+        $dict = json_decode($dict, true);
+        if ($request->params('role') === 'admin') {
+            $respond->setCode(40000);
+        } else {
+            $n = $CI->role_api_model->clean($request->params('role'));
+            $re = $CI->role_api_model->edit($request->params('role'), $dict);
+            if ($re > 0) {
+                $respond->setCode(20000)->setData(array('n' => $re));
+            }
+        }
+        return $respond;
+    }
+
     // 全部角色
     public function all(Request $request, Respond $respond) {
         $CI =& get_instance();

@@ -9,26 +9,34 @@ class api_model extends MY_Model {
     }
 
     /**
-     * 通过路径搜索接口
-     * @param $path
+     * 全部接口
      * @return mixed
      */
-    public function by_path($path) {
-        $this->db->where('usable', 1);
-        return $this->row(self::TB_API, ['path' => $path]);
+    public function all() {
+        return $this->result_all(self::TB_API);
     }
 
     /**
-     * 清理 module key
-     * @param $module
+     * 接口数
+     * @param null $title
      * @return mixed
      */
-    public function remove_module($module) {
-        $data = array(
-            'module' => "",
-        );
-        $where = array('module' => $module);
-        return $this->update(self::TB_API, $data, $where);
+    public function total($title = null) {
+        if ($title) $this->db->like('title', $title);
+        return $this->count(self::TB_API);
+    }
+
+    /**
+     * 接口列表
+     * @param null $title
+     * @param int $p
+     * @param int $n
+     * @return mixed
+     */
+    public function more($title = null, $p = 1, $n = 10) {
+        if ($title) $this->db->like('title', $title);
+        $this->db->order_by('id desc');
+        return $this->result(self::TB_API, $p, $n);
     }
 
     /**
@@ -83,28 +91,6 @@ class api_model extends MY_Model {
         return $this->update(self::TB_API, $data, $where);
     }
 
-    /**
-     * 接口数
-     * @param null $title
-     * @return mixed
-     */
-    public function total($title = null) {
-        if ($title) $this->db->like('title', $title);
-        return $this->count(self::TB_API);
-    }
-
-    /**
-     * 接口列表
-     * @param null $title
-     * @param int $p
-     * @param int $n
-     * @return mixed
-     */
-    public function more($title = null, $p = 1, $n = 10) {
-        if ($title) $this->db->like('title', $title);
-        $this->db->order_by('id desc');
-        return $this->result(self::TB_API, $p, $n);
-    }
 
     /**
      * 删除（冻结）接口
@@ -125,6 +111,29 @@ class api_model extends MY_Model {
     public function revive($id) {
         $data = array("usable" => 1);
         $where = array("id" => $id);
+        return $this->update(self::TB_API, $data, $where);
+    }
+
+    /**
+     * 通过路径搜索接口
+     * @param $path
+     * @return mixed
+     */
+    public function by_path($path) {
+        $this->db->where('usable', 1);
+        return $this->row(self::TB_API, ['path' => $path]);
+    }
+
+    /**
+     * 清理 module key
+     * @param $module
+     * @return mixed
+     */
+    public function remove_module($module) {
+        $data = array(
+            'module' => "",
+        );
+        $where = array('module' => $module);
         return $this->update(self::TB_API, $data, $where);
     }
 }
