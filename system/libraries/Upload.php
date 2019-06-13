@@ -1148,7 +1148,7 @@ class CI_Upload {
 	 */
 	public function set_error($msg, $log_level = 'error')
 	{
-		$this->_CI->lang->load('upload');
+		$this->_CI->lang->load('Resource');
 
 		is_array($msg) OR $msg = array($msg);
 		foreach ($msg as $val)

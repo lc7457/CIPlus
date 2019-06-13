@@ -420,6 +420,32 @@ class Migration_Init_ciplus extends CI_Migration {
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'api',
             array(
+                'key' => 'upload',
+                'title' => '资源上传',
+                'module' => 'resource',
+                'path' => 'resource/upload',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'download',
+                'title' => '资源下载',
+                'module' => 'resource',
+                'path' => 'resource/download',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
                 'key' => 'api_all',
                 'title' => '全部接口',
                 'module' => 'setting',

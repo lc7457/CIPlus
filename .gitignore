@@ -6,6 +6,8 @@
 */*/config/production/*.php
 */tmp/*
 !*/tmp/index.html
+*/uploads/*
+!*/uploads/index.html
 */logs/log-*.php
 */logs/!index.html
 */cache/*

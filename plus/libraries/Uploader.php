@@ -1,8 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once FCPATH . 'plus/CIClass.abstract.php';
-
-Class Uploader extends \CIPlus\CIClass {
+Class Uploader {
     /// region <<< upload config >>>
     protected $file_save_path = '';
     protected $temp_save_path = '';
@@ -16,20 +14,25 @@ Class Uploader extends \CIPlus\CIClass {
     private $fetch_hash = TRUE;
     private $rename = '';
     /// endregion
-    
+
     private $custom_folder; // 自定义文件夹名称
     private $custom_name; // 自定义文件名
-    
+
     public $url = '/';
-    
-    protected $callback_obj;
-    protected $callback_func;
-    
+
+    private $callback_obj;
+    private $callback_func;
+
     public function __construct(array $params = array()) {
-        parent::__construct($params);
-        $this->loadConf('uploader');
+        if (is_array($params)) {
+            foreach ($params as $key => $val) {
+                if (property_exists($this, $key)) {
+                    $this->$key = $val;
+                }
+            }
+        }
     }
-    
+
     /**
      * 自定义子文件夹
      * @param $folder
@@ -39,7 +42,7 @@ Class Uploader extends \CIPlus\CIClass {
         $this->custom_folder = $folder;
         return $this;
     }
-    
+
     /**
      * 自定义文件名
      * @param $name
@@ -49,7 +52,7 @@ Class Uploader extends \CIPlus\CIClass {
         $this->custom_name = $name;
         return $this;
     }
-    
+
     /**
      *  以 FILES 类型上传
      * @param $files :文件
@@ -67,7 +70,7 @@ Class Uploader extends \CIPlus\CIClass {
         }
         return true;
     }
-    
+
     /**
      * 以 base64 字节流上传
      * @param $stream : 文件完整的base64编码字节流
@@ -92,7 +95,7 @@ Class Uploader extends \CIPlus\CIClass {
         $this->_uploadProcess($file);
         return true;
     }
-    
+
     /**
      * 将 base64 写入临时文件
      * @param $base64
@@ -105,7 +108,7 @@ Class Uploader extends \CIPlus\CIClass {
         fclose($file);
         return $tmpFile;
     }
-    
+
     // 通过文件 base64 的 mime 类型判断文件扩展名
     private function _base64GetExtFromMime($mime) {
         $mimes = get_mimes();
@@ -122,7 +125,7 @@ Class Uploader extends \CIPlus\CIClass {
         }
         return $ext;
     }
-    
+
     /**
      * 文件上传进程
      * @param $file
@@ -137,7 +140,7 @@ Class Uploader extends \CIPlus\CIClass {
         $this->_getFileInfo($file);
         if (!$this->_moveFileToSavePath($file)) $this->_error('notWritablePath');
     }
-    
+
     /**
      * 设置上传文件用途类型
      * @param $usage
@@ -154,7 +157,7 @@ Class Uploader extends \CIPlus\CIClass {
             $this->_error();
         }
     }
-    
+
     /**
      * 是否为正规途径上传的文件
      * @param $file
@@ -163,7 +166,7 @@ Class Uploader extends \CIPlus\CIClass {
     private function _isUploadedFile(&$file) {
         return is_uploaded_file($file['tmp_name']);
     }
-    
+
     /**
      * 是否为合法的文件扩展类型
      * @param $file
@@ -178,7 +181,7 @@ Class Uploader extends \CIPlus\CIClass {
         }
         return false;
     }
-    
+
     /**
      * 是否为合法的文件大小
      * @param $file
@@ -187,7 +190,7 @@ Class Uploader extends \CIPlus\CIClass {
     private function _isLegalSize(&$file) {
         return $file['size'] <= $this->max_file_size;
     }
-    
+
     /**
      * 是否存在文件上传路径
      * @return bool
@@ -205,7 +208,7 @@ Class Uploader extends \CIPlus\CIClass {
         }
         return is_dir($this->file_save_path);
     }
-    
+
     /**
      * 文件上传路径是否可写
      * @return bool
@@ -213,7 +216,7 @@ Class Uploader extends \CIPlus\CIClass {
     private function _isWritablePath() {
         return is_writable($this->file_save_path);
     }
-    
+
     /**
      * 创建文件夹
      * @param $path
@@ -223,7 +226,12 @@ Class Uploader extends \CIPlus\CIClass {
             mkdir($path);
         }
     }
-    
+
+    /**
+     * 获取文件hash
+     * @param $file
+     * @return bool|string
+     */
     private function _getFileHash(&$file) {
         if ($this->fetch_hash) {
             $hash = sha1_file($file['tmp_name']);
@@ -232,7 +240,7 @@ Class Uploader extends \CIPlus\CIClass {
         }
         return false;
     }
-    
+
     /**
      * 设置上传文件名称
      * @param $file
@@ -251,7 +259,7 @@ Class Uploader extends \CIPlus\CIClass {
         $this->url .= $file['name'];
         return true;
     }
-    
+
     // 返回文件散列
     private function _rename_hash(&$file) {
         if (empty($file['hash'])) {
@@ -261,12 +269,12 @@ Class Uploader extends \CIPlus\CIClass {
         }
         return $hash;
     }
-    
+
     // 返回时间戳
     private function _rename_time(&$file) {
         return date('YmdHis', time()) . rand(100, 999);
     }
-    
+
     /**
      * 获取上传文件信息
      * @param $file
@@ -278,7 +286,7 @@ Class Uploader extends \CIPlus\CIClass {
                 break;
         }
     }
-    
+
     // 获取上传图片的尺寸
     private function _getImageSize(&$file) {
         $size = getimagesize($file['tmp_name']);
@@ -287,7 +295,7 @@ Class Uploader extends \CIPlus\CIClass {
             $file['height'] = $size[1];
         }
     }
-    
+
     /**
      * 将文件移动到指定的文件目录
      * @param $file
@@ -302,12 +310,24 @@ Class Uploader extends \CIPlus\CIClass {
         @chmod($ufo, 0755);
         return TRUE;
     }
-    
+
+    /**
+     * 设置回调处理
+     * @param $obj
+     * @param $func
+     * @return $this
+     */
+    public function set_callback($obj, $func) {
+        $this->callback_obj = $obj;
+        $this->callback_func = $func;
+        return $this;
+    }
+
     /**
      * 错误处理
      * @param string $type
      */
-    private function _error($type = '') {
+    protected function _error($type = '') {
         if (is_object($this->callback_obj) && method_exists($this->callback_obj, $this->callback_func)) {
             $method = $this->callback_func;
             $this->callback_obj->$method($type);
