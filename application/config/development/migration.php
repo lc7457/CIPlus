@@ -57,7 +57,7 @@ $config['migration_table'] = CIPLUS_DB_PREFIX . 'migrations';
 | in your code to have the latest migration.
 |
 */
-$config['migration_auto_latest'] = FALSE;
+$config['migration_auto_latest'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,7 +69,7 @@ $config['migration_auto_latest'] = FALSE;
 | be upgraded / downgraded to.
 |
 */
-$config['migration_version'] = 20190601000000;
+$config['migration_version'] = 20190601123045;
 
 /*
 |--------------------------------------------------------------------------
