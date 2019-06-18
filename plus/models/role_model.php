@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class role_model extends MY_Model {
+class Role_model extends MY_Model {
     const TB_ROLE = CIPLUS_DB_PREFIX . 'role';
     const TB_ROLE_USERS = CIPLUS_DB_PREFIX . 'role_user';
     const TB_ROLE_API = CIPLUS_DB_PREFIX . 'role_api';

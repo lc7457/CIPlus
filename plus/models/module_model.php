@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class module_model extends MY_Model {
+class Module_model extends MY_Model {
     const TB_MODULE = CIPLUS_DB_PREFIX . 'module';
 
 

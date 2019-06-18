@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class user_model extends MY_Model {
+class User_model extends MY_Model {
     const TB_USER = CIPLUS_DB_PREFIX . 'user';
     const TB_USER_INFO = CIPLUS_DB_PREFIX . 'user_info';
 

@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class api_model extends MY_Model {
+class Api_model extends MY_Model {
     const TB_API = CIPLUS_DB_PREFIX . 'api';
 
 
