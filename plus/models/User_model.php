@@ -87,10 +87,17 @@ class User_model extends MY_Model {
      */
     public function getInfo($id) {
         if (!empty($id)) {
+            $select = 'tb2.account,tb2.email,tb2.phone,tb2.create_time,tb1.name,tb1.avatar,tb1.introduction,tb1.sex,tb1.area,tb1.city,tb1.province,tb1.country';
+            $select = str_replace(array('tb1', 'tb2'), array(self::TB_USER_INFO, self::TB_USER), $select);
+            $join = 'tb1.id = tb2.id';
+            $join = str_replace(array('tb1', 'tb2'), array(self::TB_USER_INFO, self::TB_USER), $join);
             $this->db
-                ->select('name,avatar,introduction,sex,area,city,province,country')
-                ->where('id', $id);
-            return $this->row(self::TB_USER_INFO);
+                ->select($select)
+                ->from(self::TB_USER_INFO)
+                ->join(self::TB_USER, $join, 'LEFT')
+                ->where(self::TB_USER . '.id', $id);
+            $query = $this->db->get();
+            return $query->row_array();
         }
         return [];
     }

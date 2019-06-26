@@ -5,26 +5,28 @@ Class Uploader {
     protected $file_save_path = '';
     protected $temp_save_path = '';
     protected $create_usage_folder = TRUE;
-    protected $usages = [];
+    protected $usages = array();
     // usage
     private $usage = '';
-    private $approved_ext = [];
+    private $approved_ext = array();
     private $max_file_size = 0;
     private $max_file_num = 1;
     private $fetch_hash = TRUE;
     private $rename = '';
     /// endregion
 
+    protected $file;
+
     private $custom_folder; // 自定义文件夹名称
     private $custom_name; // 自定义文件名
 
-    public $url = '/';
+    public $path = '/';
 
     private $callback_obj;
     private $callback_func;
 
     public function __construct(array $params = array()) {
-        if (is_array($params)) {
+        if (is_array($params) && count($params) > 0) {
             foreach ($params as $key => $val) {
                 if (property_exists($this, $key)) {
                     $this->$key = $val;
@@ -54,10 +56,10 @@ Class Uploader {
     }
 
     /**
-     *  以 FILES 类型上传
-     * @param $files :文件
-     * @param string $usage : 文件用途（参考配置文件）
-     * @return bool
+     * 以 FILES 类型上传
+     * @param $files
+     * @param string $usage
+     * @return mixed
      */
     public function file($files, $usage = 'image') {
         $this->_setUsage($usage);
@@ -68,7 +70,7 @@ Class Uploader {
             if (!$this->_isUploadedFile($files[$keys[$i]])) $this->_error('illegalFile');
             $this->_uploadProcess($files[$keys[$i]]);
         }
-        return true;
+        return $files;
     }
 
     /**
@@ -93,7 +95,7 @@ Class Uploader {
         $file['error'] = 0;
         $file['size'] = filesize($tmpFile);
         $this->_uploadProcess($file);
-        return true;
+        return $file;
     }
 
     /**
@@ -130,13 +132,13 @@ Class Uploader {
      * 文件上传进程
      * @param $file
      */
-    private function _uploadProcess($file) {
+    private function _uploadProcess(&$file) {
         if (!$this->_isLegalExt($file)) $this->_error('illegalExt');
         if (!$this->_isLegalSize($file)) $this->_error('illegalSize');
         if (!$this->_isExistUploadPath()) $this->_error('nonexistentPath');
         if (!$this->_isWritablePath()) $this->_error('notWritablePath');
         $this->_getFileHash($file);
-        $this->_setName($file);
+        $this->_setFileName($file);
         $this->_getFileInfo($file);
         if (!$this->_moveFileToSavePath($file)) $this->_error('notWritablePath');
     }
@@ -198,12 +200,12 @@ Class Uploader {
     private function _isExistUploadPath() {
         if ($this->create_usage_folder) {
             $this->file_save_path .= $this->usage . DIRECTORY_SEPARATOR;
-            $this->url .= $this->usage . '/';
+            $this->path .= $this->usage . '/';
             $this->_mkdir($this->file_save_path);
         }
         if (!empty($this->custom_folder)) {
             $this->file_save_path .= $this->custom_folder . DIRECTORY_SEPARATOR;
-            $this->url .= $this->custom_folder . '/';
+            $this->path .= $this->custom_folder . '/';
             $this->_mkdir($this->file_save_path);
         }
         return is_dir($this->file_save_path);
@@ -246,7 +248,7 @@ Class Uploader {
      * @param $file
      * @return bool
      */
-    private function _setName(&$file) {
+    private function _setFileName(&$file) {
         if (!empty($this->custom_name)) {
             $file['origin_name'] = $file['name'];
             $file['name'] = $this->custom_name . '.' . $file['ext'];
@@ -256,7 +258,6 @@ Class Uploader {
             $file['origin_name'] = $file['name'];
             $file['name'] = $name;
         }
-        $this->url .= $file['name'];
         return true;
     }
 

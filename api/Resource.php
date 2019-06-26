@@ -10,10 +10,15 @@ class Resource {
         $config = $CI->config->item('uploader');
         $CI->load->library("uploader", $config);
         $CI->uploader->set_callback($this, '_error');
-        $bool = $CI->uploader->file($_FILES, $request->params('type'));
-        if ($bool) {
+        $files = $CI->uploader->file($_FILES, $request->params('type'));
+        if ($files) {
             $respond->setCode(20000);
-            $respond->setData(['url' => $CI->uploader->url]);
+            $respond->setData(
+                array(
+                    'path' => $CI->uploader->path,
+                    'files' => $files
+                )
+            );
         } else {
             $respond->setCode($this->code);
         }
