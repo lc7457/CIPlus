@@ -54,6 +54,7 @@ class User_model extends MY_Model {
      * @return int|null
      */
     private function compare_password($user, $password) {
+        log_message('error', $this->decrypt($user['password']));
         if ($this->decrypt($user['password']) === $password) {
             return $user['id'];
         }
@@ -103,28 +104,26 @@ class User_model extends MY_Model {
     }
 
     /**
+     * 判断是否存在用户信息
+     * @param $id
+     * @return bool
+     */
+    public function simpleInfo($id) {
+        return $this->row(self::TB_USER_INFO, array('id' => $id));
+    }
+
+    /**
      * 设置用户相关信息
      * @param $id
      * @param $info
      * @return mixed
      */
-    public function setInfo($id, $info) {
-        $exist = $this->getInfo($id);
-        $data = empty($exist) ? [] : $exist;
-        $data['name'] = key_exists('name', $info) ? $info['name'] : '';
-        $data['avatar'] = key_exists('avatar', $info) ? $info['avatar'] : '';
-        $data['introduction'] = key_exists('introduction', $info) ? $info['introduction'] : '';
-        $data['sex'] = key_exists('sex', $info) ? $info['sex'] : 2;
-        $data['area'] = key_exists('area', $info) ? $info['area'] : '';
-        $data['city'] = key_exists('city', $info) ? $info['city'] : '';
-        $data['province'] = key_exists('province', $info) ? $info['province'] : '';
-        $data['country'] = key_exists('country', $info) ? $info['country'] : '';
-        if (empty($exist)) {
-            $data['id'] = $id;
-            return $this->insert(self::TB_USER_INFO, $data);
-        } else {
-            return $this->update(self::TB_USER_INFO, $data, ['id' => $id]);
-        }
+    public function setInfo($id, array $info) {
+        $info['id'] = $id;
+        $info['sex'] = empty($info['sex']) ? 0 : $info['sex'];
+        $info['avatar'] = empty($info['avatar']) ? '/' : $info['avatar'];
+        $info['country'] = empty($info['country']) ? '86' : $info['country'];
+        return $this->replace(self::TB_USER_INFO, $info);
     }
 
     /**
@@ -136,8 +135,8 @@ class User_model extends MY_Model {
      */
     public function changePassword($id, $old_password, $new_password) {
         $this->db->where('id', $id);
-        $m = $this->row(self::TB_USER);
-        if (!empty($m) && $this->decrypt($m['password']) === $old_password) {
+        $user = $this->row(self::TB_USER);
+        if ($this->compare_password($user, $old_password)) {
             return $this->update(self::TB_USER, ['password' => $this->encrypt($new_password)], ['id' => $id]);
         }
         return false;
@@ -150,6 +149,12 @@ class User_model extends MY_Model {
      */
     private function encrypt($password) {
         $this->load->library('encryption');
+        $this->encryption->initialize(array(
+                'key' => null,
+                'cipher' => 'aes-256',
+                'mode' => 'cbc'
+            )
+        );
         return $this->encryption->encrypt($password);
     }
 
@@ -160,6 +165,12 @@ class User_model extends MY_Model {
      */
     private function decrypt($password) {
         $this->load->library('encryption');
+        $this->encryption->initialize(array(
+                'key' => null,
+                'cipher' => 'aes-256',
+                'mode' => 'cbc'
+            )
+        );
         return $this->encryption->decrypt($password);
     }
 }

@@ -104,6 +104,58 @@ class Migration_Init_data extends CI_Migration {
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'api',
             array(
+                'key' => 'edit_info',
+                'title' => '修改个人信息',
+                'module' => 'profile',
+                'path' => 'profile/edit_info',
+                'required' => json_encode(array()),
+                'optional' => json_encode(array('name', 'avatar', 'sex', 'area', 'city', 'province', 'country', 'introduction')),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'change_password',
+                'title' => '修改密码',
+                'module' => 'profile',
+                'path' => 'profile/change_password',
+                'required' => json_encode(array('old_password', 'new_password', 're_password')),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'change_phone',
+                'title' => '修改手机',
+                'module' => 'profile',
+                'path' => 'profile/change_phone',
+                'required' => json_encode(array('phone', 'captcha')),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
+                'key' => 'change_email',
+                'title' => '修改邮箱',
+                'module' => 'profile',
+                'path' => 'profile/change_email',
+                'required' => json_encode(array('email', 'captcha')),
+                'optional' => json_encode(array()),
+                'method' => 'request',
+                'validated' => 1,
+                'usable' => 1,
+                'readonly' => 1
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'api',
+            array(
                 'key' => 'upload',
                 'title' => '资源上传',
                 'module' => 'resource',
@@ -379,6 +431,18 @@ class Migration_Init_data extends CI_Migration {
             array(
                 'key' => 'system',
                 'name' => '系统模块',
+                'readonly' => 1,
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
+                'key' => 'profile',
+                'name' => '个人信息',
+                'readonly' => 1,
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
+                'key' => 'resource',
+                'name' => '资源管理',
                 'readonly' => 1,
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'module',
