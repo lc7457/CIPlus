@@ -6,18 +6,16 @@ class Migration_Init_data extends CI_Migration {
     }
 
     private function init_data() {
-        $id = $this->db->insert(CIPLUS_DB_PREFIX . 'user',
-            array(
-                'account' => 'admin',
-                'email' => 'admin@cprap.com',
-                'password' => 'b34e50b8b8b4b1fe831a20e37db6285b38adb5c0510afdd7dd62ac5a8412e5be4685b5a8408cf3cfc7b70058be2309a759009be6273ccc0a44f3fa57391abc80qfPIU29n4I6A0e8kEPx/RvuHex93c9Bl9sN9X333S7kspgczaGFXuC00KBoBvctArV/3yC0h8oErepMIFMFKBg==',
-                'create_time' => time()
-            ));
+        $CI =& get_instance();
+        $CI->load->model("user_model");
+        $id = $CI->user_model->add('admin','admin@cprap.com',null,'21232f297a57a5a743894a0e4a801fc3');
+
         $this->db->insert(CIPLUS_DB_PREFIX . 'user_info',
             array(
                 'id' => $id,
                 'name' => 'administrator',
             ));
+
         $this->db->insert(CIPLUS_DB_PREFIX . 'role',
             array(
                 'key' => 'admin',
@@ -37,6 +35,38 @@ class Migration_Init_data extends CI_Migration {
                 'role_key' => 'admin',
                 'user_id' => $id,
             ));
+
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
+                'key' => 'system',
+                'name' => '系统模块',
+                'readonly' => 1,
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
+                'key' => 'profile',
+                'name' => '个人信息',
+                'readonly' => 1,
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
+                'key' => 'resource',
+                'name' => '资源管理',
+                'readonly' => 1,
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
+                'key' => 'setting',
+                'name' => '设置模块',
+                'readonly' => 1,
+            ));
+        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
+            array(
+                'key' => 'role',
+                'name' => '角色权限',
+                'readonly' => 1,
+            ));
+
         $this->db->insert(CIPLUS_DB_PREFIX . 'api',
             array(
                 'key' => 'login',
@@ -427,36 +457,7 @@ class Migration_Init_data extends CI_Migration {
                 'usable' => 1,
                 'readonly' => 1
             ));
-        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
-            array(
-                'key' => 'system',
-                'name' => '系统模块',
-                'readonly' => 1,
-            ));
-        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
-            array(
-                'key' => 'profile',
-                'name' => '个人信息',
-                'readonly' => 1,
-            ));
-        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
-            array(
-                'key' => 'resource',
-                'name' => '资源管理',
-                'readonly' => 1,
-            ));
-        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
-            array(
-                'key' => 'setting',
-                'name' => '设置模块',
-                'readonly' => 1,
-            ));
-        $this->db->insert(CIPLUS_DB_PREFIX . 'module',
-            array(
-                'key' => 'role',
-                'name' => '角色权限',
-                'readonly' => 1,
-            ));
+
     }
 
     public function down() {
