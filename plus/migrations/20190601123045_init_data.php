@@ -2,13 +2,15 @@
 
 class Migration_Init_data extends CI_Migration {
     public function up() {
-        $this->init_data();
+        $this->init_user();
+        $this->init_module();
+        $this->init_api();
     }
 
-    private function init_data() {
+    private function init_user() {
         $CI =& get_instance();
         $CI->load->model("user_model");
-        $id = $CI->user_model->add('admin','admin@cprap.com',null,'21232f297a57a5a743894a0e4a801fc3');
+        $id = $CI->user_model->add('admin', 'admin@cprap.com', null, '21232f297a57a5a743894a0e4a801fc3');
 
         $this->db->insert(CIPLUS_DB_PREFIX . 'user_info',
             array(
@@ -35,7 +37,9 @@ class Migration_Init_data extends CI_Migration {
                 'role_key' => 'admin',
                 'user_id' => $id,
             ));
+    }
 
+    private function init_module() {
         $this->db->insert(CIPLUS_DB_PREFIX . 'module',
             array(
                 'key' => 'system',
@@ -50,14 +54,14 @@ class Migration_Init_data extends CI_Migration {
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'module',
             array(
-                'key' => 'resource',
-                'name' => '资源管理',
+                'key' => 'setting',
+                'name' => '设置模块',
                 'readonly' => 1,
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'module',
             array(
-                'key' => 'setting',
-                'name' => '设置模块',
+                'key' => 'resource',
+                'name' => '资源管理',
                 'readonly' => 1,
             ));
         $this->db->insert(CIPLUS_DB_PREFIX . 'module',
@@ -66,7 +70,9 @@ class Migration_Init_data extends CI_Migration {
                 'name' => '角色权限',
                 'readonly' => 1,
             ));
+    }
 
+    private function init_api() {
         $this->db->insert(CIPLUS_DB_PREFIX . 'api',
             array(
                 'key' => 'login',
@@ -457,7 +463,6 @@ class Migration_Init_data extends CI_Migration {
                 'usable' => 1,
                 'readonly' => 1
             ));
-
     }
 
     public function down() {
